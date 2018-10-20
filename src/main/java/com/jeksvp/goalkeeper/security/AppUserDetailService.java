@@ -1,4 +1,4 @@
-package com.jeksvp.goalkeeper.service.impl;
+package com.jeksvp.goalkeeper.security;
 
 import com.jeksvp.goalkeeper.entity.User;
 import com.jeksvp.goalkeeper.repository.UserRepository;

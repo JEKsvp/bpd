@@ -9,15 +9,13 @@ import javax.persistence.*;
 import java.util.List;
 
 
-@Entity
-@Table(name = "app_user")
 @Data
 @EqualsAndHashCode(exclude = "roles")
 @ToString(exclude = "roles")
+@Entity(name = "T_USER")
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
@@ -28,18 +26,19 @@ public class User {
     @JsonIgnore
     private String password;
 
-    @Column(name = "first_name")
-    private String firstName;
-
-    @Column(name = "last_name")
-    private String lastName;
+    @Column(name = "email")
+    private String email;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "user_role", joinColumns
-            = @JoinColumn(name = "user_id",
+    @JoinTable(name = "T_USER_ROLE", joinColumns
+            = @JoinColumn(name = "id_user",
             referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id",
+            inverseJoinColumns = @JoinColumn(name = "id_role",
                     referencedColumnName = "id"))
     private List<Role> roles;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<Goal> goals;
 }
 
