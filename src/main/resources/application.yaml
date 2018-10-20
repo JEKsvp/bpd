@@ -1,14 +1,24 @@
-spring:
-  datasource:
-    driver-class-name: org.postgresql.Driver
-    username: root
-    password: root
-    url: jdbc:postgresql://localhost:5432/goal-keeper-db
-    type: com.zaxxer.hikari.HikariDataSource
-  jpa:
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQL94Dialect
-        jdbc:
-          lob:
-            non_contextual_creation: true
+server:
+  port: 8080
+
+security:
+  oauth2:
+    resource:
+      filter-order: 3
+  signing-key: signingkey
+  encoding-strength: 256
+  security-realm: goal keeper realmushka
+  jwt:
+    client-id: clientid
+    client-secret: secret
+    grant-type: password
+    scope-read: read
+    scope-write: write
+    resource-ids: testjwtresourceid
+
+
+
+
+
+
+
