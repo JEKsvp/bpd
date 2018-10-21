@@ -5,7 +5,6 @@ import com.jeksvp.goalkeeper.dto.ApiError;
 public class ApiException extends RuntimeException {
 
     private ApiError apiError;
-    private ApiErrorContainer apiErrorContainer;
 
     public ApiException(ApiErrorContainer apiErrorContainer) {
         this.apiError = new ApiError();

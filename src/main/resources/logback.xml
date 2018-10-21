@@ -1,0 +1,56 @@
+<configuration debug="true">
+
+    <property name="PATH_LOG" value="logs"/>
+    <property name="APP_NAME" value="front"/>
+    <property name="FILE_PATTERN" value="%d{yyyy-MM-dd}_%i.log.gz"/>
+    <property name="MAX_FILE_SIZE" value="20MB"/>
+    <property name="ENCODER_PATTERN"
+              value="%date{dd/MM/yy HH:mm:ss} %level [%thread] %logger{10} [%file:%line] %msg%n"/>
+    <property name="MAX_HISTORY" value="31"/>
+
+    <appender name="WARN_ERROR_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${PATH_LOG}/${APP_NAME}-error-${FILE_PATTERN}</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>${MAX_FILE_SIZE}</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <maxHistory>${MAX_HISTORY}</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${ENCODER_PATTERN}</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>WARN</level>
+        </filter>
+    </appender>
+
+    <appender name="DEBUG_INFO_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${PATH_LOG}/${APP_NAME}-debug-${FILE_PATTERN}</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>${MAX_FILE_SIZE}</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <maxHistory>${MAX_HISTORY}</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${ENCODER_PATTERN}</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>DEBUG</level>
+        </filter>
+    </appender>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${ENCODER_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="com.jeksvp" level="debug"/>
+
+    <root level="error">
+        <appender-ref ref="DEBUG_INFO_FILE"/>
+        <appender-ref ref="WARN_ERROR_FILE"/>
+        <appender-ref ref="STDOUT"/>
+    </root>
+</configuration>

@@ -24,15 +24,13 @@ public class GoalServiceImpl implements GoalService {
 
     @Override
     public List<Goal> findByUsername(String username) {
-        User user = userRepository.findByUsername(username);
-        List<Goal> goals = goalRepository.findByUser(user);
-        return goals;
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new ApiException(ApiErrorContainer.RESOURCE_NOT_FOUND));
+        return goalRepository.findByUser(user);
     }
 
     @Override
     public List<Goal> findByUserId(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new ApiException(ApiErrorContainer.RESOURCE_NOT_FOUND));
-        List<Goal> goals = goalRepository.findByUser(user);
-        return goals;
+        return goalRepository.findByUser(user);
     }
 }
