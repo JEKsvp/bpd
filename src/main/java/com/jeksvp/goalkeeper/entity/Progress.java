@@ -1,10 +1,13 @@
 package com.jeksvp.goalkeeper.entity;
 
+import com.jeksvp.goalkeeper.dto.request.CreateProgressRequest;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 @EqualsAndHashCode(exclude = "goal")
@@ -13,6 +16,7 @@ import javax.persistence.*;
 public class Progress {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
@@ -25,4 +29,14 @@ public class Progress {
 
     @Column(name = "max_value")
     private Float maxValue;
+
+    public static Progress of(CreateProgressRequest request) {
+        Progress progress = new Progress();
+        progress.setMaxValue(request.getMaxValue());
+        return progress;
+    }
+
+    public static List<Progress> of(List<CreateProgressRequest> requests) {
+        return requests.stream().map(Progress::of).collect(Collectors.toList());
+    }
 }

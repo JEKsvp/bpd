@@ -1,11 +1,10 @@
 package com.jeksvp.goalkeeper.controller;
 
-import com.jeksvp.goalkeeper.entity.Goal;
+import com.jeksvp.goalkeeper.dto.request.CreateGoalRequest;
+import com.jeksvp.goalkeeper.dto.response.GoalResponse;
 import com.jeksvp.goalkeeper.service.GoalService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -20,7 +19,15 @@ public class GoalController {
     }
 
     @GetMapping
-    public List<Goal> getGoals(@RequestParam Long userId) {
-        return goalService.findByUserId(userId);
+    public List<GoalResponse> getGoals(@RequestParam(required = false) String username) {
+        if (username != null) {
+            return goalService.findByUsername(username);
+        }
+        return goalService.findAll();
+    }
+
+    @PostMapping
+    public GoalResponse createGoal(@RequestBody CreateGoalRequest request) {
+        return goalService.createGoal(request);
     }
 }

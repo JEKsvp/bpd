@@ -1,12 +1,17 @@
 package com.jeksvp.goalkeeper.service;
 
-import com.jeksvp.goalkeeper.entity.Goal;
+import com.jeksvp.goalkeeper.dto.request.CreateGoalRequest;
+import com.jeksvp.goalkeeper.dto.response.GoalResponse;
 
 import java.util.List;
 
 public interface GoalService {
 
-    List<Goal> findByUsername(String username);
+    List<GoalResponse> findAll();
 
-    List<Goal> findByUserId(Long userId);
+    List<GoalResponse> findByUsername(String username);
+
+    List<GoalResponse> findByUserId(Long userId);
+
+    GoalResponse createGoal(CreateGoalRequest request);
 }
