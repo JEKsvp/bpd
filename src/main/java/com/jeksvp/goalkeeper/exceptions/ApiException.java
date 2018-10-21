@@ -12,6 +12,12 @@ public class ApiException extends RuntimeException {
         this.apiError.setStatus(apiErrorContainer.getHttpStatus());
     }
 
+    public ApiException(ApiErrorContainer apiErrorContainer, String message) {
+        this.apiError = new ApiError();
+        this.apiError.setMessage(message);
+        this.apiError.setStatus(apiErrorContainer.getHttpStatus());
+    }
+
     public ApiError getApiError() {
         return apiError;
     }
