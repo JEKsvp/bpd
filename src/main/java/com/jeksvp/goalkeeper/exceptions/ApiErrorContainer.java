@@ -5,7 +5,8 @@ import org.springframework.http.HttpStatus;
 public enum ApiErrorContainer {
 
     RESOURCE_NOT_FOUND(HttpStatus.NOT_FOUND, "Resource not found"),
-    VALIDATION_ERROR(HttpStatus.BAD_REQUEST, "Validation error");
+    VALIDATION_ERROR(HttpStatus.BAD_REQUEST, "Validation error"),
+    ACCESS_DENIED(HttpStatus.FORBIDDEN, "Access denied");
 
     private HttpStatus httpStatus;
     private String message;

@@ -71,12 +71,15 @@ public class GoalServiceImpl implements GoalService {
     @Override
     public GoalResponse updateGoal(Long goalId, UpdateGoalRequest request) {
         Goal goal = goalRepository.findById(goalId).orElseThrow(() -> new ApiException(ApiErrorContainer.RESOURCE_NOT_FOUND));
+        SecurityUtils.validateUserName(goal.getUser().getUsername());
         updateGoal(goal, request);
         return GoalResponse.of(goal);
     }
 
     @Override
     public void deleteById(Long goalId) {
+        Goal goal = goalRepository.findById(goalId).orElseThrow(() -> new ApiException(ApiErrorContainer.RESOURCE_NOT_FOUND));
+        SecurityUtils.validateUserName(goal.getUser().getUsername());
         goalRepository.deleteById(goalId);
     }
 

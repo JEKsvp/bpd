@@ -11,6 +11,7 @@ import com.jeksvp.goalkeeper.repository.GoalRepository;
 import com.jeksvp.goalkeeper.repository.ProgressRepository;
 import com.jeksvp.goalkeeper.service.ProgressService;
 import com.jeksvp.goalkeeper.utils.FieldSetter;
+import com.jeksvp.goalkeeper.utils.SecurityUtils;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -26,7 +27,7 @@ public class ProgressServiceImpl implements ProgressService {
 
     @Override
     public ProgressResponse findById(Long id) {
-        Progress progress = progressRepository.findById(id).orElseThrow(() -> new ApiException(ApiErrorContainer.RESOURCE_NOT_FOUND));
+        Progress progress = findProgressById(id);
         return ProgressResponse.of(progress);
     }
 
@@ -41,18 +42,27 @@ public class ProgressServiceImpl implements ProgressService {
 
     @Override
     public ProgressResponse updateProgress(Long progressId, UpdateProgressRequest request) {
-        Progress progress = progressRepository.findById(progressId).orElseThrow(() -> new ApiException(ApiErrorContainer.RESOURCE_NOT_FOUND));
+        Progress progress = findProgressById(progressId);
+        String username = progress.getGoal().getUser().getUsername();
+        SecurityUtils.validateUserName(username);
         updateProgress(progress, request);
         return ProgressResponse.of(progress);
     }
 
     @Override
     public void deleteById(Long progressId) {
+        Progress progress = findProgressById(progressId);
+        String username = progress.getGoal().getUser().getUsername();
+        SecurityUtils.validateUserName(username);
         progressRepository.deleteById(progressId);
     }
 
     private void updateProgress(Progress progress, UpdateProgressRequest request) {
         FieldSetter.setIfNotNull(progress::setMaxValue, request.getMaxValue());
         FieldSetter.setIfNotNull(progress::setCurrentValue, request.getCurrentValue());
+    }
+
+    private Progress findProgressById(Long progressId) {
+        return progressRepository.findById(progressId).orElseThrow(() -> new ApiException(ApiErrorContainer.RESOURCE_NOT_FOUND));
     }
 }
