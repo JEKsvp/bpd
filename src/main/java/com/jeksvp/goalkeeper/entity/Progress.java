@@ -25,7 +25,7 @@ public class Progress {
     private Goal goal;
 
     @Column(name = "current_value")
-    private Float currentValue;
+    private Float currentValue = 0f;
 
     @Column(name = "max_value")
     private Float maxValue;

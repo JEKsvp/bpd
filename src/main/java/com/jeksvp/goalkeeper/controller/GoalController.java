@@ -1,9 +1,9 @@
 package com.jeksvp.goalkeeper.controller;
 
 import com.jeksvp.goalkeeper.dto.request.CreateGoalRequest;
+import com.jeksvp.goalkeeper.dto.request.UpdateGoalRequest;
 import com.jeksvp.goalkeeper.dto.response.GoalResponse;
 import com.jeksvp.goalkeeper.service.GoalService;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,5 +29,20 @@ public class GoalController {
     @PostMapping
     public GoalResponse createGoal(@RequestBody CreateGoalRequest request) {
         return goalService.createGoal(request);
+    }
+
+    @GetMapping("/{goalId}")
+    public GoalResponse getGoal(@PathVariable Long goalId) {
+        return goalService.findById(goalId);
+    }
+
+    @PutMapping("/{goalId}")
+    public GoalResponse updateGoal(@PathVariable Long goalId, @RequestBody UpdateGoalRequest request) {
+        return goalService.updateGoal(goalId, request);
+    }
+
+    @DeleteMapping("/{goalId}")
+    public void deleteGoal(@PathVariable Long goalId){
+        goalService.deleteById(goalId);
     }
 }

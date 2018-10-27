@@ -4,7 +4,6 @@ import com.jeksvp.goalkeeper.entity.Goal;
 import com.jeksvp.goalkeeper.entity.Progress;
 import org.junit.Test;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -47,12 +46,12 @@ public class GoalResponseTest {
         response.setId(1L);
         response.setName("test name");
         response.setDescription("test description");
-        ProgressesResponse progressesResponse = new ProgressesResponse();
-        progressesResponse.setId(1L);
-        progressesResponse.setMaxValue(22f);
-        progressesResponse.setCurrentValue(12f);
-        List<ProgressesResponse> progressesResponses = new ArrayList<>(Arrays.asList(progressesResponse, progressesResponse));
-        response.setProgresses(progressesResponses);
+        ProgressResponse progressResponse = new ProgressResponse();
+        progressResponse.setId(1L);
+        progressResponse.setMaxValue(22f);
+        progressResponse.setCurrentValue(12f);
+        List<ProgressResponse> progressRespons = new ArrayList<>(Arrays.asList(progressResponse, progressResponse));
+        response.setProgresses(progressRespons);
         return response;
     }
 }

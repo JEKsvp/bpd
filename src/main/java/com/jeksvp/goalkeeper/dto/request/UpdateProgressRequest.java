@@ -3,7 +3,7 @@ package com.jeksvp.goalkeeper.dto.request;
 import lombok.Data;
 
 @Data
-public class CreateProgressRequest {
+public class UpdateProgressRequest {
+    private Float currentValue;
     private Float maxValue;
-    private Long goalId;
 }

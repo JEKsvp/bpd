@@ -24,7 +24,7 @@ public class GoalResponse {
             pattern = "dd-MM-yyyy hh:mm:ss")
     private LocalDateTime expirationDate;
 
-    private List<ProgressesResponse> progresses;
+    private List<ProgressResponse> progresses;
 
     public static GoalResponse of(Goal goal) {
         GoalResponse response = new GoalResponse();
@@ -34,7 +34,7 @@ public class GoalResponse {
         response.setCreateDate(goal.getCreateDate());
         response.setExpirationDate(goal.getExpirationDate());
         response.setProgresses(
-                goal.getProgresses().stream().map(ProgressesResponse::of).collect(Collectors.toList())
+                goal.getProgresses().stream().map(ProgressResponse::of).collect(Collectors.toList())
         );
         return response;
     }
