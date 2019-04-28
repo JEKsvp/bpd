@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: 8081
 
 spring:
   datasource:
@@ -33,12 +33,9 @@ security:
     scope-read: read
     scope-write: write
     resource-ids: testjwtresourceid
-    access_token_validity_in_seconds: 1800 #30 minutes
+    access_token_validity_in_seconds: 10 #30 minutes
     refresh_token_validity_in_seconds: 2592000 #one month
 
-
-
-
-
-
-
+logging:
+  level:
+    root: debug

@@ -46,10 +46,10 @@ public class RegisterUserServiceImpl implements RegisterUserService {
 
     private void validate(RegisterUserRequest request) {
         if (userRepository.findByUsername(request.getUsername()).isPresent()) {
-            throw new ApiException(ApiErrorContainer.VALIDATION_ERROR, "This username is taken by another user");
+            throw new ApiException(ApiErrorContainer.VALIDATION_ERROR, "This username exists");
         }
         if (userRepository.findByEmail(request.getEmail()).isPresent()) {
-            throw new ApiException(ApiErrorContainer.VALIDATION_ERROR, "This email is taken by another user");
+            throw new ApiException(ApiErrorContainer.VALIDATION_ERROR, "This email exists");
         }
     }
 }

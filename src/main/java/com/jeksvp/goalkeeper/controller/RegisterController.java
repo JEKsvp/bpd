@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
 @RestController
 public class RegisterController {
 
@@ -17,7 +19,7 @@ public class RegisterController {
     }
 
     @PostMapping("/register")
-    public UserResponse register(@RequestBody RegisterUserRequest request) {
+    public UserResponse register(@Valid @RequestBody RegisterUserRequest request) {
         return registerUserService.registerUser(request);
     }
 }
