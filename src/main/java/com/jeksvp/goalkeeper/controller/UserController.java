@@ -1,6 +1,6 @@
 package com.jeksvp.goalkeeper.controller;
 
-import com.jeksvp.goalkeeper.dto.response.UserResponse;
+import com.jeksvp.goalkeeper.web.dto.response.UserResponse;
 import com.jeksvp.goalkeeper.service.UserService;
 import com.jeksvp.goalkeeper.utils.SecurityUtils;
 import org.springframework.web.bind.annotation.GetMapping;

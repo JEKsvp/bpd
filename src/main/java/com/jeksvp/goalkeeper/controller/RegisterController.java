@@ -1,7 +1,7 @@
 package com.jeksvp.goalkeeper.controller;
 
-import com.jeksvp.goalkeeper.dto.request.RegisterUserRequest;
-import com.jeksvp.goalkeeper.dto.response.UserResponse;
+import com.jeksvp.goalkeeper.web.dto.request.RegisterUserRequest;
+import com.jeksvp.goalkeeper.web.dto.response.UserResponse;
 import com.jeksvp.goalkeeper.service.RegisterUserService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

@@ -1,8 +1,8 @@
 package com.jeksvp.goalkeeper.service;
 
-import com.jeksvp.goalkeeper.dto.request.CreateProgressRequest;
-import com.jeksvp.goalkeeper.dto.request.UpdateProgressRequest;
-import com.jeksvp.goalkeeper.dto.response.ProgressResponse;
+import com.jeksvp.goalkeeper.web.dto.request.CreateProgressRequest;
+import com.jeksvp.goalkeeper.web.dto.request.UpdateProgressRequest;
+import com.jeksvp.goalkeeper.web.dto.response.ProgressResponse;
 
 public interface ProgressService {
 

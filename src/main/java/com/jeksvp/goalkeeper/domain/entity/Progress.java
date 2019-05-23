@@ -1,6 +1,6 @@
-package com.jeksvp.goalkeeper.entity;
+package com.jeksvp.goalkeeper.domain.entity;
 
-import com.jeksvp.goalkeeper.dto.request.CreateProgressRequest;
+import com.jeksvp.goalkeeper.web.dto.request.CreateProgressRequest;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;

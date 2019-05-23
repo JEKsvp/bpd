@@ -1,9 +1,9 @@
 package com.jeksvp.goalkeeper.service.impl;
 
-import com.jeksvp.goalkeeper.dto.request.RegisterUserRequest;
-import com.jeksvp.goalkeeper.dto.response.UserResponse;
-import com.jeksvp.goalkeeper.entity.Role;
-import com.jeksvp.goalkeeper.entity.User;
+import com.jeksvp.goalkeeper.web.dto.request.RegisterUserRequest;
+import com.jeksvp.goalkeeper.web.dto.response.UserResponse;
+import com.jeksvp.goalkeeper.domain.entity.Role;
+import com.jeksvp.goalkeeper.domain.entity.User;
 import com.jeksvp.goalkeeper.exceptions.ApiErrorContainer;
 import com.jeksvp.goalkeeper.exceptions.ApiException;
 import com.jeksvp.goalkeeper.repository.RoleRepository;
@@ -12,8 +12,6 @@ import com.jeksvp.goalkeeper.service.RegisterUserService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.lang.reflect.Array;
-import java.util.Arrays;
 import java.util.Collections;
 
 @Service

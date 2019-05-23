@@ -1,10 +1,10 @@
 package com.jeksvp.goalkeeper.service.impl;
 
-import com.jeksvp.goalkeeper.dto.request.CreateGoalRequest;
-import com.jeksvp.goalkeeper.dto.request.UpdateGoalRequest;
-import com.jeksvp.goalkeeper.dto.response.GoalResponse;
-import com.jeksvp.goalkeeper.entity.Goal;
-import com.jeksvp.goalkeeper.entity.User;
+import com.jeksvp.goalkeeper.web.dto.request.CreateGoalRequest;
+import com.jeksvp.goalkeeper.web.dto.request.UpdateGoalRequest;
+import com.jeksvp.goalkeeper.web.dto.response.GoalResponse;
+import com.jeksvp.goalkeeper.domain.entity.Goal;
+import com.jeksvp.goalkeeper.domain.entity.User;
 import com.jeksvp.goalkeeper.exceptions.ApiErrorContainer;
 import com.jeksvp.goalkeeper.exceptions.ApiException;
 import com.jeksvp.goalkeeper.repository.GoalRepository;
@@ -12,7 +12,6 @@ import com.jeksvp.goalkeeper.repository.UserRepository;
 import com.jeksvp.goalkeeper.service.GoalService;
 import com.jeksvp.goalkeeper.utils.FieldSetter;
 import com.jeksvp.goalkeeper.utils.SecurityUtils;
-import org.hibernate.sql.Update;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

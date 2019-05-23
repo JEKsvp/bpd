@@ -1,4 +1,4 @@
-package com.jeksvp.goalkeeper.entity;
+package com.jeksvp.goalkeeper.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;

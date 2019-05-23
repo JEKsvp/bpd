@@ -1,7 +1,7 @@
-package com.jeksvp.goalkeeper.dto.response;
+package com.jeksvp.goalkeeper.web.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.jeksvp.goalkeeper.entity.Goal;
+import com.jeksvp.goalkeeper.domain.entity.Goal;
 import lombok.Data;
 
 import java.time.LocalDateTime;

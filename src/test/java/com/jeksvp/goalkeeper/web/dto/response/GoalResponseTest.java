@@ -1,7 +1,7 @@
-package com.jeksvp.goalkeeper.dto.response;
+package com.jeksvp.goalkeeper.web.dto.response;
 
-import com.jeksvp.goalkeeper.entity.Goal;
-import com.jeksvp.goalkeeper.entity.Progress;
+import com.jeksvp.goalkeeper.domain.entity.Goal;
+import com.jeksvp.goalkeeper.domain.entity.Progress;
 import org.junit.Test;
 
 import java.util.ArrayList;

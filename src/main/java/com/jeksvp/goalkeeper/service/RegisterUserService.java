@@ -1,7 +1,7 @@
 package com.jeksvp.goalkeeper.service;
 
-import com.jeksvp.goalkeeper.dto.request.RegisterUserRequest;
-import com.jeksvp.goalkeeper.dto.response.UserResponse;
+import com.jeksvp.goalkeeper.web.dto.request.RegisterUserRequest;
+import com.jeksvp.goalkeeper.web.dto.response.UserResponse;
 
 public interface RegisterUserService {
 

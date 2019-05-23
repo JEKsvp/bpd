@@ -1,6 +1,6 @@
 package com.jeksvp.goalkeeper.repository;
 
-import com.jeksvp.goalkeeper.entity.User;
+import com.jeksvp.goalkeeper.domain.entity.User;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.Optional;

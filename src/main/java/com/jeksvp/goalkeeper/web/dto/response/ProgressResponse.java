@@ -1,6 +1,6 @@
-package com.jeksvp.goalkeeper.dto.response;
+package com.jeksvp.goalkeeper.web.dto.response;
 
-import com.jeksvp.goalkeeper.entity.Progress;
+import com.jeksvp.goalkeeper.domain.entity.Progress;
 import lombok.Data;
 
 @Data

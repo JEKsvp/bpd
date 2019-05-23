@@ -1,24 +1,21 @@
 package com.jeksvp.goalkeeper.exceptions;
 
-import com.jeksvp.goalkeeper.dto.ApiError;
+import lombok.Getter;
+import org.springframework.http.HttpStatus;
 
+@Getter
 public class ApiException extends RuntimeException {
 
-    private ApiError apiError;
+    private String message;
+    private HttpStatus httpStatus;
 
     public ApiException(ApiErrorContainer apiErrorContainer) {
-        this.apiError = new ApiError();
-        this.apiError.setMessage(apiErrorContainer.getMessage());
-        this.apiError.setStatus(apiErrorContainer.getHttpStatus());
+        this.message = apiErrorContainer.getMessage();
+        this.httpStatus = apiErrorContainer.getHttpStatus();
     }
 
     public ApiException(ApiErrorContainer apiErrorContainer, String message) {
-        this.apiError = new ApiError();
-        this.apiError.setMessage(message);
-        this.apiError.setStatus(apiErrorContainer.getHttpStatus());
-    }
-
-    public ApiError getApiError() {
-        return apiError;
+        this.message = message;
+        this.httpStatus = apiErrorContainer.getHttpStatus();
     }
 }

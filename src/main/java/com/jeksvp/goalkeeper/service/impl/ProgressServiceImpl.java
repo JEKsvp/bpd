@@ -1,10 +1,10 @@
 package com.jeksvp.goalkeeper.service.impl;
 
-import com.jeksvp.goalkeeper.dto.request.CreateProgressRequest;
-import com.jeksvp.goalkeeper.dto.request.UpdateProgressRequest;
-import com.jeksvp.goalkeeper.dto.response.ProgressResponse;
-import com.jeksvp.goalkeeper.entity.Goal;
-import com.jeksvp.goalkeeper.entity.Progress;
+import com.jeksvp.goalkeeper.web.dto.request.CreateProgressRequest;
+import com.jeksvp.goalkeeper.web.dto.request.UpdateProgressRequest;
+import com.jeksvp.goalkeeper.web.dto.response.ProgressResponse;
+import com.jeksvp.goalkeeper.domain.entity.Goal;
+import com.jeksvp.goalkeeper.domain.entity.Progress;
 import com.jeksvp.goalkeeper.exceptions.ApiErrorContainer;
 import com.jeksvp.goalkeeper.exceptions.ApiException;
 import com.jeksvp.goalkeeper.repository.GoalRepository;

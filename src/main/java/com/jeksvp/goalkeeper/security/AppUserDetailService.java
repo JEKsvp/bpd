@@ -1,6 +1,6 @@
 package com.jeksvp.goalkeeper.security;
 
-import com.jeksvp.goalkeeper.entity.User;
+import com.jeksvp.goalkeeper.domain.entity.User;
 import com.jeksvp.goalkeeper.repository.UserRepository;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

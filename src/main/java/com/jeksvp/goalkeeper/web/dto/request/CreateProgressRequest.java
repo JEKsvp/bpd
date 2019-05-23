@@ -1,4 +1,4 @@
-package com.jeksvp.goalkeeper.dto.request;
+package com.jeksvp.goalkeeper.web.dto.request;
 
 import lombok.Data;
 

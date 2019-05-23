@@ -1,6 +1,5 @@
 package com.jeksvp.goalkeeper.utils;
 
-import com.jeksvp.goalkeeper.entity.Role;
 import com.jeksvp.goalkeeper.exceptions.ApiErrorContainer;
 import com.jeksvp.goalkeeper.exceptions.ApiException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

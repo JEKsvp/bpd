@@ -1,7 +1,7 @@
 package com.jeksvp.goalkeeper.service.impl;
 
-import com.jeksvp.goalkeeper.dto.response.UserResponse;
-import com.jeksvp.goalkeeper.entity.User;
+import com.jeksvp.goalkeeper.web.dto.response.UserResponse;
+import com.jeksvp.goalkeeper.domain.entity.User;
 import com.jeksvp.goalkeeper.exceptions.ApiErrorContainer;
 import com.jeksvp.goalkeeper.exceptions.ApiException;
 import com.jeksvp.goalkeeper.repository.UserRepository;

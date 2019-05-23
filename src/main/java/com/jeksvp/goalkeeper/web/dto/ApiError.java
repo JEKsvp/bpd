@@ -1,4 +1,4 @@
-package com.jeksvp.goalkeeper.dto;
+package com.jeksvp.goalkeeper.web.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
@@ -12,7 +12,4 @@ import org.springframework.http.HttpStatus;
 public class ApiError {
 
     private String message;
-
-    @JsonIgnore
-    private HttpStatus status;
 }

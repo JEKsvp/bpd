@@ -1,8 +1,8 @@
 package com.jeksvp.goalkeeper.controller;
 
-import com.jeksvp.goalkeeper.dto.request.CreateGoalRequest;
-import com.jeksvp.goalkeeper.dto.request.UpdateGoalRequest;
-import com.jeksvp.goalkeeper.dto.response.GoalResponse;
+import com.jeksvp.goalkeeper.web.dto.request.CreateGoalRequest;
+import com.jeksvp.goalkeeper.web.dto.request.UpdateGoalRequest;
+import com.jeksvp.goalkeeper.web.dto.response.GoalResponse;
 import com.jeksvp.goalkeeper.service.GoalService;
 import org.springframework.web.bind.annotation.*;
 

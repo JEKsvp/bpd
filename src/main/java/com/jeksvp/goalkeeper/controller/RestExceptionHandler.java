@@ -1,6 +1,6 @@
 package com.jeksvp.goalkeeper.controller;
 
-import com.jeksvp.goalkeeper.dto.ApiError;
+import com.jeksvp.goalkeeper.web.dto.ApiError;
 import com.jeksvp.goalkeeper.exceptions.ApiException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -19,16 +19,16 @@ import java.text.MessageFormat;
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(ApiException.class)
-    public ResponseEntity<ApiError> handleApiException(ApiException apiException) {
-        ApiError apiError = apiException.getApiError();
-        return new ResponseEntity<>(apiError, apiError.getStatus());
+    public ResponseEntity<ApiError> handleApiException(ApiException ex) {
+        ApiError apiError = new ApiError(ex.getMessage());
+        return new ResponseEntity<>(apiError, ex.getHttpStatus());
     }
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
         String field = ex.getBindingResult().getFieldError().getField();
         String message = ex.getBindingResult().getFieldError().getDefaultMessage();
-        ApiError apiError = new ApiError(MessageFormat.format("Invalid field <{0}>. {1}", field, message), HttpStatus.BAD_REQUEST);
-        return new ResponseEntity<>(apiError, apiError.getStatus());
+        ApiError apiError = new ApiError(MessageFormat.format("Invalid field <{0}>. {1}", field, message));
+        return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
     }
 }
