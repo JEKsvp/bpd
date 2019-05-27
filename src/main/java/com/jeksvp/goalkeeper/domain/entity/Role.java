@@ -1,11 +1,14 @@
 package com.jeksvp.goalkeeper.domain.entity;
 
-import lombok.Data;
+import lombok.*;
 
 import javax.persistence.*;
 
-@Data
-@Entity(name="T_ROLE")
+@Getter
+@Setter(AccessLevel.PROTECTED)
+@EqualsAndHashCode
+@ToString
+@Entity(name = "T_ROLE")
 public class Role {
 
     @Id
@@ -13,10 +16,15 @@ public class Role {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name="name")
+    @Column(name = "name")
     private String roleName;
 
-    @Column(name="description")
+    @Column(name = "description")
     private String description;
+
+    public Role(String roleName, String description) {
+        this.roleName = roleName;
+        this.description = description;
+    }
 }
 

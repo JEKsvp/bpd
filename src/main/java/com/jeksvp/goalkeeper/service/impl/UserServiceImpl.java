@@ -19,13 +19,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponse getUser(Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new ApiException(ApiErrorContainer.RESOURCE_NOT_FOUND));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ApiException(ApiErrorContainer.RESOURCE_NOT_FOUND));
         return UserResponse.of(user);
     }
 
     @Override
     public UserResponse getUserByUserName(String username) {
-        User user = userRepository.findByUsername(username).orElseThrow(() -> new ApiException(ApiErrorContainer.RESOURCE_NOT_FOUND));
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new ApiException(ApiErrorContainer.RESOURCE_NOT_FOUND));
         return UserResponse.of(user);
     }
 }

@@ -1,4 +1,4 @@
-package com.jeksvp.goalkeeper.controller;
+package com.jeksvp.goalkeeper.web.controller;
 
 import com.jeksvp.goalkeeper.web.dto.request.CreateProgressRequest;
 import com.jeksvp.goalkeeper.web.dto.request.UpdateProgressRequest;

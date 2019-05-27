@@ -1,15 +1,15 @@
 package com.jeksvp.goalkeeper.domain.entity;
 
 import com.jeksvp.goalkeeper.web.dto.request.CreateProgressRequest;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Data
+@Getter
+@Setter(AccessLevel.PROTECTED)
 @EqualsAndHashCode(exclude = "goal")
 @ToString(exclude = "goal")
 @Entity(name = "t_progress")
@@ -30,13 +30,13 @@ public class Progress {
     @Column(name = "max_value")
     private Float maxValue;
 
-    public static Progress of(CreateProgressRequest request) {
-        Progress progress = new Progress();
-        progress.setMaxValue(request.getMaxValue());
-        return progress;
+    public Progress(Float maxValue, Goal goal){
+        this.maxValue = maxValue;
+        this.goal = goal;
     }
 
-    public static List<Progress> of(List<CreateProgressRequest> requests) {
-        return requests.stream().map(Progress::of).collect(Collectors.toList());
+    public void update(Float currentValue, Float maxValue) {
+        this.currentValue = currentValue;
+        this.maxValue = maxValue;
     }
 }

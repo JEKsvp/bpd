@@ -1,4 +1,4 @@
-package com.jeksvp.goalkeeper.controller;
+package com.jeksvp.goalkeeper.web.controller;
 
 import com.jeksvp.goalkeeper.web.dto.response.UserResponse;
 import com.jeksvp.goalkeeper.service.UserService;

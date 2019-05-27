@@ -1,4 +1,4 @@
-package com.jeksvp.goalkeeper.controller;
+package com.jeksvp.goalkeeper.web.controller;
 
 import com.jeksvp.goalkeeper.web.dto.ApiError;
 import com.jeksvp.goalkeeper.exceptions.ApiException;

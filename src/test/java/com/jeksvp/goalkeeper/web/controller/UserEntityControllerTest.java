@@ -1,7 +1,5 @@
 package com.jeksvp.goalkeeper.web.controller;
 
-import com.jeksvp.goalkeeper.controller.UserController;
-import com.jeksvp.goalkeeper.domain.entity.User;
 import com.jeksvp.goalkeeper.exceptions.ApiErrorContainer;
 import com.jeksvp.goalkeeper.exceptions.ApiException;
 import com.jeksvp.goalkeeper.service.UserService;

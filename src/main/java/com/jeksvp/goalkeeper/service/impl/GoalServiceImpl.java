@@ -1,5 +1,6 @@
 package com.jeksvp.goalkeeper.service.impl;
 
+import com.jeksvp.goalkeeper.domain.entity.Progress;
 import com.jeksvp.goalkeeper.web.dto.request.CreateGoalRequest;
 import com.jeksvp.goalkeeper.web.dto.request.UpdateGoalRequest;
 import com.jeksvp.goalkeeper.web.dto.response.GoalResponse;
@@ -10,12 +11,10 @@ import com.jeksvp.goalkeeper.exceptions.ApiException;
 import com.jeksvp.goalkeeper.repository.GoalRepository;
 import com.jeksvp.goalkeeper.repository.UserRepository;
 import com.jeksvp.goalkeeper.service.GoalService;
-import com.jeksvp.goalkeeper.utils.FieldSetter;
 import com.jeksvp.goalkeeper.utils.SecurityUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -53,11 +52,13 @@ public class GoalServiceImpl implements GoalService {
     @Transactional
     public GoalResponse createGoal(CreateGoalRequest request) {
         String currentUserName = SecurityUtils.getCurrentUserName();
-        User user = userRepository.findByUsername(currentUserName).orElseThrow(() -> new ApiException(ApiErrorContainer.RESOURCE_NOT_FOUND));
-        Goal newGoal = Goal.of(request);
-        newGoal.setUser(user);
-        newGoal.setCreateDate(LocalDateTime.now());
-        Goal savedGoal = goalRepository.save(newGoal);
+        User user = userRepository.findByUsername(currentUserName)
+                .orElseThrow(() -> new ApiException(ApiErrorContainer.RESOURCE_NOT_FOUND));
+
+        Goal goal = new Goal(request.getName(), request.getDescription(), user, request.getExpirationDate());
+        request.getProgresses()
+                .forEach(progress -> goal.addProgress(new Progress(progress.getMaxValue(), goal)));
+        Goal savedGoal = goalRepository.save(goal);
         return GoalResponse.of(savedGoal);
     }
 
@@ -71,7 +72,7 @@ public class GoalServiceImpl implements GoalService {
     public GoalResponse updateGoal(Long goalId, UpdateGoalRequest request) {
         Goal goal = goalRepository.findById(goalId).orElseThrow(() -> new ApiException(ApiErrorContainer.RESOURCE_NOT_FOUND));
         SecurityUtils.validateUserName(goal.getUser().getUsername());
-        updateGoal(goal, request);
+        goal.update(request.getName(), request.getDescription(), request.getExpirationDate());
         return GoalResponse.of(goal);
     }
 
@@ -80,11 +81,5 @@ public class GoalServiceImpl implements GoalService {
         Goal goal = goalRepository.findById(goalId).orElseThrow(() -> new ApiException(ApiErrorContainer.RESOURCE_NOT_FOUND));
         SecurityUtils.validateUserName(goal.getUser().getUsername());
         goalRepository.deleteById(goalId);
-    }
-
-    private void updateGoal(Goal goal, UpdateGoalRequest request) {
-        FieldSetter.setIfNotNull(goal::setName, request.getName());
-        FieldSetter.setIfNotNull(goal::setDescription, request.getDescription());
-        FieldSetter.setIfNotNull(goal::setExpirationDate, request.getExpirationDate());
     }
 }

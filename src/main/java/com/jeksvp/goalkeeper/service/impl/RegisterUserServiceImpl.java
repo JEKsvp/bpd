@@ -21,23 +21,17 @@ public class RegisterUserServiceImpl implements RegisterUserService {
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
-    private final BCryptPasswordEncoder passwordEncoder;
 
-    public RegisterUserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, BCryptPasswordEncoder passwordEncoder) {
+    public RegisterUserServiceImpl(UserRepository userRepository, RoleRepository roleRepository) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
-        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
     public UserResponse registerUser(RegisterUserRequest request) {
         validate(request);
-        User user = new User();
-        user.setEmail(request.getEmail());
-        user.setUsername(request.getUsername());
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
         Role defaultRole = roleRepository.findByRoleName(DEFAULT_ROLE_NAME);
-        user.setRoles(Collections.singletonList(defaultRole));
+        User user = new User(request.getUsername(), request.getPassword(), request.getEmail(), defaultRole);
         User registeredUser = userRepository.save(user);
         return UserResponse.of(registeredUser);
     }

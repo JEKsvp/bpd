@@ -33,9 +33,9 @@ public class ProgressServiceImpl implements ProgressService {
 
     @Override
     public ProgressResponse createProgress(CreateProgressRequest request) {
-        Goal goal = goalRepository.findById(request.getGoalId()).orElseThrow(() -> new ApiException(ApiErrorContainer.RESOURCE_NOT_FOUND));
-        Progress progress = Progress.of(request);
-        progress.setGoal(goal);
+        Goal goal = goalRepository.findById(request.getGoalId())
+                .orElseThrow(() -> new ApiException(ApiErrorContainer.RESOURCE_NOT_FOUND));
+        Progress progress = new Progress(request.getMaxValue(), goal);
         Progress newProgress = progressRepository.save(progress);
         return ProgressResponse.of(newProgress);
     }
@@ -45,7 +45,7 @@ public class ProgressServiceImpl implements ProgressService {
         Progress progress = findProgressById(progressId);
         String username = progress.getGoal().getUser().getUsername();
         SecurityUtils.validateUserName(username);
-        updateProgress(progress, request);
+        progress.update(request.getMaxValue(), request.getMaxValue());
         return ProgressResponse.of(progress);
     }
 
@@ -57,12 +57,8 @@ public class ProgressServiceImpl implements ProgressService {
         progressRepository.deleteById(progressId);
     }
 
-    private void updateProgress(Progress progress, UpdateProgressRequest request) {
-        FieldSetter.setIfNotNull(progress::setMaxValue, request.getMaxValue());
-        FieldSetter.setIfNotNull(progress::setCurrentValue, request.getCurrentValue());
-    }
-
     private Progress findProgressById(Long progressId) {
-        return progressRepository.findById(progressId).orElseThrow(() -> new ApiException(ApiErrorContainer.RESOURCE_NOT_FOUND));
+        return progressRepository.findById(progressId)
+                .orElseThrow(() -> new ApiException(ApiErrorContainer.RESOURCE_NOT_FOUND));
     }
 }
