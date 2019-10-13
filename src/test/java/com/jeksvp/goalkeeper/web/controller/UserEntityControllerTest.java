@@ -36,7 +36,7 @@ public class UserEntityControllerTest {
         mvc.perform(get("/api/v1/users/{username}", "testUser"))
                 .andExpect(status().isOk())
                 .andExpect(content()
-                        .json(getStringFromFile("/web/controller/UserController/test-user.json")));
+                        .json(getStringFromFile("/web/controller/user-controller/test-user.json")));
     }
 
     @Test
@@ -47,13 +47,13 @@ public class UserEntityControllerTest {
         mvc.perform(get("/api/v1/users/{username}", "testUser"))
                 .andExpect(status().is4xxClientError())
                 .andExpect(content()
-                        .json(getStringFromFile("/web/controller/UserController/user-not-found-error.json")));
+                        .json(getStringFromFile("/web/controller/user-controller/user-not-found-error.json")));
     }
 
     private UserResponse testUser() {
         UserResponse user = new UserResponse();
         user.setEmail("test@mail.ru");
-        user.setId(12L);
+        user.setId("ololo");
         user.setUsername("test");
         return user;
     }

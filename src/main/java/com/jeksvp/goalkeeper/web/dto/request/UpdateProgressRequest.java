@@ -1,9 +1,0 @@
-package com.jeksvp.goalkeeper.web.dto.request;
-
-import lombok.Data;
-
-@Data
-public class UpdateProgressRequest {
-    private Float currentValue;
-    private Float maxValue;
-}

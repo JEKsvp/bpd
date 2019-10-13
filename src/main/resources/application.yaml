@@ -1,25 +1,6 @@
 server:
   port: 8081
 
-spring:
-  datasource:
-    driver-class-name: org.postgresql.Driver
-    username: root
-    password: root
-    url: jdbc:postgresql://localhost:5432/goal-keeper-db
-    type: com.zaxxer.hikari.HikariDataSource
-  jpa:
-    properties:
-      hibernate:
-        format_sql: true
-        dialect: org.hibernate.dialect.PostgreSQL94Dialect
-        default_shema: public
-        jdbc:
-          lob:
-            non_contextual_creation: true
-    show-sql: true
-
-
 security:
   oauth2:
     resource:

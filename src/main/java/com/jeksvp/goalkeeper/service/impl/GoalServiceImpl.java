@@ -37,14 +37,14 @@ public class GoalServiceImpl implements GoalService {
     @Override
     public List<GoalResponse> findByUsername(String username) {
         User user = userRepository.findByUsername(username).orElseThrow(() -> new ApiException(ApiErrorContainer.RESOURCE_NOT_FOUND));
-        List<Goal> goals = goalRepository.findByUser(user);
+        List<Goal> goals = goalRepository.findByUsername(user.getUsername());
         return GoalResponse.of(goals);
     }
 
     @Override
     public List<GoalResponse> findByUserId(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new ApiException(ApiErrorContainer.RESOURCE_NOT_FOUND));
-        List<Goal> goals = goalRepository.findByUser(user);
+        List<Goal> goals = goalRepository.findByUsername(user.getUsername());
         return GoalResponse.of(goals);
     }
 
@@ -55,9 +55,9 @@ public class GoalServiceImpl implements GoalService {
         User user = userRepository.findByUsername(currentUserName)
                 .orElseThrow(() -> new ApiException(ApiErrorContainer.RESOURCE_NOT_FOUND));
 
-        Goal goal = new Goal(request.getName(), request.getDescription(), user, request.getExpirationDate());
+        Goal goal = new Goal(request.getName(), request.getDescription(), user.getUsername(), request.getExpirationDate());
         request.getProgresses()
-                .forEach(progress -> goal.addProgress(new Progress(progress.getMaxValue(), goal)));
+                .forEach(progress -> goal.addProgress(new Progress(progress.getMaxValue())));
         Goal savedGoal = goalRepository.save(goal);
         return GoalResponse.of(savedGoal);
     }
@@ -71,7 +71,7 @@ public class GoalServiceImpl implements GoalService {
     @Override
     public GoalResponse updateGoal(Long goalId, UpdateGoalRequest request) {
         Goal goal = goalRepository.findById(goalId).orElseThrow(() -> new ApiException(ApiErrorContainer.RESOURCE_NOT_FOUND));
-        SecurityUtils.validateUserName(goal.getUser().getUsername());
+        SecurityUtils.validateUserId(goal.getUsername());
         goal.update(request.getName(), request.getDescription(), request.getExpirationDate());
         return GoalResponse.of(goal);
     }
@@ -79,7 +79,7 @@ public class GoalServiceImpl implements GoalService {
     @Override
     public void deleteById(Long goalId) {
         Goal goal = goalRepository.findById(goalId).orElseThrow(() -> new ApiException(ApiErrorContainer.RESOURCE_NOT_FOUND));
-        SecurityUtils.validateUserName(goal.getUser().getUsername());
+        SecurityUtils.validateUserId(goal.getUsername());
         goalRepository.deleteById(goalId);
     }
 }

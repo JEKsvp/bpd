@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 @Data
 public class GoalResponse {
-    private Long id;
+    private String id;
     private String name;
     private String description;
 
