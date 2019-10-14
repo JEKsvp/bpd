@@ -1,19 +1,27 @@
 package com.jeksvp.goalkeeper.web.dto.response;
 
 import com.jeksvp.goalkeeper.domain.entity.Progress;
-import lombok.Data;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
 
-@Data
+import java.math.BigDecimal;
+
+@Getter
+@EqualsAndHashCode
+@ToString
+@Builder
 public class ProgressResponse {
-    private Long id;
-    private Float currentValue;
-    private Float maxValue;
+    private String name;
+    private BigDecimal currentValue;
+    private BigDecimal maxValue;
 
-    public static ProgressResponse of(Progress progress){
-        ProgressResponse response = new ProgressResponse();
-        response.setId(progress.getId());
-        response.setCurrentValue(progress.getCurrentValue());
-        response.setMaxValue(progress.getMaxValue());
-        return response;
+    public static ProgressResponse of(Progress progress) {
+        return ProgressResponse.builder()
+                .name(progress.getName())
+                .currentValue(progress.getCurrentValue())
+                .maxValue(progress.getMaxValue())
+                .build();
     }
 }

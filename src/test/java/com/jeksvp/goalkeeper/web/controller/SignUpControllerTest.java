@@ -13,6 +13,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultMatcher;
 
 import java.util.Collections;
 
@@ -24,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(value = SignUpController.class)
+@WebMvcTest(SignUpController.class)
 public class SignUpControllerTest {
 
     @Autowired
@@ -35,6 +36,9 @@ public class SignUpControllerTest {
 
     @Test
     public void invalidShortPasswordTest() throws Exception {
+
+        ResultMatcher json = content()
+                .json(getStringFromFile("/web/controller/signup-controller/invalid-password-response.json"));
 
         mvc.perform(post("/register")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -95,11 +99,11 @@ public class SignUpControllerTest {
     }
 
     private UserResponse buildUserResponse() {
-        UserResponse userResponse = new UserResponse();
-        userResponse.setId("testId");
-        userResponse.setEmail("abadeksvp@gmail.com");
-        userResponse.setRoles(Collections.singletonList(Role.USER));
-        userResponse.setUsername("jeksvp");
-        return userResponse;
+        return UserResponse.builder()
+                .id("testId")
+                .email("abadeksvp@gmail.com")
+                .roles(Collections.singletonList(Role.USER))
+                .username("jeksvp")
+                .build();
     }
 }

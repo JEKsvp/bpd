@@ -1,11 +1,12 @@
 package com.jeksvp.goalkeeper.web.controller;
 
-import com.jeksvp.goalkeeper.web.dto.request.CreateGoalRequest;
-import com.jeksvp.goalkeeper.web.dto.request.UpdateGoalRequest;
+import com.jeksvp.goalkeeper.web.dto.request.GoalRequest;
 import com.jeksvp.goalkeeper.web.dto.response.GoalResponse;
 import com.jeksvp.goalkeeper.service.GoalService;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -27,22 +28,22 @@ public class GoalController {
     }
 
     @PostMapping
-    public GoalResponse createGoal(@RequestBody CreateGoalRequest request) {
+    public GoalResponse createGoal(@Valid @RequestBody GoalRequest request) {
         return goalService.createGoal(request);
     }
 
-    @GetMapping("/{goalId}")
-    public GoalResponse getGoal(@PathVariable Long goalId) {
+    @GetMapping(value = "/{goalId}")
+    public GoalResponse getGoal(@PathVariable String goalId) {
         return goalService.findById(goalId);
     }
 
     @PutMapping("/{goalId}")
-    public GoalResponse updateGoal(@PathVariable Long goalId, @RequestBody UpdateGoalRequest request) {
+    public GoalResponse updateGoal(@PathVariable String goalId, @RequestBody GoalRequest request) {
         return goalService.updateGoal(goalId, request);
     }
 
     @DeleteMapping("/{goalId}")
-    public void deleteGoal(@PathVariable Long goalId){
+    public void deleteGoal(@PathVariable String goalId) {
         goalService.deleteById(goalId);
     }
 }

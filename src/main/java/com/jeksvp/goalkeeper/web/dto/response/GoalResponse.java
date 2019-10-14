@@ -2,13 +2,18 @@ package com.jeksvp.goalkeeper.web.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.jeksvp.goalkeeper.domain.entity.Goal;
-import lombok.Data;
+import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
+import java.text.DateFormat;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Data
+@Getter
+@EqualsAndHashCode
+@ToString
+@Builder
 public class GoalResponse {
     private String id;
     private String name;
@@ -16,27 +21,27 @@ public class GoalResponse {
 
     @JsonFormat(
             shape = JsonFormat.Shape.STRING,
-            pattern = "dd-MM-yyyy hh:mm:ss")
+            pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime createDate;
 
     @JsonFormat(
             shape = JsonFormat.Shape.STRING,
-            pattern = "dd-MM-yyyy hh:mm:ss")
+            pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime expirationDate;
 
     private List<ProgressResponse> progresses;
 
     public static GoalResponse of(Goal goal) {
-        GoalResponse response = new GoalResponse();
-        response.setId(goal.getId());
-        response.setName(goal.getName());
-        response.setDescription(goal.getDescription());
-        response.setCreateDate(goal.getCreateDate());
-        response.setExpirationDate(goal.getExpirationDate());
-        response.setProgresses(
-                goal.getProgresses().stream().map(ProgressResponse::of).collect(Collectors.toList())
-        );
-        return response;
+        return GoalResponse.builder()
+                .id(goal.getId())
+                .name(goal.getName())
+                .description(goal.getDescription())
+                .createDate(goal.getCreateDate())
+                .expirationDate(goal.getExpirationDate())
+                .progresses(goal.getProgresses().stream()
+                        .map(ProgressResponse::of)
+                        .collect(Collectors.toList()))
+                .build();
     }
 
     public static List<GoalResponse> of(List<Goal> goals) {

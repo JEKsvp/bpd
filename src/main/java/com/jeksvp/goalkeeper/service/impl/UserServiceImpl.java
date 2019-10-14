@@ -18,7 +18,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponse getUser(Long userId) {
+    public UserResponse getUser(String  userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ApiException(ApiErrorContainer.RESOURCE_NOT_FOUND));
         return UserResponse.of(user);

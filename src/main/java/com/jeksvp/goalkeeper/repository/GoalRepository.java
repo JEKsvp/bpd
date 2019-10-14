@@ -6,9 +6,7 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.List;
 
-public interface GoalRepository extends MongoRepository<Goal, Long> {
+public interface GoalRepository extends MongoRepository<Goal, String> {
 
     List<Goal> findByUsername(String username);
-
-    Goal findByProgressesContains(Long progressId);
 }

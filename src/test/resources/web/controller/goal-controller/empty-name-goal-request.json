@@ -1,0 +1,12 @@
+{
+  "name": null,
+  "description": "testDescription",
+  "expirationDate": "2020-11-02T03:08:55",
+  "progresses": [
+    {
+      "name": "kek",
+      "maxValue": 9.9,
+      "currentValue": 8.8
+    }
+  ]
+}

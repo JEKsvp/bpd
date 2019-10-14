@@ -4,12 +4,13 @@ import com.jeksvp.goalkeeper.domain.entity.Role;
 import com.jeksvp.goalkeeper.domain.entity.User;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-@Data
-@NoArgsConstructor
+@Getter
+@Builder
 public class UserResponse {
 
     private String id;
@@ -17,13 +18,12 @@ public class UserResponse {
     private String email;
     private List<Role> roles;
 
-
     public static UserResponse of(User user) {
-        UserResponse userResponse = new UserResponse();
-        userResponse.setId(user.getId());
-        userResponse.setUsername(user.getUsername());
-        userResponse.setEmail(user.getEmail());
-        userResponse.setRoles(user.getRoles());
-        return userResponse;
+        return UserResponse.builder()
+                .id(user.getId())
+                .email(user.getEmail())
+                .username(user.getUsername())
+                .roles(user.getRoles())
+                .build();
     }
 }

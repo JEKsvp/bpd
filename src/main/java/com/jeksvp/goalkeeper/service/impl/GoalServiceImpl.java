@@ -1,8 +1,7 @@
 package com.jeksvp.goalkeeper.service.impl;
 
 import com.jeksvp.goalkeeper.domain.entity.Progress;
-import com.jeksvp.goalkeeper.web.dto.request.CreateGoalRequest;
-import com.jeksvp.goalkeeper.web.dto.request.UpdateGoalRequest;
+import com.jeksvp.goalkeeper.web.dto.request.GoalRequest;
 import com.jeksvp.goalkeeper.web.dto.response.GoalResponse;
 import com.jeksvp.goalkeeper.domain.entity.Goal;
 import com.jeksvp.goalkeeper.domain.entity.User;
@@ -42,7 +41,7 @@ public class GoalServiceImpl implements GoalService {
     }
 
     @Override
-    public List<GoalResponse> findByUserId(Long userId) {
+    public List<GoalResponse> findByUserId(String  userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new ApiException(ApiErrorContainer.RESOURCE_NOT_FOUND));
         List<Goal> goals = goalRepository.findByUsername(user.getUsername());
         return GoalResponse.of(goals);
@@ -50,10 +49,10 @@ public class GoalServiceImpl implements GoalService {
 
     @Override
     @Transactional
-    public GoalResponse createGoal(CreateGoalRequest request) {
+    public GoalResponse createGoal(GoalRequest request) {
         String currentUserName = SecurityUtils.getCurrentUserName();
         User user = userRepository.findByUsername(currentUserName)
-                .orElseThrow(() -> new ApiException(ApiErrorContainer.RESOURCE_NOT_FOUND));
+                .orElseThrow(() -> new ApiException(ApiErrorContainer.RESOURCE_NOT_FOUND, "User not found"));
 
         Goal goal = new Goal(request.getName(), request.getDescription(), user.getUsername(), request.getExpirationDate());
         request.getProgresses()
@@ -63,13 +62,13 @@ public class GoalServiceImpl implements GoalService {
     }
 
     @Override
-    public GoalResponse findById(Long id) {
+    public GoalResponse findById(String  id) {
         Goal goal = goalRepository.findById(id).orElseThrow(() -> new ApiException(ApiErrorContainer.RESOURCE_NOT_FOUND));
         return GoalResponse.of(goal);
     }
 
     @Override
-    public GoalResponse updateGoal(Long goalId, UpdateGoalRequest request) {
+    public GoalResponse updateGoal(String  goalId, GoalRequest request) {
         Goal goal = goalRepository.findById(goalId).orElseThrow(() -> new ApiException(ApiErrorContainer.RESOURCE_NOT_FOUND));
         SecurityUtils.validateUserId(goal.getUsername());
         goal.update(request.getName(), request.getDescription(), request.getExpirationDate());
@@ -77,7 +76,7 @@ public class GoalServiceImpl implements GoalService {
     }
 
     @Override
-    public void deleteById(Long goalId) {
+    public void deleteById(String goalId) {
         Goal goal = goalRepository.findById(goalId).orElseThrow(() -> new ApiException(ApiErrorContainer.RESOURCE_NOT_FOUND));
         SecurityUtils.validateUserId(goal.getUsername());
         goalRepository.deleteById(goalId);

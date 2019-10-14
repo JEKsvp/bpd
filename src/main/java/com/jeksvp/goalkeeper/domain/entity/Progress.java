@@ -4,16 +4,16 @@ import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.math.BigDecimal;
+
 @Data
-@Document
 public class Progress {
 
-    @Id
-    private Long id;
-    private Float currentValue = 0f;
-    private Float maxValue;
+    private String name;
+    private BigDecimal currentValue = new BigDecimal(0);
+    private BigDecimal maxValue;
 
-    public Progress(Float maxValue){
+    public Progress(BigDecimal maxValue){
         this.maxValue = maxValue;
     }
 

@@ -4,7 +4,7 @@ import com.jeksvp.goalkeeper.web.dto.response.UserResponse;
 
 public interface UserService {
 
-    UserResponse getUser(Long userId);
+    UserResponse getUser(String  userId);
 
     UserResponse getUserByUserName(String username);
 }

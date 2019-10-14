@@ -1,9 +1,11 @@
 package com.jeksvp.goalkeeper.web.controller;
 
+import com.jeksvp.goalkeeper.domain.entity.Role;
 import com.jeksvp.goalkeeper.exceptions.ApiErrorContainer;
 import com.jeksvp.goalkeeper.exceptions.ApiException;
 import com.jeksvp.goalkeeper.service.UserService;
 import com.jeksvp.goalkeeper.web.dto.response.UserResponse;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,9 +13,13 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MockMvcBuilder;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+
+import java.util.Collections;
 
 import static com.jeksvp.goalkeeper.TestUtils.getStringFromFile;
-import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -21,7 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(value = UserController.class)
-public class UserEntityControllerTest {
+public class UserControllerTest {
 
     @Autowired
     private MockMvc mvc;
@@ -31,30 +37,31 @@ public class UserEntityControllerTest {
 
     @Test
     public void returnUserById() throws Exception {
-        given(userService.getUserByUserName("testUser")).willReturn(testUser());
+        when(userService.getUserByUserName("testUser")).thenReturn(testUser());
 
         mvc.perform(get("/api/v1/users/{username}", "testUser"))
                 .andExpect(status().isOk())
                 .andExpect(content()
-                        .json(getStringFromFile("/web/controller/user-controller/test-user.json")));
+                        .json(getStringFromFile("/web/controller/user-controller/valid-user-response.json")));
     }
 
     @Test
     public void returnErrorWhenUserNotFound() throws Exception {
-        given(userService.getUserByUserName("testUser"))
-                .willThrow(new ApiException(ApiErrorContainer.RESOURCE_NOT_FOUND, "User not found"));
+        when(userService.getUserByUserName("testUser"))
+                .thenThrow(new ApiException(ApiErrorContainer.RESOURCE_NOT_FOUND, "User not found"));
 
         mvc.perform(get("/api/v1/users/{username}", "testUser"))
                 .andExpect(status().is4xxClientError())
                 .andExpect(content()
-                        .json(getStringFromFile("/web/controller/user-controller/user-not-found-error.json")));
+                        .json(getStringFromFile("/web/controller/user-controller/user-not-found-response.json")));
     }
 
     private UserResponse testUser() {
-        UserResponse user = new UserResponse();
-        user.setEmail("test@mail.ru");
-        user.setId("ololo");
-        user.setUsername("test");
-        return user;
+        return UserResponse.builder()
+                .id("ololo")
+                .username("test")
+                .email("test@mail.ru")
+                .roles(Collections.singletonList(Role.USER))
+                .build();
     }
 }
