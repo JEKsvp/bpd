@@ -1,9 +1,6 @@
 package com.jeksvp.goalkeeper.domain.entity;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.codehaus.jackson.annotate.JsonCreator;
+import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -11,9 +8,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
 @Document
-@NoArgsConstructor
+@Builder
+@Getter
+@AllArgsConstructor
+@EqualsAndHashCode
+@ToString
 public class User {
 
     @Id
@@ -22,6 +22,9 @@ public class User {
     private String password;
     private String email;
     private List<Role> roles = new ArrayList<>();
+
+    User() {
+    }
 
     public User(String username, String password, String email, List<Role> roles) {
         this.username = username;

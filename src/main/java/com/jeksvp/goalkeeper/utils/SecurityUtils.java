@@ -20,8 +20,8 @@ public class SecurityUtils {
         return (List<SimpleGrantedAuthority>) context.getAuthentication().getAuthorities();
     }
 
-    public static void validateUserId(String userName) {
-        if (!SecurityUtils.getCurrentUserName().equals(userName)) {
+    public static void validateUsername(String username) {
+        if (!SecurityUtils.getCurrentUserName().equals(username)) {
             throw new ApiException(ApiErrorContainer.ACCESS_DENIED);
         }
     }

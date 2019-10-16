@@ -5,7 +5,6 @@ import com.jeksvp.goalkeeper.exceptions.ApiErrorContainer;
 import com.jeksvp.goalkeeper.exceptions.ApiException;
 import com.jeksvp.goalkeeper.service.UserService;
 import com.jeksvp.goalkeeper.web.dto.response.UserResponse;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +12,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MockMvcBuilder;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.Collections;
 
@@ -37,7 +34,7 @@ public class UserControllerTest {
 
     @Test
     public void returnUserById() throws Exception {
-        when(userService.getUserByUserName("testUser")).thenReturn(testUser());
+        when(userService.getUserByUsername("testUser")).thenReturn(testUser());
 
         mvc.perform(get("/api/v1/users/{username}", "testUser"))
                 .andExpect(status().isOk())
@@ -47,7 +44,7 @@ public class UserControllerTest {
 
     @Test
     public void returnErrorWhenUserNotFound() throws Exception {
-        when(userService.getUserByUserName("testUser"))
+        when(userService.getUserByUsername("testUser"))
                 .thenThrow(new ApiException(ApiErrorContainer.RESOURCE_NOT_FOUND, "User not found"));
 
         mvc.perform(get("/api/v1/users/{username}", "testUser"))

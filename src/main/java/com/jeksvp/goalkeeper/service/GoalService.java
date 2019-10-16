@@ -11,8 +11,6 @@ public interface GoalService {
 
     List<GoalResponse> findByUsername(String username);
 
-    List<GoalResponse> findByUserId(String  userId);
-
     GoalResponse createGoal(GoalRequest request);
 
     GoalResponse findById(String id);

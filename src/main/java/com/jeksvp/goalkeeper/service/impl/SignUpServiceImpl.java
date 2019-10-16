@@ -25,7 +25,11 @@ public class SignUpServiceImpl implements SignUpService {
     @Override
     public UserResponse registerUser(RegisterUserRequest request) {
         validate(request);
-        User user = new User(request.getUsername(), request.getPassword(), request.getEmail(), Collections.singletonList(Role.USER));
+        User user = new User(
+                request.getUsername(),
+                request.getPassword(),
+                request.getEmail(),
+                Collections.singletonList(Role.USER));
         User registeredUser = userRepository.save(user);
         return UserResponse.of(registeredUser);
     }

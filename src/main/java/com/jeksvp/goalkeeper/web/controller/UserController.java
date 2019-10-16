@@ -20,12 +20,12 @@ public class UserController {
 
     @GetMapping("/{username}")
     public UserResponse getUser(@PathVariable String username) {
-        return userService.getUserByUserName(username);
+        return userService.getUserByUsername(username);
     }
 
     @GetMapping("/current")
     public UserResponse getCurrentUser() {
         String currentUserName = SecurityUtils.getCurrentUserName();
-        return userService.getUserByUserName(currentUserName);
+        return userService.getUserByUsername(currentUserName);
     }
 }

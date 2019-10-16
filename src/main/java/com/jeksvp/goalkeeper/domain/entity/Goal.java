@@ -1,6 +1,6 @@
 package com.jeksvp.goalkeeper.domain.entity;
 
-import lombok.Data;
+import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -8,7 +8,11 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
+@Builder
+@Getter
+@EqualsAndHashCode
+@AllArgsConstructor
+@ToString
 @Document
 public class Goal {
 
@@ -21,6 +25,9 @@ public class Goal {
     private LocalDateTime createDate;
     private LocalDateTime expirationDate;
 
+    public Goal() {
+    }
+
     public Goal(String name, String description, String username, LocalDateTime expirationDate) {
         this.name = name;
         this.description = description;
@@ -29,13 +36,19 @@ public class Goal {
         this.expirationDate = expirationDate;
     }
 
-    public void update(String name, String description, LocalDateTime expirationDate) {
+    public void setName(String name) {
         this.name = name;
+    }
+
+    public void setDescription(String description) {
         this.description = description;
+    }
+
+    public void setExpirationDate(LocalDateTime expirationDate) {
         this.expirationDate = expirationDate;
     }
 
-    public void addProgress(Progress progress) {
-        this.progresses.add(progress);
+    public void setProgresses(List<Progress> progresses) {
+        this.progresses = progresses;
     }
 }
