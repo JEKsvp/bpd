@@ -1,5 +1,6 @@
 package com.jeksvp.goalkeeper.web.controller;
 
+import com.jeksvp.goalkeeper.TestFileReader;
 import com.jeksvp.goalkeeper.domain.entity.Role;
 import com.jeksvp.goalkeeper.exceptions.ApiErrorContainer;
 import com.jeksvp.goalkeeper.exceptions.ApiException;
@@ -15,7 +16,6 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Collections;
 
-import static com.jeksvp.goalkeeper.TestUtils.getStringFromFile;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -32,6 +32,8 @@ public class UserControllerTest {
     @MockBean
     private UserService userService;
 
+    private final TestFileReader testFileReader = new TestFileReader();
+
     @Test
     public void returnUserById() throws Exception {
         when(userService.getUserByUsername("testUser")).thenReturn(testUser());
@@ -39,7 +41,7 @@ public class UserControllerTest {
         mvc.perform(get("/api/v1/users/{username}", "testUser"))
                 .andExpect(status().isOk())
                 .andExpect(content()
-                        .json(getStringFromFile("/web/controller/user-controller/valid-user-response.json")));
+                        .json(testFileReader.getStringFromFile("/web/controller/user-controller/valid-user-response.json")));
     }
 
     @Test
@@ -50,7 +52,7 @@ public class UserControllerTest {
         mvc.perform(get("/api/v1/users/{username}", "testUser"))
                 .andExpect(status().is4xxClientError())
                 .andExpect(content()
-                        .json(getStringFromFile("/web/controller/user-controller/user-not-found-response.json")));
+                        .json(testFileReader.getStringFromFile("/web/controller/user-controller/user-not-found-response.json")));
     }
 
     private UserResponse testUser() {

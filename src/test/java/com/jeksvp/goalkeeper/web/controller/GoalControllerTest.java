@@ -1,5 +1,6 @@
 package com.jeksvp.goalkeeper.web.controller;
 
+import com.jeksvp.goalkeeper.TestFileReader;
 import com.jeksvp.goalkeeper.exceptions.ApiErrorContainer;
 import com.jeksvp.goalkeeper.exceptions.ApiException;
 import com.jeksvp.goalkeeper.service.GoalService;
@@ -18,7 +19,6 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Collections;
 
-import static com.jeksvp.goalkeeper.TestUtils.getStringFromFile;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -34,7 +34,9 @@ public class GoalControllerTest {
 
     @MockBean
     private GoalService goalService;
-
+    
+    private final TestFileReader testFileReader = new TestFileReader();
+    
     @Test
     public void getGoalByIdTest() throws Exception {
         when(goalService.findById(eq("testGoalId")))
@@ -44,7 +46,7 @@ public class GoalControllerTest {
                 .contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isOk())
                 .andExpect(content()
-                        .json(getStringFromFile("/web/controller/goal-controller/valid-goal-response.json")));
+                        .json(testFileReader.getStringFromFile("/web/controller/goal-controller/valid-goal-response.json")));
     }
 
     @Test
@@ -56,7 +58,7 @@ public class GoalControllerTest {
                 .contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().is4xxClientError())
                 .andExpect(content()
-                        .json(getStringFromFile("/web/controller/goal-controller/not-found-response.json")));
+                        .json(testFileReader.getStringFromFile("/web/controller/goal-controller/not-found-response.json")));
     }
 
     @Test
@@ -68,7 +70,7 @@ public class GoalControllerTest {
                 .contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().is4xxClientError())
                 .andExpect(content()
-                        .json(getStringFromFile("/web/controller/goal-controller/not-found-response.json")));
+                        .json(testFileReader.getStringFromFile("/web/controller/goal-controller/not-found-response.json")));
     }
 
     @Test
@@ -79,7 +81,7 @@ public class GoalControllerTest {
                 .contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isOk())
                 .andExpect(content()
-                        .json(getStringFromFile("/web/controller/goal-controller/valid-goals-response.json")));
+                        .json(testFileReader.getStringFromFile("/web/controller/goal-controller/valid-goals-response.json")));
         verify(goalService, times(1)).findAll();
     }
 
@@ -93,7 +95,7 @@ public class GoalControllerTest {
                 .contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isOk())
                 .andExpect(content()
-                        .json(getStringFromFile("/web/controller/goal-controller/valid-goals-response.json")));
+                        .json(testFileReader.getStringFromFile("/web/controller/goal-controller/valid-goals-response.json")));
         verify(goalService, times(1)).findByUsername("testUser");
     }
 
@@ -104,10 +106,10 @@ public class GoalControllerTest {
 
         this.mockMvc.perform(post("/api/v1/goals")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .content(getStringFromFile("/web/controller/goal-controller/valid-goal-request.json")))
+                .content(testFileReader.getStringFromFile("/web/controller/goal-controller/valid-goal-request.json")))
                 .andExpect(status().isOk())
                 .andExpect(content()
-                        .json(getStringFromFile("/web/controller/goal-controller/valid-goal-response.json")));
+                        .json(testFileReader.getStringFromFile("/web/controller/goal-controller/valid-goal-response.json")));
         verify(goalService, times(1)).createGoal(any());
     }
 
@@ -118,10 +120,10 @@ public class GoalControllerTest {
 
         this.mockMvc.perform(put("/api/v1/goals/{goalId}", "testGoalId")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .content(getStringFromFile("/web/controller/goal-controller/valid-goal-request.json")))
+                .content(testFileReader.getStringFromFile("/web/controller/goal-controller/valid-goal-request.json")))
                 .andExpect(status().isOk())
                 .andExpect(content()
-                        .json(getStringFromFile("/web/controller/goal-controller/valid-goal-response.json")));
+                        .json(testFileReader.getStringFromFile("/web/controller/goal-controller/valid-goal-response.json")));
         verify(goalService, times(1)).updateGoal(eq("testGoalId"), any());
     }
 
@@ -129,30 +131,30 @@ public class GoalControllerTest {
     public void emptyProgressesGoalTest() throws Exception {
         this.mockMvc.perform(post("/api/v1/goals")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .content(getStringFromFile("/web/controller/goal-controller/empty-progresses-goal-request.json")))
+                .content(testFileReader.getStringFromFile("/web/controller/goal-controller/empty-progresses-goal-request.json")))
                 .andExpect(status().is4xxClientError())
                 .andExpect(content()
-                        .json(getStringFromFile("/web/controller/goal-controller/empty-progresses-response.json")));
+                        .json(testFileReader.getStringFromFile("/web/controller/goal-controller/empty-progresses-response.json")));
     }
 
     @Test
     public void emptyNameGoalTest() throws Exception {
         this.mockMvc.perform(post("/api/v1/goals")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .content(getStringFromFile("/web/controller/goal-controller/empty-name-goal-request.json")))
+                .content(testFileReader.getStringFromFile("/web/controller/goal-controller/empty-name-goal-request.json")))
                 .andExpect(status().is4xxClientError())
                 .andExpect(content()
-                        .json(getStringFromFile("/web/controller/goal-controller/empty-name-response.json")));
+                        .json(testFileReader.getStringFromFile("/web/controller/goal-controller/empty-name-response.json")));
     }
 
     @Test
     public void emptyExpirationDateGoalTest() throws Exception {
         this.mockMvc.perform(post("/api/v1/goals")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .content(getStringFromFile("/web/controller/goal-controller/empty-expiration-date-goal-request.json")))
+                .content(testFileReader.getStringFromFile("/web/controller/goal-controller/empty-expiration-date-goal-request.json")))
                 .andExpect(status().is4xxClientError())
                 .andExpect(content()
-                        .json(getStringFromFile("/web/controller/goal-controller/empty-expiration-date-response.json")));
+                        .json(testFileReader.getStringFromFile("/web/controller/goal-controller/empty-expiration-date-response.json")));
     }
 
 

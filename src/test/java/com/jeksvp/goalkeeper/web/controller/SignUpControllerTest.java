@@ -1,5 +1,6 @@
 package com.jeksvp.goalkeeper.web.controller;
 
+import com.jeksvp.goalkeeper.TestFileReader;
 import com.jeksvp.goalkeeper.domain.entity.Role;
 import com.jeksvp.goalkeeper.exceptions.ApiErrorContainer;
 import com.jeksvp.goalkeeper.exceptions.ApiException;
@@ -17,7 +18,6 @@ import org.springframework.test.web.servlet.ResultMatcher;
 
 import java.util.Collections;
 
-import static com.jeksvp.goalkeeper.TestUtils.getStringFromFile;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -34,18 +34,20 @@ public class SignUpControllerTest {
     @MockBean
     private SignUpService signUpService;
 
+    private final TestFileReader testFileReader = new TestFileReader();
+
     @Test
     public void invalidShortPasswordTest() throws Exception {
 
         ResultMatcher json = content()
-                .json(getStringFromFile("/web/controller/signup-controller/invalid-password-response.json"));
+                .json(testFileReader.getStringFromFile("/web/controller/signup-controller/invalid-password-response.json"));
 
         mvc.perform(post("/register")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .content(getStringFromFile("/web/controller/signup-controller/invalid-short-password-request.json")))
+                .content(testFileReader.getStringFromFile("/web/controller/signup-controller/invalid-short-password-request.json")))
                 .andExpect(status().is4xxClientError())
                 .andExpect(content()
-                        .json(getStringFromFile("/web/controller/signup-controller/invalid-password-response.json")));
+                        .json(testFileReader.getStringFromFile("/web/controller/signup-controller/invalid-password-response.json")));
     }
 
     @Test
@@ -53,10 +55,10 @@ public class SignUpControllerTest {
 
         mvc.perform(post("/register")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .content(getStringFromFile("/web/controller/signup-controller/invalid-long-password-request.json")))
+                .content(testFileReader.getStringFromFile("/web/controller/signup-controller/invalid-long-password-request.json")))
                 .andExpect(status().is4xxClientError())
                 .andExpect(content()
-                        .json(getStringFromFile("/web/controller/signup-controller/invalid-password-response.json")));
+                        .json(testFileReader.getStringFromFile("/web/controller/signup-controller/invalid-password-response.json")));
     }
 
     @Test
@@ -66,10 +68,10 @@ public class SignUpControllerTest {
 
         mvc.perform(post("/register")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .content(getStringFromFile("/web/controller/signup-controller/duplicate-username-request.json")))
+                .content(testFileReader.getStringFromFile("/web/controller/signup-controller/duplicate-username-request.json")))
                 .andExpect(status().is4xxClientError())
                 .andExpect(content()
-                        .json(getStringFromFile("/web/controller/signup-controller/duplicate-username-response.json")));
+                        .json(testFileReader.getStringFromFile("/web/controller/signup-controller/duplicate-username-response.json")));
     }
 
     @Test
@@ -79,10 +81,10 @@ public class SignUpControllerTest {
 
         mvc.perform(post("/register")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .content(getStringFromFile("/web/controller/signup-controller/duplicate-email-request.json")))
+                .content(testFileReader.getStringFromFile("/web/controller/signup-controller/duplicate-email-request.json")))
                 .andExpect(status().is4xxClientError())
                 .andExpect(content()
-                        .json(getStringFromFile("/web/controller/signup-controller/duplicate-email-response.json")));
+                        .json(testFileReader.getStringFromFile("/web/controller/signup-controller/duplicate-email-response.json")));
     }
 
     @Test
@@ -92,10 +94,10 @@ public class SignUpControllerTest {
 
         mvc.perform(post("/register")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .content(getStringFromFile("/web/controller/signup-controller/valid-sign-up-request.json")))
+                .content(testFileReader.getStringFromFile("/web/controller/signup-controller/valid-sign-up-request.json")))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(content()
-                        .json(getStringFromFile("/web/controller/signup-controller/valid-sign-up-response.json")));
+                        .json(testFileReader.getStringFromFile("/web/controller/signup-controller/valid-sign-up-response.json")));
     }
 
     private UserResponse buildUserResponse() {
