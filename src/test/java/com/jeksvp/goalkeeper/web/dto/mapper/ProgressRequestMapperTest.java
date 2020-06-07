@@ -2,11 +2,12 @@ package com.jeksvp.goalkeeper.web.dto.mapper;
 
 import com.jeksvp.goalkeeper.domain.entity.Progress;
 import com.jeksvp.goalkeeper.web.dto.request.ProgressRequest;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 
 public class ProgressRequestMapperTest {
 

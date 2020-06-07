@@ -13,12 +13,12 @@ import com.jeksvp.goalkeeper.web.dto.request.GoalRequest;
 import com.jeksvp.goalkeeper.web.dto.request.ProgressRequest;
 import com.jeksvp.goalkeeper.web.dto.response.GoalResponse;
 import com.jeksvp.goalkeeper.web.dto.response.ProgressResponse;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -26,11 +26,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 public class GoalServiceImplTest {
 
     public static final String TEST_GOAL_ID = "test goal id";
@@ -45,7 +45,7 @@ public class GoalServiceImplTest {
 
     private GoalService goalService;
 
-    @Before
+    @BeforeEach
     public void init() {
         this.goalService = new GoalServiceImpl(goalRepository, userRepository);
     }
