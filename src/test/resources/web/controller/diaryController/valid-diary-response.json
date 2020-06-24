@@ -1,0 +1,9 @@
+{
+  "id": "testId",
+  "name": "Мой тестовый дневник",
+  "username": "jeksvp",
+  "notes": [
+    "noteId1",
+    "noteId2"
+  ]
+}

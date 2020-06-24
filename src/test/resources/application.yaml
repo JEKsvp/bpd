@@ -1,0 +1,24 @@
+server:
+  port: 8081
+
+
+security:
+  oauth2:
+    resource:
+      filter-order: 3
+  signing-key: signingkey
+  encoding-strength: 256
+  security-realm: goal keeper realmushka
+  jwt:
+    client-id: clientid
+    client-secret: secret
+    scope-read: read
+    scope-write: write
+    resource-ids: testjwtresourceid
+    access_token_validity_in_seconds: 300 #5 minutes
+    refresh_token_validity_in_seconds: 2592000 #one month
+spring:
+  data:
+    mongodb:
+      database: embeded_db
+      uri: localhost
