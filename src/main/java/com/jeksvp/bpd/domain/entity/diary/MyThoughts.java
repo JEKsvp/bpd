@@ -2,7 +2,7 @@ package com.jeksvp.bpd.domain.entity.diary;
 
 import lombok.*;
 
-@Builder
+@Builder(access = AccessLevel.PRIVATE)
 @Getter
 @AllArgsConstructor
 @EqualsAndHashCode
@@ -11,14 +11,13 @@ public class MyThoughts {
 
     private String description;
 
-    public static MyThoughts create(MyThoughts myThoughts) {
+    public static MyThoughts create(String description) {
         return MyThoughts.builder()
-                .description(myThoughts.getDescription())
+                .description(description)
                 .build();
     }
 
-    public MyThoughts update(MyThoughts myThoughts) {
-        this.description = myThoughts.description;
-        return this;
+    public void update(String description) {
+        this.description = description;
     }
 }

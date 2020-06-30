@@ -2,7 +2,7 @@ package com.jeksvp.bpd.domain.entity.diary;
 
 import lombok.*;
 
-@Builder
+@Builder(access = AccessLevel.PRIVATE)
 @Getter
 @AllArgsConstructor
 @EqualsAndHashCode
@@ -11,14 +11,13 @@ public class EmotionalEvaluation {
 
     private String description;
 
-    public static EmotionalEvaluation create(EmotionalEvaluation emotionalEvaluation) {
+    public static EmotionalEvaluation create(String description) {
         return EmotionalEvaluation.builder()
-                .description(emotionalEvaluation.getDescription())
+                .description(description)
                 .build();
     }
 
-    public EmotionalEvaluation update(EmotionalEvaluation emotionalEvaluation) {
-        this.description = emotionalEvaluation.description;
-        return this;
+    public void update(String description) {
+        this.description = description;
     }
 }

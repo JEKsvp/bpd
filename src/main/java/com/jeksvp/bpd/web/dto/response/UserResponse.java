@@ -2,13 +2,14 @@ package com.jeksvp.bpd.web.dto.response;
 
 import com.jeksvp.bpd.domain.entity.Role;
 import com.jeksvp.bpd.domain.entity.User;
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 
 import java.util.List;
 
 @Getter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserResponse {
 
     private String username;

@@ -2,7 +2,8 @@ package com.jeksvp.bpd.domain.entity.diary;
 
 import lombok.*;
 
-@Builder
+@Builder(access = AccessLevel.PRIVATE)
+
 @Getter
 @AllArgsConstructor
 @EqualsAndHashCode
@@ -11,14 +12,13 @@ public class BodyReaction {
 
     private String description;
 
-    public static BodyReaction create(BodyReaction bodyReaction) {
+    public static BodyReaction create(String description) {
         return BodyReaction.builder()
-                .description(bodyReaction.getDescription())
+                .description(description)
                 .build();
     }
 
-    public BodyReaction update(BodyReaction bodyReaction) {
+    public void update(String description) {
         this.description = description;
-        return this;
     }
 }

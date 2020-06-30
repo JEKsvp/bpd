@@ -2,16 +2,16 @@ package com.jeksvp.bpd.web.dto.response;
 
 import com.jeksvp.bpd.domain.entity.diary.Diary;
 import com.jeksvp.bpd.domain.entity.diary.Note;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Getter
-@Builder(access = AccessLevel.PRIVATE)
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class DiaryResponse {
     private String id;
     private String name;

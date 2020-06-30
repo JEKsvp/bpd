@@ -1,0 +1,18 @@
+{
+  "id": "testId",
+  "event": {
+    "description": "Тестовое событие из жизы"
+  },
+  "emotionalEvaluation": {
+    "description": "Тестовая оценка"
+  },
+  "bodyReaction": {
+    "description": "Тестовая реакция тела"
+  },
+  "myThoughts": {
+    "description": "Тестовые мысли"
+  },
+  "oppositeThoughts": {
+    "description": "Тестовые противоположные мысли"
+  }
+}

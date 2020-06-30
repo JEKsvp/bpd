@@ -10,6 +10,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Function;
 
 @Document
 @Builder(access = AccessLevel.PRIVATE)
@@ -37,22 +38,15 @@ public class Diary {
                 .build();
     }
 
-    public Diary updateName(String name) {
+    public void updateName(String name) {
         this.name = name;
-        return this;
     }
 
-    public Diary updateNote(String id, Note note) {
-        this.notes.stream()
-                .filter(n -> id.equals(n.getId()))
-                .findFirst()
-                .orElseThrow(NoteNotFoundException::new)
-                .update(note);
-        return this;
+    public void addNote(Note note) {
+        notes.add(note);
     }
 
-    public Diary createNote(Note note) {
-        notes.add(Note.create(note));
-        return this;
+    public void removeNote(String noteId) {
+        notes.removeIf(note -> noteId.equals(note.getId()));
     }
 }

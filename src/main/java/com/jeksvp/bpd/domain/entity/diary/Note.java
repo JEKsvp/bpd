@@ -2,39 +2,38 @@ package com.jeksvp.bpd.domain.entity.diary;
 
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
+import java.util.function.Function;
 
-@Builder
+@Builder(access = AccessLevel.PRIVATE)
 @Getter
 @AllArgsConstructor
 @EqualsAndHashCode
 @ToString
 public class Note {
 
-    private String id;
-    private Event event;
-    private EmotionalEvaluation emotionalEvaluation;
-    private BodyReaction bodyReaction;
-    private MyThoughts myThoughts;
-    private OppositeThoughts oppositeThoughts;
+    private final String id;
+    private final Event event;
+    private final EmotionalEvaluation emotionalEvaluation;
+    private final BodyReaction bodyReaction;
+    private final MyThoughts myThoughts;
+    private final OppositeThoughts oppositeThoughts;
+    private final LocalDateTime createDate;
 
-    public static Note create(Note note) {
+    public static Note create(Event event,
+                              EmotionalEvaluation emotionalEvaluation,
+                              BodyReaction bodyReaction,
+                              MyThoughts myThoughts,
+                              OppositeThoughts oppositeThoughts) {
         return Note.builder()
                 .id(UUID.randomUUID().toString())
-                .event(Event.create(note.getEvent()))
-                .emotionalEvaluation(EmotionalEvaluation.create(note.getEmotionalEvaluation()))
-                .bodyReaction(BodyReaction.create(note.getBodyReaction()))
-                .myThoughts(MyThoughts.create(note.getMyThoughts()))
-                .oppositeThoughts(OppositeThoughts.create(note.getOppositeThoughts()))
+                .event(event)
+                .emotionalEvaluation(emotionalEvaluation)
+                .bodyReaction(bodyReaction)
+                .myThoughts(myThoughts)
+                .oppositeThoughts(oppositeThoughts)
+                .createDate(LocalDateTime.now())
                 .build();
-    }
-
-    public Note update(Note note) {
-        this.event.update(note.getEvent());
-        this.emotionalEvaluation.update(note.getEmotionalEvaluation());
-        this.bodyReaction.update(note.getBodyReaction());
-        this.myThoughts.update(note.getMyThoughts());
-        this.oppositeThoughts.update(note.getOppositeThoughts());
-        return this;
     }
 }

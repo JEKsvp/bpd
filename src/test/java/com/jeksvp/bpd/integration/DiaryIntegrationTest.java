@@ -17,7 +17,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.nio.charset.Charset;
 
-import static com.jeksvp.bpd.integration.TokenObtainer.JEKSVP_LOGIN;
+import static com.jeksvp.bpd.integration.TokenObtainer.JEKSVP_USERNAME;
 import static com.jeksvp.bpd.integration.TokenObtainer.JEKSVP_PASSWORD;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -30,8 +30,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ContextConfiguration(classes = IntegrationTestConfiguration.class)
 public class DiaryIntegrationTest {
 
-    private static final String USERNAME = "jeksvp";
-
     @Autowired
     private MockMvc mockMvc;
 
@@ -42,12 +40,12 @@ public class DiaryIntegrationTest {
 
     @BeforeEach
     public void init() {
-        this.authHeader = tokenObtainer.obtainAuthHeader(mockMvc, JEKSVP_LOGIN, JEKSVP_PASSWORD);
+        this.authHeader = tokenObtainer.obtainAuthHeader(mockMvc, JEKSVP_USERNAME, JEKSVP_PASSWORD);
     }
 
     @Test
     public void createDiaryTest() throws Exception {
-        String requestBody = IOUtils.toString(getClass().getResource("/web/controller/diaryController/create-diary-request.json"), Charset.defaultCharset());
+        String requestBody = IOUtils.toString(getClass().getResource("/web/controller/diary-controller/create-diary-request.json"), Charset.defaultCharset());
         mockMvc.perform(
                 post("/api/v1/diaries")
                         .headers(authHeader)
@@ -55,7 +53,7 @@ public class DiaryIntegrationTest {
                         .content(requestBody))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(jsonPath("$.name", is("Мой тестовый дневник")))
-                .andExpect(jsonPath("$.username", is(USERNAME)));
+                .andExpect(jsonPath("$.username", is(JEKSVP_USERNAME)));
     }
 
     @Test
@@ -67,14 +65,14 @@ public class DiaryIntegrationTest {
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(jsonPath("$.id", is(diaryId)))
                 .andExpect(jsonPath("$.name", is("Мой тестовый дневник")))
-                .andExpect(jsonPath("$.username", is(USERNAME)));
+                .andExpect(jsonPath("$.username", is(JEKSVP_USERNAME)));
 
     }
 
     @Test
     public void updateDictionaryTest() throws Exception {
         String diaryId = createDiaryAndGetId();
-        String requestBody = IOUtils.toString(getClass().getResource("/web/controller/diaryController/update-diary-request.json"), Charset.defaultCharset());
+        String requestBody = IOUtils.toString(getClass().getResource("/web/controller/diary-controller/update-diary-request.json"), Charset.defaultCharset());
         mockMvc.perform(
                 put("/api/v1/diaries/{id}", diaryId)
                         .headers(authHeader)
@@ -83,7 +81,7 @@ public class DiaryIntegrationTest {
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(jsonPath("$.id", is(diaryId)))
                 .andExpect(jsonPath("$.name", is("Мой обновленный тестовый дневник")))
-                .andExpect(jsonPath("$.username", is(USERNAME)));
+                .andExpect(jsonPath("$.username", is(JEKSVP_USERNAME)));
     }
 
     @Test
@@ -101,7 +99,7 @@ public class DiaryIntegrationTest {
     }
 
     private String createDiaryAndGetId() throws Exception {
-        String requestBody = IOUtils.toString(getClass().getResource("/web/controller/diaryController/create-diary-request.json"), Charset.defaultCharset());
+        String requestBody = IOUtils.toString(getClass().getResource("/web/controller/diary-controller/create-diary-request.json"), Charset.defaultCharset());
         String responseBody = mockMvc.perform(
                 post("/api/v1/diaries")
                         .headers(authHeader)

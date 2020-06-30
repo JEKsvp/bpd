@@ -13,7 +13,11 @@ import java.util.List;
 @RequestMapping("/api/v1/diaries/{diaryId}/notes")
 public class NoteController {
 
-    public NoteService noteService;
+    private final NoteService noteService;
+
+    public NoteController(NoteService noteService) {
+        this.noteService = noteService;
+    }
 
     @GetMapping("/{noteId}")
     public NoteResponse getNoteById(@PathVariable String diaryId,

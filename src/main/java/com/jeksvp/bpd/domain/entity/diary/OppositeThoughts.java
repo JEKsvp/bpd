@@ -2,7 +2,7 @@ package com.jeksvp.bpd.domain.entity.diary;
 
 import lombok.*;
 
-@Builder
+@Builder(access = AccessLevel.PRIVATE)
 @Getter
 @AllArgsConstructor
 @EqualsAndHashCode
@@ -11,14 +11,13 @@ public class OppositeThoughts {
 
     private String description;
 
-    public static OppositeThoughts create(OppositeThoughts oppositeThoughts) {
+    public static OppositeThoughts create(String description) {
         return OppositeThoughts.builder()
-                .description(oppositeThoughts.getDescription())
+                .description(description)
                 .build();
     }
 
-    public OppositeThoughts update(OppositeThoughts oppositeThoughts) {
-        this.description = oppositeThoughts.getDescription();
-        return this;
+    public void update(String description) {
+        this.description = description;
     }
 }

@@ -15,7 +15,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class TokenObtainer {
 
-    public static final String JEKSVP_LOGIN = "jeksvp";
+    public static final String JEKSVP_USERNAME = "jeksvp";
     public static final String JEKSVP_PASSWORD = "testpassword";
 
     @SneakyThrows
@@ -44,7 +44,7 @@ public class TokenObtainer {
     public HttpHeaders obtainAuthHeader(MockMvc mockMvc, String login, String password) {
         MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
         String token = obtainAccessToken(mockMvc, login, password);
-        map.add("Authorization", "Bearer" + token);
+        map.add("Authorization", "Bearer " + token);
         return new HttpHeaders(map);
     }
 }

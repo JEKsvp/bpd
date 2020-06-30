@@ -1,0 +1,17 @@
+{
+  "event": {
+    "description": "Обновленное тестовое событие из жизы"
+  },
+  "emotionalEvaluation": {
+    "description": "Обновленная тестовая оценка"
+  },
+  "bodyReaction": {
+    "description": "Обновленная тестовая реакция тела"
+  },
+  "myThoughts": {
+    "description": "Обновленные тестовые мысли"
+  },
+  "oppositeThoughts": {
+    "description": "Обновленные тестовые противоположные мысли"
+  }
+}

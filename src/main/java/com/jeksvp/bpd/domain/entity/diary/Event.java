@@ -2,7 +2,7 @@ package com.jeksvp.bpd.domain.entity.diary;
 
 import lombok.*;
 
-@Builder
+@Builder(access = AccessLevel.PRIVATE)
 @Getter
 @AllArgsConstructor
 @EqualsAndHashCode
@@ -11,14 +11,13 @@ public class Event {
 
     private String description;
 
-    public static Event create(Event event) {
+    public static Event create(String description) {
         return Event.builder()
-                .description(event.getDescription())
+                .description(description)
                 .build();
     }
 
-    public Event update(Event event) {
-        this.description = event.getDescription();
-        return this;
+    public void update(String description) {
+        this.description = description;
     }
 }
