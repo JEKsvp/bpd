@@ -1,8 +1,6 @@
 package com.jeksvp.bpd.domain.entity.diary;
 
 
-import com.jeksvp.bpd.domain.entity.User;
-import com.jeksvp.bpd.exceptions.diary.NoteNotFoundException;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -10,7 +8,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.function.Function;
 
 @Document
 @Builder(access = AccessLevel.PRIVATE)

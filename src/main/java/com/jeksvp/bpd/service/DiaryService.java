@@ -13,5 +13,5 @@ public interface DiaryService {
     DiaryResponse updateDiary(String id, UpdateDiaryRequest updateDiaryRequest);
     void deleteDiary(String id);
 
-    List<DiaryResponse> getDiariesByUser(String userId);
+    List<DiaryResponse> getDiariesByUsername(String username);
 }

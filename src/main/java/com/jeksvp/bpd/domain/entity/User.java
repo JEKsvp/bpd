@@ -6,7 +6,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -16,6 +15,7 @@ import java.util.stream.Collectors;
 @Document
 @Builder(access = AccessLevel.PRIVATE)
 @AllArgsConstructor
+@NoArgsConstructor
 @EqualsAndHashCode
 @ToString
 public class User implements UserDetails {
@@ -25,9 +25,6 @@ public class User implements UserDetails {
     private String password;
     private String email;
     private List<Role> roles = new ArrayList<>();
-
-    User() {
-    }
 
     public static User create(String username, String password, String email, List<Role> roles) {
         return User.builder()

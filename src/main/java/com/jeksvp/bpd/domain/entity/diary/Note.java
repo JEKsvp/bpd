@@ -4,7 +4,6 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
-import java.util.function.Function;
 
 @Builder(access = AccessLevel.PRIVATE)
 @Getter

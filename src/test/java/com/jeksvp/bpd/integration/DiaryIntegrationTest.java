@@ -19,7 +19,7 @@ import java.nio.charset.Charset;
 
 import static com.jeksvp.bpd.integration.TokenObtainer.JEKSVP_USERNAME;
 import static com.jeksvp.bpd.integration.TokenObtainer.JEKSVP_PASSWORD;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -57,7 +57,7 @@ public class DiaryIntegrationTest {
     }
 
     @Test
-    public void getDictionaryTest() throws Exception {
+    public void getDiaryTest() throws Exception {
         String diaryId = createDiaryAndGetId();
         mockMvc.perform(
                 get("/api/v1/diaries/{id}", diaryId)
@@ -70,7 +70,7 @@ public class DiaryIntegrationTest {
     }
 
     @Test
-    public void updateDictionaryTest() throws Exception {
+    public void updateDiaryTest() throws Exception {
         String diaryId = createDiaryAndGetId();
         String requestBody = IOUtils.toString(getClass().getResource("/web/controller/diary-controller/update-diary-request.json"), Charset.defaultCharset());
         mockMvc.perform(
@@ -85,7 +85,7 @@ public class DiaryIntegrationTest {
     }
 
     @Test
-    public void deleteDictionaryTest() throws Exception {
+    public void deleteDiaryTest() throws Exception {
         String diaryId = createDiaryAndGetId();
         mockMvc.perform(
                 delete("/api/v1/diaries/{id}", diaryId)
@@ -96,6 +96,19 @@ public class DiaryIntegrationTest {
                 get("/api/v1/diaries/{id}", diaryId)
                         .headers(authHeader))
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void getDiariesByUsernameTest() throws Exception {
+        createDiaryAndGetId();
+        mockMvc.perform(
+                get("/api/v1/diaries")
+                        .param("username", "jeksvp")
+                        .headers(authHeader))
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$").isNotEmpty())
+                .andExpect(jsonPath("$[0].username", is("jeksvp")));
     }
 
     private String createDiaryAndGetId() throws Exception {

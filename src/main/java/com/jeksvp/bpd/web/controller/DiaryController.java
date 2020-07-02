@@ -7,6 +7,7 @@ import com.jeksvp.bpd.web.dto.response.DiaryResponse;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/diaries")
@@ -16,6 +17,11 @@ public class DiaryController {
 
     public DiaryController(DiaryService diaryService) {
         this.diaryService = diaryService;
+    }
+
+    @GetMapping
+    public List<DiaryResponse> getDiariesByUsername(@RequestParam String username) {
+        return diaryService.getDiariesByUsername(username);
     }
 
     @GetMapping("/{id}")

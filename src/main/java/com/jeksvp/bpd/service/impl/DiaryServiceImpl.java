@@ -13,6 +13,7 @@ import com.jeksvp.bpd.web.dto.updater.Updater;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class DiaryServiceImpl implements DiaryService {
@@ -62,7 +63,10 @@ public class DiaryServiceImpl implements DiaryService {
     }
 
     @Override
-    public List<DiaryResponse> getDiariesByUser(String userId) {
-        return null;
+    public List<DiaryResponse> getDiariesByUsername(String username) {
+        return diaryRepository.findDiariesByUsername(username)
+                .stream()
+                .map(DiaryResponse::create)
+                .collect(Collectors.toList());
     }
 }
