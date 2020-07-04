@@ -8,6 +8,7 @@ import com.jeksvp.bpd.domain.entity.User;
 import com.jeksvp.bpd.exceptions.ApiErrorContainer;
 import com.jeksvp.bpd.exceptions.ApiException;
 import com.jeksvp.bpd.repository.UserRepository;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.text.MessageFormat;
@@ -17,9 +18,11 @@ import java.util.Collections;
 public class SignUpServiceImpl implements SignUpService {
 
     private final UserRepository userRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
 
-    public SignUpServiceImpl(UserRepository userRepository) {
+    public SignUpServiceImpl(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -27,7 +30,7 @@ public class SignUpServiceImpl implements SignUpService {
         validate(request);
         User user = User.create(
                 request.getUsername(),
-                request.getPassword(),
+                passwordEncoder.encode(request.getPassword()),
                 request.getEmail(),
                 Collections.singletonList(Role.USER));
         User registeredUser = userRepository.save(user);

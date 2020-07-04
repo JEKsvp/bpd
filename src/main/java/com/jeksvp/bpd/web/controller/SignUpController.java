@@ -18,7 +18,7 @@ public class SignUpController {
         this.signUpService = signUpService;
     }
 
-    @PostMapping("/register")
+    @PostMapping("/api/v1/signup")
     public UserResponse register(@Valid @RequestBody RegisterUserRequest request) {
         return signUpService.registerUser(request);
     }

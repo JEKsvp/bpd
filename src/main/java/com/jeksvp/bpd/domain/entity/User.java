@@ -26,10 +26,10 @@ public class User implements UserDetails {
     private String email;
     private List<Role> roles = new ArrayList<>();
 
-    public static User create(String username, String password, String email, List<Role> roles) {
+    public static User create(String username, String passwordHash, String email, List<Role> roles) {
         return User.builder()
                 .username(username)
-                .password(password)
+                .password(passwordHash)
                 .email(email)
                 .roles(roles)
                 .build();

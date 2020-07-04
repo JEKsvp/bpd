@@ -42,7 +42,7 @@ public class SignUpControllerTest {
         ResultMatcher json = content()
                 .json(testFileReader.getStringFromFile("/web/controller/signup-controller/invalid-password-response.json"));
 
-        mvc.perform(post("/register")
+        mvc.perform(post("/api/v1/signup")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(testFileReader.getStringFromFile("/web/controller/signup-controller/invalid-short-password-request.json")))
                 .andExpect(status().is4xxClientError())
@@ -53,7 +53,7 @@ public class SignUpControllerTest {
     @Test
     public void invalidLongPasswordTest() throws Exception {
 
-        mvc.perform(post("/register")
+        mvc.perform(post("/api/v1/signup")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(testFileReader.getStringFromFile("/web/controller/signup-controller/invalid-long-password-request.json")))
                 .andExpect(status().is4xxClientError())
@@ -66,7 +66,7 @@ public class SignUpControllerTest {
         when(signUpService.registerUser(any()))
                 .thenThrow(new ApiException(ApiErrorContainer.VALIDATION_ERROR, "Username duplicateUser exists"));
 
-        mvc.perform(post("/register")
+        mvc.perform(post("/api/v1/signup")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(testFileReader.getStringFromFile("/web/controller/signup-controller/duplicate-username-request.json")))
                 .andExpect(status().is4xxClientError())
@@ -79,7 +79,7 @@ public class SignUpControllerTest {
         when(signUpService.registerUser(any()))
                 .thenThrow(new ApiException(ApiErrorContainer.VALIDATION_ERROR, "Email duplicateEmail@test.com exists"));
 
-        mvc.perform(post("/register")
+        mvc.perform(post("/api/v1/signup")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(testFileReader.getStringFromFile("/web/controller/signup-controller/duplicate-email-request.json")))
                 .andExpect(status().is4xxClientError())
@@ -92,7 +92,7 @@ public class SignUpControllerTest {
         when(signUpService.registerUser(any()))
                 .thenReturn(buildUserResponse());
 
-        mvc.perform(post("/register")
+        mvc.perform(post("/api/v1/signup")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(testFileReader.getStringFromFile("/web/controller/signup-controller/valid-sign-up-request.json")))
                 .andExpect(status().is2xxSuccessful())

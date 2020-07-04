@@ -1,0 +1,11 @@
+[
+  {
+    "_class": "com.jeksvp.bpd.domain.entity.User",
+    "username": "jeksvp",
+    "password": "$2a$10$Whfna.9FBPLRH.XZmLW6geQ6jtjkEikU8/wMlDXtNXjmuahM3jsCa",
+    "email": "test@test.com",
+    "roles": [
+      "USER"
+    ]
+  }
+]
