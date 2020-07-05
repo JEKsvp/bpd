@@ -37,6 +37,8 @@ public class SignUpServiceImpl implements SignUpService {
                 request.getEmail(),
                 Collections.singletonList(Role.USER));
         User registeredUser = userRepository.save(user);
+
+        //todo do in transaction
         diaryService.createDiary(registeredUser.getUsername());
         return UserResponse.of(registeredUser);
     }
