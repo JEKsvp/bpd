@@ -7,36 +7,26 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @Document
 @Builder(access = AccessLevel.PRIVATE)
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor
 @EqualsAndHashCode
 @ToString
 public class Diary {
 
     @Id
-    private final String id;
-
-    private final String username;
-
-    private String name;
+    private String username;
 
     private List<Note> notes = new ArrayList<>();
 
-    public static Diary create(String name, String username) {
+    public static Diary create(String username) {
         return Diary.builder()
-                .id(UUID.randomUUID().toString())
-                .name(name)
                 .username(username)
                 .notes(new ArrayList<>())
                 .build();
-    }
-
-    public void updateName(String name) {
-        this.name = name;
     }
 
     public void addNote(Note note) {

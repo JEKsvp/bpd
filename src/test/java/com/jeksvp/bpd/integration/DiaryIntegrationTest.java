@@ -44,83 +44,13 @@ public class DiaryIntegrationTest {
     }
 
     @Test
-    public void createDiaryTest() throws Exception {
-        String requestBody = IOUtils.toString(getClass().getResource("/web/controller/diary-controller/create-diary-request.json"), Charset.defaultCharset());
-        mockMvc.perform(
-                post("/api/v1/diaries")
-                        .headers(authHeader)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(requestBody))
-                .andExpect(status().is2xxSuccessful())
-                .andExpect(jsonPath("$.name", is("Мой тестовый дневник")))
-                .andExpect(jsonPath("$.username", is(JEKSVP_USERNAME)));
-    }
-
-    @Test
     public void getDiaryTest() throws Exception {
-        String diaryId = createDiaryAndGetId();
         mockMvc.perform(
-                get("/api/v1/diaries/{id}", diaryId)
+                get("/api/v1/diaries/{username}", JEKSVP_USERNAME)
                         .headers(authHeader))
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(jsonPath("$.id", is(diaryId)))
-                .andExpect(jsonPath("$.name", is("Мой тестовый дневник")))
-                .andExpect(jsonPath("$.username", is(JEKSVP_USERNAME)));
+                .andExpect(jsonPath("$.username", is(JEKSVP_USERNAME)))
+                .andExpect(jsonPath("$.notes").isArray());
 
-    }
-
-    @Test
-    public void updateDiaryTest() throws Exception {
-        String diaryId = createDiaryAndGetId();
-        String requestBody = IOUtils.toString(getClass().getResource("/web/controller/diary-controller/update-diary-request.json"), Charset.defaultCharset());
-        mockMvc.perform(
-                put("/api/v1/diaries/{id}", diaryId)
-                        .headers(authHeader)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(requestBody))
-                .andExpect(status().is2xxSuccessful())
-                .andExpect(jsonPath("$.id", is(diaryId)))
-                .andExpect(jsonPath("$.name", is("Мой обновленный тестовый дневник")))
-                .andExpect(jsonPath("$.username", is(JEKSVP_USERNAME)));
-    }
-
-    @Test
-    public void deleteDiaryTest() throws Exception {
-        String diaryId = createDiaryAndGetId();
-        mockMvc.perform(
-                delete("/api/v1/diaries/{id}", diaryId)
-                        .headers(authHeader))
-                .andExpect(status().is2xxSuccessful());
-
-        mockMvc.perform(
-                get("/api/v1/diaries/{id}", diaryId)
-                        .headers(authHeader))
-                .andExpect(status().isNotFound());
-    }
-
-    @Test
-    public void getDiariesByUsernameTest() throws Exception {
-        createDiaryAndGetId();
-        mockMvc.perform(
-                get("/api/v1/diaries")
-                        .param("username", "jeksvp")
-                        .headers(authHeader))
-                .andExpect(status().is2xxSuccessful())
-                .andExpect(jsonPath("$").isArray())
-                .andExpect(jsonPath("$").isNotEmpty())
-                .andExpect(jsonPath("$[0].username", is("jeksvp")));
-    }
-
-    private String createDiaryAndGetId() throws Exception {
-        String requestBody = IOUtils.toString(getClass().getResource("/web/controller/diary-controller/create-diary-request.json"), Charset.defaultCharset());
-        String responseBody = mockMvc.perform(
-                post("/api/v1/diaries")
-                        .headers(authHeader)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(requestBody))
-                .andExpect(status().is2xxSuccessful())
-                .andReturn().getResponse().getContentAsString();
-        JacksonJsonParser jsonParser = new JacksonJsonParser();
-        return jsonParser.parseMap(responseBody).get("id").toString();
     }
 }

@@ -10,7 +10,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/diaries/{diaryId}/notes")
+@RequestMapping("/api/v1/users/{username}/diary/notes")
 public class NoteController {
 
     private final NoteService noteService;
@@ -20,32 +20,32 @@ public class NoteController {
     }
 
     @GetMapping("/{noteId}")
-    public NoteResponse getNoteById(@PathVariable String diaryId,
+    public NoteResponse getNoteById(@PathVariable String username,
                                     @PathVariable String noteId) {
-        return noteService.getNote(diaryId, noteId);
+        return noteService.getNote(username, noteId);
     }
 
     @PostMapping
-    public NoteResponse createNote(@PathVariable String diaryId,
+    public NoteResponse createNote(@PathVariable String username,
                                    @RequestBody @Valid CreateNoteRequest createNoteRequest) {
-        return noteService.createNote(diaryId, createNoteRequest);
+        return noteService.createNote(username, createNoteRequest);
     }
 
     @PutMapping("/{noteId}")
-    public NoteResponse updateNote(@PathVariable String diaryId,
+    public NoteResponse updateNote(@PathVariable String username,
                                    @PathVariable String noteId,
                                    @RequestBody @Valid UpdateNoteRequest updateNoteRequest) {
-        return noteService.updateNote(diaryId, noteId, updateNoteRequest);
+        return noteService.updateNote(username, noteId, updateNoteRequest);
     }
 
     @DeleteMapping("/{noteId}")
-    public void deleteNote(@PathVariable String diaryId,
+    public void deleteNote(@PathVariable String username,
                            @PathVariable String noteId) {
-        noteService.deleteNote(diaryId, noteId);
+        noteService.deleteNote(username, noteId);
     }
 
     @GetMapping
-    public List<NoteResponse> getNotesByDiary(@PathVariable String diaryId){
-        return noteService.getNotesByDiary(diaryId);
+    public List<NoteResponse> getNotesByDiary(@PathVariable String username) {
+        return noteService.getNotesByDiary(username);
     }
 }

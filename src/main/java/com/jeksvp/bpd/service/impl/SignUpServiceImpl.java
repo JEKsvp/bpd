@@ -1,8 +1,9 @@
 package com.jeksvp.bpd.service.impl;
 
 import com.jeksvp.bpd.domain.entity.Role;
+import com.jeksvp.bpd.service.DiaryService;
 import com.jeksvp.bpd.service.SignUpService;
-import com.jeksvp.bpd.web.dto.request.RegisterUserRequest;
+import com.jeksvp.bpd.web.dto.request.SignUpRequest;
 import com.jeksvp.bpd.web.dto.response.UserResponse;
 import com.jeksvp.bpd.domain.entity.User;
 import com.jeksvp.bpd.exceptions.ApiErrorContainer;
@@ -19,14 +20,16 @@ public class SignUpServiceImpl implements SignUpService {
 
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
+    private final DiaryService diaryService;
 
-    public SignUpServiceImpl(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder) {
+    public SignUpServiceImpl(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder, DiaryService diaryService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.diaryService = diaryService;
     }
 
     @Override
-    public UserResponse registerUser(RegisterUserRequest request) {
+    public UserResponse registerUser(SignUpRequest request) {
         validate(request);
         User user = User.create(
                 request.getUsername(),
@@ -34,10 +37,11 @@ public class SignUpServiceImpl implements SignUpService {
                 request.getEmail(),
                 Collections.singletonList(Role.USER));
         User registeredUser = userRepository.save(user);
+        diaryService.createDiary(registeredUser.getUsername());
         return UserResponse.of(registeredUser);
     }
 
-    private void validate(RegisterUserRequest request) {
+    private void validate(SignUpRequest request) {
         if (userRepository.findByUsername(request.getUsername()).isPresent()) {
             throw new ApiException(ApiErrorContainer.VALIDATION_ERROR, MessageFormat.format("Username {0} exists", request.getUsername()));
         }

@@ -8,13 +8,13 @@ import java.util.List;
 
 public interface NoteService {
 
-    NoteResponse getNote(String diaryId, String noteId);
+    NoteResponse getNote(String username, String noteId);
 
-    NoteResponse createNote(String diaryId, CreateNoteRequest createNoteRequest);
+    NoteResponse createNote(String username, CreateNoteRequest createNoteRequest);
 
-    NoteResponse updateNote(String diaryId, String noteId, UpdateNoteRequest updateNoteRequest);
+    NoteResponse updateNote(String username, String noteId, UpdateNoteRequest updateNoteRequest);
 
-    void deleteNote(String diaryId, String noteId);
+    void deleteNote(String username, String noteId);
 
-    List<NoteResponse> getNotesByDiary(String diaryId);
+    List<NoteResponse> getNotesByDiary(String username);
 }

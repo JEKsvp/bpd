@@ -7,5 +7,10 @@
     "roles": [
       "USER"
     ]
+  },
+  {
+    "_class": "com.jeksvp.bpd.domain.entity.diary.Diary",
+    "username": "jeksvp",
+    "notes": []
   }
 ]

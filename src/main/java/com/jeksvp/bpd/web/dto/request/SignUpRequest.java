@@ -1,12 +1,15 @@
 package com.jeksvp.bpd.web.dto.request;
 
-import lombok.Data;
+import lombok.*;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
-@Data
-public class RegisterUserRequest {
+@Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class SignUpRequest {
 
     @Size(min = 1, max = 20)
     private String username;

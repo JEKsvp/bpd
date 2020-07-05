@@ -32,24 +32,24 @@ public class NoteServiceImpl implements NoteService {
     }
 
     @Override
-    public NoteResponse getNote(String diaryId, String noteId) {
-        Diary diary = getDiary(diaryId);
+    public NoteResponse getNote(String username, String noteId) {
+        Diary diary = getDiary(username);
         Note note = getNoteByDiary(diary, noteId);
         return NoteResponse.create(note);
     }
 
     @Override
-    public NoteResponse createNote(String diaryId, CreateNoteRequest request) {
+    public NoteResponse createNote(String username, CreateNoteRequest request) {
         Note note = noteCreator.create(request);
-        Diary diary = getDiary(diaryId);
+        Diary diary = getDiary(username);
         diary.addNote(note);
         diaryRepository.save(diary);
         return NoteResponse.create(note);
     }
 
     @Override
-    public NoteResponse updateNote(String diaryId, String noteId, UpdateNoteRequest request) {
-        Diary diary = getDiary(diaryId);
+    public NoteResponse updateNote(String username, String noteId, UpdateNoteRequest request) {
+        Diary diary = getDiary(username);
         Note note = getNoteByDiary(diary, noteId);
         noteUpdater.update(request, note);
         diaryRepository.save(diary);
@@ -57,8 +57,8 @@ public class NoteServiceImpl implements NoteService {
     }
 
     @Override
-    public void deleteNote(String diaryId, String noteId) {
-        Diary diary = getDiary(diaryId);
+    public void deleteNote(String username, String noteId) {
+        Diary diary = getDiary(username);
         if (diary.getNotes().stream().anyMatch(note -> noteId.equals(note.getId()))) {
             diary.removeNote(noteId);
             diaryRepository.save(diary);
@@ -68,8 +68,8 @@ public class NoteServiceImpl implements NoteService {
     }
 
     @Override
-    public List<NoteResponse> getNotesByDiary(String diaryId) {
-        return getDiary(diaryId)
+    public List<NoteResponse> getNotesByDiary(String username) {
+        return getDiary(username)
                 .getNotes().stream()
                 .sorted(Comparator.comparing(Note::getCreateDate))
                 .map(NoteResponse::create)
@@ -84,8 +84,8 @@ public class NoteServiceImpl implements NoteService {
                 .orElseThrow(() -> new ApiException(ApiErrorContainer.NOTE_NOT_FOUND));
     }
 
-    private Diary getDiary(String diaryId) {
-        return diaryRepository.findById(diaryId)
+    private Diary getDiary(String username) {
+        return diaryRepository.findById(username)
                 .orElseThrow(() -> new ApiException(ApiErrorContainer.DIARY_NOT_FOUND));
     }
 }

@@ -1,6 +1,8 @@
 package com.jeksvp.bpd.integration;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jeksvp.bpd.configuration.IntegrationTestConfiguration;
+import com.jeksvp.bpd.web.dto.request.SignUpRequest;
 import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,6 +33,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ContextConfiguration(classes = IntegrationTestConfiguration.class)
 public class NoteIntegrationTest {
 
+    public static final String PASSWORD = "000000";
+
     @Autowired
     private MockMvc mockMvc;
 
@@ -39,19 +43,16 @@ public class NoteIntegrationTest {
 
     private HttpHeaders authHeader;
 
-    private String mainDiaryId;
-
     @BeforeEach
-    public void init() throws Exception {
+    public void init() {
         this.authHeader = tokenObtainer.obtainAuthHeader(mockMvc, JEKSVP_USERNAME, JEKSVP_PASSWORD);
-        mainDiaryId = createDiaryAndGetId();
     }
 
     @Test
     public void createNoteTest() throws Exception {
         String requestBody = IOUtils.toString(getClass().getResource("/web/controller/note-controller/create-note-request.json"), Charset.defaultCharset());
         mockMvc.perform(
-                post("/api/v1/diaries/{diaryId}/notes", mainDiaryId)
+                post("/api/v1/users/{username}/diary/notes", JEKSVP_USERNAME)
                         .headers(authHeader)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestBody))
@@ -65,9 +66,9 @@ public class NoteIntegrationTest {
 
     @Test
     public void getNoteTest() throws Exception {
-        String noteId = createNoteAndGetId(mainDiaryId);
+        String noteId = createNoteAndGetId(JEKSVP_USERNAME);
         mockMvc.perform(
-                get("/api/v1/diaries/{diaryId}/notes/{noteId}", mainDiaryId, noteId)
+                get("/api/v1/users/{username}/diary/notes/{noteId}", JEKSVP_USERNAME, noteId)
                         .headers(authHeader)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is2xxSuccessful())
@@ -81,11 +82,13 @@ public class NoteIntegrationTest {
 
     @Test
     public void updateNoteTest() throws Exception {
-        String diaryId = createDiaryAndGetId();
-        String noteId = createNoteAndGetId(diaryId);
+        String username = "UpdatingNoteUser";
+        createUser(username);
+        HttpHeaders authHeader = tokenObtainer.obtainAuthHeader(mockMvc, username, PASSWORD);
+        String noteId = createNoteAndGetId(username);
         String requestBody = IOUtils.toString(getClass().getResource("/web/controller/note-controller/update-note-request.json"), Charset.defaultCharset());
         mockMvc.perform(
-                put("/api/v1/diaries/{diaryId}/notes/{noteId}", diaryId, noteId)
+                put("/api/v1/users/{username}/diary/notes/{noteId}", username, noteId)
                         .headers(authHeader)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestBody))
@@ -100,27 +103,29 @@ public class NoteIntegrationTest {
 
     @Test
     public void deleteNoteTest() throws Exception {
-        String noteId = createNoteAndGetId(mainDiaryId);
+        String noteId = createNoteAndGetId(JEKSVP_USERNAME);
 
         mockMvc.perform(
-                delete("/api/v1/diaries/{diaryId}/notes/{noteId}", mainDiaryId, noteId)
+                delete("/api/v1/users/{username}/diary/notes/{noteId}", JEKSVP_USERNAME, noteId)
                         .headers(authHeader))
                 .andExpect(status().is2xxSuccessful());
 
         mockMvc.perform(
-                get("/api/v1/diaries/{diaryId}/notes/{noteId}", mainDiaryId, noteId)
+                get("/api/v1/users/{username}/diary/notes/{noteId}", JEKSVP_USERNAME, noteId)
                         .headers(authHeader))
                 .andExpect(status().isNotFound());
     }
 
     @Test
     public void getNotesByDiaryTest() throws Exception {
-        String diaryId = createDiaryAndGetId();
-        String noteId1 = createNoteAndGetId(diaryId);
-        String noteId2 = createNoteAndGetId(diaryId);
+        String username = "getNotesByDiaryUser";
+        createUser(username);
+        HttpHeaders authHeader = tokenObtainer.obtainAuthHeader(mockMvc, username, PASSWORD);
+        String noteId1 = createNoteAndGetId(username);
+        String noteId2 = createNoteAndGetId(username);
 
         mockMvc.perform(
-                get("/api/v1/diaries/{diaryId}/notes", diaryId)
+                get("/api/v1/users/{username}/diary/notes", username)
                         .headers(authHeader)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is2xxSuccessful())
@@ -130,10 +135,10 @@ public class NoteIntegrationTest {
                 .andExpect(jsonPath("$[1].id", is(noteId2)));
     }
 
-    private String createNoteAndGetId(String diaryId) throws Exception {
+    private String createNoteAndGetId(String username) throws Exception {
         String requestBody = IOUtils.toString(getClass().getResource("/web/controller/note-controller/create-note-request.json"), Charset.defaultCharset());
         String responseBody = mockMvc.perform(
-                post("/api/v1/diaries/{diaryId}/notes", diaryId)
+                post("/api/v1/users/{username}/diary/notes", username)
                         .headers(authHeader)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestBody))
@@ -143,16 +148,19 @@ public class NoteIntegrationTest {
         return jsonParser.parseMap(responseBody).get("id").toString();
     }
 
-    private String createDiaryAndGetId() throws Exception {
-        String requestBody = IOUtils.toString(getClass().getResource("/web/controller/diary-controller/create-diary-request.json"), Charset.defaultCharset());
-        String responseBody = mockMvc.perform(
-                post("/api/v1/diaries")
+    private void createUser(String username) throws Exception {
+        SignUpRequest request = SignUpRequest.builder()
+                .username(username)
+                .password("000000")
+                .email(username + "@mail.com")
+                .build();
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        mockMvc.perform(
+                post("/api/v1/signup")
                         .headers(authHeader)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(requestBody))
-                .andExpect(status().is2xxSuccessful())
-                .andReturn().getResponse().getContentAsString();
-        JacksonJsonParser jsonParser = new JacksonJsonParser();
-        return jsonParser.parseMap(responseBody).get("id").toString();
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().is2xxSuccessful());
     }
 }

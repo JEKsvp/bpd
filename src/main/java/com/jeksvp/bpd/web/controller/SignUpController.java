@@ -1,7 +1,7 @@
 package com.jeksvp.bpd.web.controller;
 
 import com.jeksvp.bpd.service.SignUpService;
-import com.jeksvp.bpd.web.dto.request.RegisterUserRequest;
+import com.jeksvp.bpd.web.dto.request.SignUpRequest;
 import com.jeksvp.bpd.web.dto.response.UserResponse;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,7 +19,7 @@ public class SignUpController {
     }
 
     @PostMapping("/api/v1/signup")
-    public UserResponse register(@Valid @RequestBody RegisterUserRequest request) {
+    public UserResponse register(@Valid @RequestBody SignUpRequest request) {
         return signUpService.registerUser(request);
     }
 }
