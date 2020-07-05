@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/v1/diaries")
+@RequestMapping("/api/v1/users/{username}/diary")
 public class DiaryController {
 
     private final DiaryService diaryService;
@@ -17,7 +17,7 @@ public class DiaryController {
         this.diaryService = diaryService;
     }
 
-    @GetMapping("/{username}")
+    @GetMapping
     public DiaryResponse getDiaryById(@PathVariable String username) {
         return diaryService.getDiaryByUsername(username);
     }

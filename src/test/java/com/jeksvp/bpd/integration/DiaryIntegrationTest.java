@@ -46,7 +46,7 @@ public class DiaryIntegrationTest {
     @Test
     public void getDiaryTest() throws Exception {
         mockMvc.perform(
-                get("/api/v1/diaries/{username}", JEKSVP_USERNAME)
+                get("/api/v1/users/{username}/diary", JEKSVP_USERNAME)
                         .headers(authHeader))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(jsonPath("$.username", is(JEKSVP_USERNAME)))
