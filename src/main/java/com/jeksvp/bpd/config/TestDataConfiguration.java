@@ -8,7 +8,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.data.repository.init.Jackson2RepositoryPopulatorFactoryBean;
 
 @Configuration
-@Profile("test-data")
+@Profile({"test-data", "dev"})
 public class TestDataConfiguration {
 
     @Bean

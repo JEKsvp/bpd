@@ -1,28 +1,27 @@
 server:
-  port: 8081
-
+  port: ${SERVER_PORT}
 
 security:
   oauth2:
     resource:
       filter-order: 3
-  signing-key: signingkey
-  encoding-strength: 256
-  security-realm: goal keeper realmushka
+  signing-key: ${OUAUTH_SIGNING_KEY}
+  encoding-strength: ${OAUTH_ENCODING_STRENGTH}
+  security-realm: ${OAUTH_SECURITY_REALM}
   jwt:
-    client-id: clientid
-    client-secret: secret
+    client-id: ${OAUTH_CLIENT_ID}
+    client-secret: ${OAUTH_SECRET}
     scope-read: read
     scope-write: write
-    resource-ids: testjwtresourceid
-    access_token_validity_in_seconds: 5 #5 minutes
-    refresh_token_validity_in_seconds: 2592000 #one month
+    resource-ids: ${OAUTH_RESOURCE_IDS}
+    access_token_validity_in_seconds: ${OATUH_ACCESS_TOKEN_TIMEOUT}
+    refresh_token_validity_in_seconds: ${OAUTH_REFRESH_TOKEN_TIMEOUT}
 spring:
   data:
     mongodb:
-      host: localhost
-      port: 27017
-      database: bpd
-      username: root
-      password: testpassword
-      authentication-database: admin
+      host: ${MONGODB_HOST}
+      port: ${MONGODB_PORT}
+      database: ${MONGODB_DATABASE}
+      username: ${MONGODB_USERNAME}
+      password: ${MONGODB_PASSWORD}
+      authentication-database: ${MONGODB_AUTH_DATABASE}
