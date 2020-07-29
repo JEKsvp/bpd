@@ -9,6 +9,8 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: testpassword
     ports:
       - '27017-27019:27017-27019'
+    volumes:
+      - ./mongodbdata:/data/db
 
   mongo-express:
     image: mongo-express
