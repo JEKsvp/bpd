@@ -24,5 +24,6 @@ services:
   redis:
     image: redis
     container_name: redis
+    command: redis-server --requirepass testpassword
     ports:
       - 6379:6379
