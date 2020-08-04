@@ -41,7 +41,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     @SneakyThrows
     public AuthenticationFilter createAuthFilter() {
-        return new AuthenticationFilter(authenticationManager());
+        return new AuthenticationFilter();
     }
 
     @Bean

@@ -45,7 +45,7 @@ public class NoteIntegrationTest {
 
     @BeforeEach
     public void init() {
-        this.authHeader = tokenObtainer.obtainAuthHeader(mockMvc, JEKSVP_USERNAME, JEKSVP_PASSWORD);
+        this.authHeader = tokenObtainer.obtainAuthHeader(mockMvc, "ssdaasd", JEKSVP_PASSWORD);
     }
 
     @Test
