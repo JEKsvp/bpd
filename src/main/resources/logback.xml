@@ -48,7 +48,7 @@
 
     <logger name="com.jeksvp" level="debug"/>
 
-    <root level="error">
+    <root level="info">
         <appender-ref ref="DEBUG_INFO_FILE"/>
         <appender-ref ref="WARN_ERROR_FILE"/>
         <appender-ref ref="STDOUT"/>

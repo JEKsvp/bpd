@@ -30,7 +30,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     private String scopeRead;
 
     @Value("${security.jwt.scope-write}")
-    private String scopeWrite = "write";
+    private final String scopeWrite = "write";
 
     @Value("${security.jwt.resource-ids}")
     private String resourceIds;
@@ -83,5 +83,6 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
                 .authenticationManager(authenticationManager)
                 .userDetailsService(userDetailsService);
     }
+
 
 }

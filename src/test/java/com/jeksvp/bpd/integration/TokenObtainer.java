@@ -17,14 +17,16 @@ public class TokenObtainer {
 
     public static final String JEKSVP_USERNAME = "jeksvp";
     public static final String JEKSVP_PASSWORD = "testpassword";
+    public static final String TBOLIVAR_PASSWORD = "testpassword";
+    public static final String TBOLIVAR_USERNAME = "tbolivar";
 
     @SneakyThrows
     public String obtainAccessToken(MockMvc mockMvc, String login, String password) {
 
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("grant_type", "password");
-        params.add("username", "jeksvp");
-        params.add("password", "testpassword");
+        params.add("username", login);
+        params.add("password", password);
 
         ResultActions result
                 = mockMvc.perform(post("/oauth/token")

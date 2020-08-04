@@ -85,6 +85,7 @@ public class NoteIntegrationTest {
         String username = "UpdatingNoteUser";
         createUser(username);
         HttpHeaders authHeader = tokenObtainer.obtainAuthHeader(mockMvc, username, PASSWORD);
+        this.authHeader = authHeader;
         String noteId = createNoteAndGetId(username);
         String requestBody = IOUtils.toString(getClass().getResource("/web/controller/note-controller/update-note-request.json"), Charset.defaultCharset());
         mockMvc.perform(
@@ -121,6 +122,7 @@ public class NoteIntegrationTest {
         String username = "getNotesByDiaryUser";
         createUser(username);
         HttpHeaders authHeader = tokenObtainer.obtainAuthHeader(mockMvc, username, PASSWORD);
+        this.authHeader = authHeader;
         String noteId1 = createNoteAndGetId(username);
         String noteId2 = createNoteAndGetId(username);
 
