@@ -1,6 +1,6 @@
 package com.jeksvp.bpd.config;
 
-import com.jeksvp.bpd.filter.AuthenticationFilter;
+import com.jeksvp.bpd.filter.AuthorizationFilter;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -40,8 +40,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     @SneakyThrows
-    public AuthenticationFilter createAuthFilter() {
-        return new AuthenticationFilter();
+    public AuthorizationFilter createAuthFilter() {
+        return new AuthorizationFilter();
     }
 
     @Bean

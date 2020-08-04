@@ -41,11 +41,11 @@ public class NoteIntegrationTest {
     @Autowired
     private TokenObtainer tokenObtainer;
 
-    private HttpHeaders authHeader;
+    private HttpHeaders defaultAuthHeader;
 
     @BeforeEach
     public void init() {
-        this.authHeader = tokenObtainer.obtainAuthHeader(mockMvc, JEKSVP_USERNAME, JEKSVP_PASSWORD);
+        this.defaultAuthHeader = tokenObtainer.obtainAuthHeader(mockMvc, JEKSVP_USERNAME, JEKSVP_PASSWORD);
     }
 
     @Test
@@ -53,7 +53,7 @@ public class NoteIntegrationTest {
         String requestBody = IOUtils.toString(getClass().getResource("/web/controller/note-controller/create-note-request.json"), Charset.defaultCharset());
         mockMvc.perform(
                 post("/api/v1/users/{username}/diary/notes", JEKSVP_USERNAME)
-                        .headers(authHeader)
+                        .headers(defaultAuthHeader)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestBody))
                 .andExpect(status().is2xxSuccessful())
@@ -66,10 +66,10 @@ public class NoteIntegrationTest {
 
     @Test
     public void getNoteTest() throws Exception {
-        String noteId = createNoteAndGetId(JEKSVP_USERNAME);
+        String noteId = createNoteAndGetId(JEKSVP_USERNAME, defaultAuthHeader);
         mockMvc.perform(
                 get("/api/v1/users/{username}/diary/notes/{noteId}", JEKSVP_USERNAME, noteId)
-                        .headers(authHeader)
+                        .headers(defaultAuthHeader)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(jsonPath("$.id", is(noteId)))
@@ -85,8 +85,7 @@ public class NoteIntegrationTest {
         String username = "UpdatingNoteUser";
         createUser(username);
         HttpHeaders authHeader = tokenObtainer.obtainAuthHeader(mockMvc, username, PASSWORD);
-        this.authHeader = authHeader;
-        String noteId = createNoteAndGetId(username);
+        String noteId = createNoteAndGetId(username, authHeader);
         String requestBody = IOUtils.toString(getClass().getResource("/web/controller/note-controller/update-note-request.json"), Charset.defaultCharset());
         mockMvc.perform(
                 put("/api/v1/users/{username}/diary/notes/{noteId}", username, noteId)
@@ -104,16 +103,16 @@ public class NoteIntegrationTest {
 
     @Test
     public void deleteNoteTest() throws Exception {
-        String noteId = createNoteAndGetId(JEKSVP_USERNAME);
+        String noteId = createNoteAndGetId(JEKSVP_USERNAME, defaultAuthHeader);
 
         mockMvc.perform(
                 delete("/api/v1/users/{username}/diary/notes/{noteId}", JEKSVP_USERNAME, noteId)
-                        .headers(authHeader))
+                        .headers(defaultAuthHeader))
                 .andExpect(status().is2xxSuccessful());
 
         mockMvc.perform(
                 get("/api/v1/users/{username}/diary/notes/{noteId}", JEKSVP_USERNAME, noteId)
-                        .headers(authHeader))
+                        .headers(defaultAuthHeader))
                 .andExpect(status().isNotFound());
     }
 
@@ -122,9 +121,8 @@ public class NoteIntegrationTest {
         String username = "getNotesByDiaryUser";
         createUser(username);
         HttpHeaders authHeader = tokenObtainer.obtainAuthHeader(mockMvc, username, PASSWORD);
-        this.authHeader = authHeader;
-        String noteId1 = createNoteAndGetId(username);
-        String noteId2 = createNoteAndGetId(username);
+        String noteId1 = createNoteAndGetId(username, authHeader);
+        String noteId2 = createNoteAndGetId(username, authHeader);
 
         mockMvc.perform(
                 get("/api/v1/users/{username}/diary/notes", username)
@@ -137,7 +135,36 @@ public class NoteIntegrationTest {
                 .andExpect(jsonPath("$[1].id", is(noteId2)));
     }
 
-    private String createNoteAndGetId(String username) throws Exception {
+    @Test
+    public void accessDeniedToForeignNotes() throws Exception {
+        String username = "UserWithAccess";
+        createUser(username);
+        HttpHeaders authHeader = tokenObtainer.obtainAuthHeader(mockMvc, username, PASSWORD);
+        String noteId1 = createNoteAndGetId(username, authHeader);
+        String noteId2 = createNoteAndGetId(username, authHeader);
+
+        mockMvc.perform(
+                get("/api/v1/users/{username}/diary/notes", username)
+                        .headers(authHeader)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(jsonPath("$[0].id", is(noteId1)))
+                .andExpect(jsonPath("$[1].id", is(noteId2)));
+
+        String userWithoutAccess = "UserWithoutAccess";
+        createUser(userWithoutAccess);
+        HttpHeaders authHeaderWithoutAccess = tokenObtainer.obtainAuthHeader(mockMvc, userWithoutAccess, PASSWORD);
+
+        mockMvc.perform(
+                get("/api/v1/users/{username}/diary/notes", username)
+                        .headers(authHeaderWithoutAccess)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().is(403));
+    }
+
+    private String createNoteAndGetId(String username, HttpHeaders authHeader) throws Exception {
         String requestBody = IOUtils.toString(getClass().getResource("/web/controller/note-controller/create-note-request.json"), Charset.defaultCharset());
         String responseBody = mockMvc.perform(
                 post("/api/v1/users/{username}/diary/notes", username)
@@ -160,7 +187,6 @@ public class NoteIntegrationTest {
         ObjectMapper objectMapper = new ObjectMapper();
         mockMvc.perform(
                 post("/api/v1/signup")
-                        .headers(authHeader)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().is2xxSuccessful());

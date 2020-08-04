@@ -10,7 +10,7 @@ public enum ApiErrorContainer {
     NOTE_NOT_FOUND(HttpStatus.NOT_FOUND, "Note not found"),
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "User not found"),
     VALIDATION_ERROR(HttpStatus.BAD_REQUEST, "Validation error"),
-    ACCESS_DENIED(HttpStatus.FORBIDDEN, "Access denied");
+    FORBIDDEN(HttpStatus.FORBIDDEN, "Access denied");
 
     private HttpStatus httpStatus;
     private String message;
