@@ -22,7 +22,7 @@ public class SecurityUtils {
 
     public static void validateUsername(String username) {
         if (!SecurityUtils.getCurrentUserName().equals(username)) {
-            throw new ApiException(ApiErrorContainer.ACCESS_DENIED);
+            throw new ApiException(ApiErrorContainer.FORBIDDEN);
         }
     }
 }
