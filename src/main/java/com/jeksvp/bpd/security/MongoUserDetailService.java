@@ -18,6 +18,7 @@ public class MongoUserDetailService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
         return userRepository.findByUsername(s)
+                .or(() -> userRepository.findByEmail(s))
                 .orElseThrow(() -> new UsernameNotFoundException(String.format("The username %s doesn't exist", s)));
     }
 }

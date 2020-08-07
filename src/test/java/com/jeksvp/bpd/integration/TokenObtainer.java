@@ -15,11 +15,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class TokenObtainer {
 
-    public static final String JEKSVP_USERNAME = "jeksvp";
-    public static final String JEKSVP_PASSWORD = "testpassword";
-    public static final String TBOLIVAR_PASSWORD = "testpassword";
-    public static final String TBOLIVAR_USERNAME = "tbolivar";
-
     @SneakyThrows
     public String obtainAccessToken(MockMvc mockMvc, String login, String password) {
 

@@ -19,8 +19,8 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.nio.charset.Charset;
 
-import static com.jeksvp.bpd.integration.TokenObtainer.JEKSVP_PASSWORD;
-import static com.jeksvp.bpd.integration.TokenObtainer.JEKSVP_USERNAME;
+import static com.jeksvp.bpd.integration.DefaultUser.JEKSVP_PASSWORD;
+import static com.jeksvp.bpd.integration.DefaultUser.JEKSVP_USERNAME;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
