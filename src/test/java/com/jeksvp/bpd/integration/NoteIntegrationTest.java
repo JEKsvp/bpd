@@ -2,6 +2,7 @@ package com.jeksvp.bpd.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jeksvp.bpd.configuration.IntegrationTestConfiguration;
+import com.jeksvp.bpd.domain.entity.Role;
 import com.jeksvp.bpd.web.dto.request.SignUpRequest;
 import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,6 +22,7 @@ import java.nio.charset.Charset;
 
 import static com.jeksvp.bpd.integration.DefaultUser.JEKSVP_PASSWORD;
 import static com.jeksvp.bpd.integration.DefaultUser.JEKSVP_USERNAME;
+import static com.jeksvp.bpd.integration.UserCreator.createUser;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -83,7 +85,7 @@ public class NoteIntegrationTest {
     @Test
     public void updateNoteTest() throws Exception {
         String username = "UpdatingNoteUser";
-        createUser(username);
+        createUser(mockMvc, username, Role.PATIENT);
         HttpHeaders authHeader = tokenObtainer.obtainAuthHeader(mockMvc, username, PASSWORD);
         String noteId = createNoteAndGetId(username, authHeader);
         String requestBody = IOUtils.toString(getClass().getResource("/web/controller/note-controller/update-note-request.json"), Charset.defaultCharset());
@@ -119,10 +121,10 @@ public class NoteIntegrationTest {
     @Test
     public void getNotesByDiaryTest() throws Exception {
         String username = "getNotesByDiaryUser";
-        createUser(username);
+        createUser(mockMvc, username, Role.PATIENT);
         HttpHeaders authHeader = tokenObtainer.obtainAuthHeader(mockMvc, username, PASSWORD);
-        String noteId1 = createNoteAndGetId(username, authHeader);
-        String noteId2 = createNoteAndGetId(username, authHeader);
+        String olderNode = createNoteAndGetId(username, authHeader);
+        String newerNode = createNoteAndGetId(username, authHeader);
 
         mockMvc.perform(
                 get("/api/v1/users/{username}/diary/notes", username)
@@ -131,17 +133,17 @@ public class NoteIntegrationTest {
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(jsonPath("$").isArray())
                 .andExpect(jsonPath("$", hasSize(2)))
-                .andExpect(jsonPath("$[0].id", is(noteId1)))
-                .andExpect(jsonPath("$[1].id", is(noteId2)));
+                .andExpect(jsonPath("$[0].id", is(newerNode)))
+                .andExpect(jsonPath("$[1].id", is(olderNode)));
     }
 
     @Test
     public void accessDeniedToForeignNotes() throws Exception {
         String username = "UserWithAccess";
-        createUser(username);
+        createUser(mockMvc, username, Role.PATIENT);
         HttpHeaders authHeader = tokenObtainer.obtainAuthHeader(mockMvc, username, PASSWORD);
-        String noteId1 = createNoteAndGetId(username, authHeader);
-        String noteId2 = createNoteAndGetId(username, authHeader);
+        String olderNode = createNoteAndGetId(username, authHeader);
+        String newerNode = createNoteAndGetId(username, authHeader);
 
         mockMvc.perform(
                 get("/api/v1/users/{username}/diary/notes", username)
@@ -150,11 +152,11 @@ public class NoteIntegrationTest {
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(jsonPath("$").isArray())
                 .andExpect(jsonPath("$", hasSize(2)))
-                .andExpect(jsonPath("$[0].id", is(noteId1)))
-                .andExpect(jsonPath("$[1].id", is(noteId2)));
+                .andExpect(jsonPath("$[0].id", is(newerNode)))
+                .andExpect(jsonPath("$[1].id", is(olderNode)));
 
         String userWithoutAccess = "UserWithoutAccess";
-        createUser(userWithoutAccess);
+        createUser(mockMvc, userWithoutAccess, Role.PATIENT);
         HttpHeaders authHeaderWithoutAccess = tokenObtainer.obtainAuthHeader(mockMvc, userWithoutAccess, PASSWORD);
 
         mockMvc.perform(
@@ -177,18 +179,4 @@ public class NoteIntegrationTest {
         return jsonParser.parseMap(responseBody).get("id").toString();
     }
 
-    private void createUser(String username) throws Exception {
-        SignUpRequest request = SignUpRequest.builder()
-                .username(username)
-                .password("000000")
-                .email(username + "@mail.com")
-                .build();
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        mockMvc.perform(
-                post("/api/v1/signup")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().is2xxSuccessful());
-    }
 }

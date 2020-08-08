@@ -35,11 +35,13 @@ public class SignUpServiceImpl implements SignUpService {
                 request.getUsername(),
                 passwordEncoder.encode(request.getPassword()),
                 request.getEmail(),
-                Collections.singletonList(Role.USER));
+                Collections.singletonList(request.getRole()));
         User registeredUser = userRepository.save(user);
 
         //todo do in transaction
-        diaryService.createDiary(registeredUser.getUsername());
+        if (Role.PATIENT.equals(request.getRole())) {
+            diaryService.createDiary(registeredUser.getUsername());
+        }
         return UserResponse.of(registeredUser);
     }
 

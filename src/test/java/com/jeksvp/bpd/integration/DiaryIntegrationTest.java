@@ -1,7 +1,7 @@
 package com.jeksvp.bpd.integration;
 
 import com.jeksvp.bpd.configuration.IntegrationTestConfiguration;
-import org.junit.jupiter.api.BeforeEach;
+import com.jeksvp.bpd.domain.entity.Role;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +12,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static com.jeksvp.bpd.integration.DefaultUser.JEKSVP_PASSWORD;
-import static com.jeksvp.bpd.integration.DefaultUser.JEKSVP_USERNAME;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -31,21 +29,27 @@ public class DiaryIntegrationTest {
     @Autowired
     private TokenObtainer tokenObtainer;
 
-    private HttpHeaders authHeader;
-
-    @BeforeEach
-    public void init() {
-        this.authHeader = tokenObtainer.obtainAuthHeader(mockMvc, JEKSVP_USERNAME, JEKSVP_PASSWORD);
+    @Test
+    public void patientMustHasDiary() throws Exception {
+        String username = "testPatient";
+        UserCreator.createUser(mockMvc, username, Role.PATIENT);
+        HttpHeaders authHeader = tokenObtainer.obtainAuthHeader(mockMvc, username, UserCreator.PASSWORD);
+        mockMvc.perform(
+                get("/api/v1/users/{username}/diary", username)
+                        .headers(authHeader))
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(jsonPath("$.username", is(username)))
+                .andExpect(jsonPath("$.notes").isArray());
     }
 
     @Test
-    public void getDiaryTest() throws Exception {
+    public void psychotherapistMustNotHasDiary() throws Exception {
+        String username = "testPsychotherapist";
+        UserCreator.createUser(mockMvc, username, Role.PSYCHOTHERAPIST);
+        HttpHeaders authHeader = tokenObtainer.obtainAuthHeader(mockMvc, username, UserCreator.PASSWORD);
         mockMvc.perform(
-                get("/api/v1/users/{username}/diary", JEKSVP_USERNAME)
+                get("/api/v1/users/{username}/diary", username)
                         .headers(authHeader))
-                .andExpect(status().is2xxSuccessful())
-                .andExpect(jsonPath("$.username", is(JEKSVP_USERNAME)))
-                .andExpect(jsonPath("$.notes").isArray());
-
+                .andExpect(status().is(404));
     }
 }

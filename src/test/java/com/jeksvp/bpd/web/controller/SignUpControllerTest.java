@@ -14,7 +14,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultMatcher;
 
 import java.util.Collections;
 
@@ -38,12 +37,8 @@ public class SignUpControllerTest {
 
     @Test
     public void invalidShortPasswordTest() throws Exception {
-
-        ResultMatcher json = content()
-                .json(testFileReader.getStringFromFile("/web/controller/signup-controller/invalid-password-response.json"));
-
         mvc.perform(post("/api/v1/signup")
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .contentType(MediaType.APPLICATION_JSON)
                 .content(testFileReader.getStringFromFile("/web/controller/signup-controller/invalid-short-password-request.json")))
                 .andExpect(status().is4xxClientError())
                 .andExpect(content()
@@ -52,9 +47,8 @@ public class SignUpControllerTest {
 
     @Test
     public void invalidLongPasswordTest() throws Exception {
-
         mvc.perform(post("/api/v1/signup")
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .contentType(MediaType.APPLICATION_JSON)
                 .content(testFileReader.getStringFromFile("/web/controller/signup-controller/invalid-long-password-request.json")))
                 .andExpect(status().is4xxClientError())
                 .andExpect(content()
@@ -67,7 +61,7 @@ public class SignUpControllerTest {
                 .thenThrow(new ApiException(ApiErrorContainer.VALIDATION_ERROR, "Username duplicateUser exists"));
 
         mvc.perform(post("/api/v1/signup")
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .contentType(MediaType.APPLICATION_JSON)
                 .content(testFileReader.getStringFromFile("/web/controller/signup-controller/duplicate-username-request.json")))
                 .andExpect(status().is4xxClientError())
                 .andExpect(content()
@@ -80,11 +74,24 @@ public class SignUpControllerTest {
                 .thenThrow(new ApiException(ApiErrorContainer.VALIDATION_ERROR, "Email duplicateEmail@test.com exists"));
 
         mvc.perform(post("/api/v1/signup")
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .contentType(MediaType.APPLICATION_JSON)
                 .content(testFileReader.getStringFromFile("/web/controller/signup-controller/duplicate-email-request.json")))
                 .andExpect(status().is4xxClientError())
                 .andExpect(content()
                         .json(testFileReader.getStringFromFile("/web/controller/signup-controller/duplicate-email-response.json")));
+    }
+
+    @Test
+    public void emptyRoleTest() throws Exception {
+        when(signUpService.registerUser(any()))
+                .thenThrow(new ApiException(ApiErrorContainer.VALIDATION_ERROR, "Email duplicateEmail@test.com exists"));
+
+        mvc.perform(post("/api/v1/signup")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(testFileReader.getStringFromFile("/web/controller/signup-controller/empty-role-request.json")))
+                .andExpect(status().is4xxClientError())
+                .andExpect(content()
+                        .json(testFileReader.getStringFromFile("/web/controller/signup-controller/empty-role-response.json")));
     }
 
     @Test
@@ -93,17 +100,17 @@ public class SignUpControllerTest {
                 .thenReturn(buildUserResponse());
 
         mvc.perform(post("/api/v1/signup")
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .content(testFileReader.getStringFromFile("/web/controller/signup-controller/valid-sign-up-request.json")))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(testFileReader.getStringFromFile("/web/controller/signup-controller/valid-sign-up-as-patient-request.json")))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(content()
-                        .json(testFileReader.getStringFromFile("/web/controller/signup-controller/valid-sign-up-response.json")));
+                        .json(testFileReader.getStringFromFile("/web/controller/signup-controller/valid-sign-up-as-patient-response.json")));
     }
 
     private UserResponse buildUserResponse() {
         return UserResponse.builder()
                 .email("abadeksvp@gmail.com")
-                .roles(Collections.singletonList(Role.USER))
+                .roles(Collections.singletonList(Role.PATIENT))
                 .username("jeksvp")
                 .build();
     }

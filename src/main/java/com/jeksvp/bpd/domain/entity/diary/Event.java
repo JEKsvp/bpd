@@ -5,6 +5,7 @@ import lombok.*;
 @Builder(access = AccessLevel.PRIVATE)
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor
 @EqualsAndHashCode
 @ToString
 public class Event {
