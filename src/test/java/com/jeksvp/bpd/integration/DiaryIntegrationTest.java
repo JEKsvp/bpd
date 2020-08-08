@@ -12,8 +12,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static com.jeksvp.bpd.integration.TokenObtainer.JEKSVP_PASSWORD;
-import static com.jeksvp.bpd.integration.TokenObtainer.JEKSVP_USERNAME;
+import static com.jeksvp.bpd.integration.DefaultUser.JEKSVP_PASSWORD;
+import static com.jeksvp.bpd.integration.DefaultUser.JEKSVP_USERNAME;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;

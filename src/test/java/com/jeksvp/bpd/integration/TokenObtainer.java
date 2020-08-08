@@ -3,22 +3,20 @@ package com.jeksvp.bpd.integration;
 import lombok.SneakyThrows;
 import org.springframework.boot.json.JacksonJsonParser;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
+import static com.jeksvp.bpd.integration.DefaultClient.CLIENT_ID;
+import static com.jeksvp.bpd.integration.DefaultClient.SECRET;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class TokenObtainer {
-
-    public static final String JEKSVP_USERNAME = "jeksvp";
-    public static final String JEKSVP_PASSWORD = "testpassword";
-    public static final String TBOLIVAR_PASSWORD = "testpassword";
-    public static final String TBOLIVAR_USERNAME = "tbolivar";
 
     @SneakyThrows
     public String obtainAccessToken(MockMvc mockMvc, String login, String password) {
@@ -31,10 +29,10 @@ public class TokenObtainer {
         ResultActions result
                 = mockMvc.perform(post("/oauth/token")
                 .params(params)
-                .with(httpBasic("clientid", "secret"))
-                .accept("application/json;charset=UTF-8"))
+                .with(httpBasic(CLIENT_ID, SECRET))
+                .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType("application/json;charset=UTF-8"));
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
 
         String resultString = result.andReturn().getResponse().getContentAsString();
 
