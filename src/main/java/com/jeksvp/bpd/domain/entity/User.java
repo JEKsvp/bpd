@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @EqualsAndHashCode
 @ToString
+@Getter
 public class User implements UserDetails {
 
     @Id
@@ -25,13 +26,25 @@ public class User implements UserDetails {
     private String password;
     private String email;
     private List<Role> roles = new ArrayList<>();
+    private String firstName;
+    private String lastName;
+    private String aboutMe;
 
-    public static User create(String username, String passwordHash, String email, List<Role> roles) {
+    public static User create(String username,
+                              String passwordHash,
+                              String email,
+                              List<Role> roles,
+                              String firstName,
+                              String lastName,
+                              String aboutMe) {
         return User.builder()
                 .username(username)
                 .password(passwordHash)
                 .email(email)
                 .roles(roles)
+                .firstName(firstName)
+                .lastName(lastName)
+                .aboutMe(aboutMe)
                 .build();
     }
 

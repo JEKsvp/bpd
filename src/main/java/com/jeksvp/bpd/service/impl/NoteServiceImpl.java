@@ -71,7 +71,7 @@ public class NoteServiceImpl implements NoteService {
     public List<NoteResponse> getNotesByDiary(String username) {
         return getDiary(username)
                 .getNotes().stream()
-                .sorted(Comparator.comparing(Note::getCreateDate))
+                .sorted(Comparator.comparing(Note::getCreateDate).reversed())
                 .map(NoteResponse::create)
                 .collect(Collectors.toList());
     }
