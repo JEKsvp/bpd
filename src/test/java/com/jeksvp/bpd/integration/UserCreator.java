@@ -14,6 +14,8 @@ public class UserCreator {
 
     public static String PASSWORD = "000000";
 
+    private static final ObjectMapper objectMapper = new ObjectMapper();
+
     @SneakyThrows
     public static void createUser(MockMvc mockMvc, String username, Role role) {
         SignUpRequest request = SignUpRequest.builder()
@@ -24,8 +26,6 @@ public class UserCreator {
                 .lastName(username + "last name")
                 .role(role)
                 .build();
-
-        ObjectMapper objectMapper = new ObjectMapper();
         mockMvc.perform(
                 post("/api/v1/signup")
                         .contentType(MediaType.APPLICATION_JSON)
