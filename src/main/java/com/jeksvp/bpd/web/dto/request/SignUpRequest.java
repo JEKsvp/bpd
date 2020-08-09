@@ -4,10 +4,7 @@ import com.jeksvp.bpd.domain.entity.Role;
 import lombok.*;
 import org.apache.commons.lang3.StringUtils;
 
-import javax.validation.constraints.AssertTrue;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 
 @Getter
 @Builder
@@ -16,6 +13,7 @@ import javax.validation.constraints.Size;
 public class SignUpRequest {
 
     @Size(min = 1, max = 20)
+    @Pattern(regexp = "^[\\w]*$", message = "Username can contains only alphanumeric and underscore.")
     private String username;
 
     @Size(min = 6, max = 30)

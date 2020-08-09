@@ -69,6 +69,16 @@ public class SignUpControllerTest {
     }
 
     @Test
+    public void invalidCharacterUsernameTest() throws Exception {
+        mvc.perform(post("/api/v1/signup")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(testFileReader.getStringFromFile("/web/controller/signup-controller/invalid-character-username-request.json")))
+                .andExpect(status().is4xxClientError())
+                .andExpect(content()
+                        .json(testFileReader.getStringFromFile("/web/controller/signup-controller/invalid-character-username-response.json")));
+    }
+
+    @Test
     public void duplicateEmailTest() throws Exception {
         when(signUpService.registerUser(any()))
                 .thenThrow(new ApiException(ApiErrorContainer.VALIDATION_ERROR, "Email duplicateEmail@test.com exists"));
