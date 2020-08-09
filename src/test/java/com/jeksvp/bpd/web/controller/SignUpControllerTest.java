@@ -95,6 +95,26 @@ public class SignUpControllerTest {
     }
 
     @Test
+    public void emptyFirstNamePsychotherapistTest() throws Exception {
+        mvc.perform(post("/api/v1/signup")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(testFileReader.getStringFromFile("/web/controller/signup-controller/empty-first-name-psychotherapist-request.json")))
+                .andExpect(status().is4xxClientError())
+                .andExpect(content()
+                        .json(testFileReader.getStringFromFile("/web/controller/signup-controller/empty-first-name-psychotherapist-response.json")));
+    }
+
+    @Test
+    public void emptyLastNamePsychotherapistTest() throws Exception {
+        mvc.perform(post("/api/v1/signup")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(testFileReader.getStringFromFile("/web/controller/signup-controller/empty-last-name-psychotherapist-request.json")))
+                .andExpect(status().is4xxClientError())
+                .andExpect(content()
+                        .json(testFileReader.getStringFromFile("/web/controller/signup-controller/empty-last-name-psychotherapist-response.json")));
+    }
+
+    @Test
     public void validSignUp() throws Exception {
         when(signUpService.registerUser(any()))
                 .thenReturn(buildUserResponse());

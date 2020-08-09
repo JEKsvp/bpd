@@ -35,7 +35,11 @@ public class SignUpServiceImpl implements SignUpService {
                 request.getUsername(),
                 passwordEncoder.encode(request.getPassword()),
                 request.getEmail(),
-                Collections.singletonList(request.getRole()));
+                Collections.singletonList(request.getRole()),
+                request.getFirstName(),
+                request.getLastName(),
+                request.getAboutMe()
+        );
         User registeredUser = userRepository.save(user);
 
         //todo do in transaction

@@ -20,6 +20,8 @@ public class UserCreator {
                 .username(username)
                 .password(PASSWORD)
                 .email(username + "@mail.com")
+                .firstName(username + "fist name")
+                .lastName(username + "last name")
                 .role(role)
                 .build();
 
