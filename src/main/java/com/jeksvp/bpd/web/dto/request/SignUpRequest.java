@@ -12,11 +12,11 @@ import javax.validation.constraints.*;
 @AllArgsConstructor
 public class SignUpRequest {
 
-    @Size(min = 1, max = 20)
+    @Size(min = 1, max = 30)
     @Pattern(regexp = "^[\\w]*$", message = "Username can contains only alphanumeric and underscore.")
     private String username;
 
-    @Size(min = 6, max = 30)
+    @Size(min = 6, max = 50)
     private String password;
 
     @NotBlank
