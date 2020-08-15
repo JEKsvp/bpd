@@ -59,7 +59,7 @@ public class UserControllerTest {
         return UserResponse.builder()
                 .username("test")
                 .email("test@mail.ru")
-                .roles(Collections.singletonList(Role.PATIENT))
+                .roles(Collections.singletonList(Role.CLIENT))
                 .build();
     }
 }

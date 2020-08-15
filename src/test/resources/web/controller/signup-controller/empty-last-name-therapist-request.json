@@ -2,5 +2,6 @@
   "username": "jeksvp",
   "password": "111111",
   "email": "abadeksvp@gmail.com",
-  "role": "PATIENT"
+  "role": "THERAPIST",
+  "firstName": "Олег"
 }

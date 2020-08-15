@@ -1,6 +1,6 @@
 package com.jeksvp.bpd.web.dto.response;
 
-import com.jeksvp.bpd.domain.entity.access.patient.ClientAccess;
+import com.jeksvp.bpd.domain.entity.access.client.ClientAccess;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

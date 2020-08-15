@@ -1,9 +1,7 @@
 package com.jeksvp.bpd.integration;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jeksvp.bpd.configuration.IntegrationTestConfiguration;
 import com.jeksvp.bpd.domain.entity.Role;
-import com.jeksvp.bpd.web.dto.request.SignUpRequest;
 import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -85,7 +83,7 @@ public class NoteIntegrationTest {
     @Test
     public void updateNoteTest() throws Exception {
         String username = "UpdatingNoteUser";
-        createUser(mockMvc, username, Role.PATIENT);
+        createUser(mockMvc, username, Role.CLIENT);
         HttpHeaders authHeader = tokenObtainer.obtainAuthHeader(mockMvc, username, PASSWORD);
         String noteId = createNoteAndGetId(username, authHeader);
         String requestBody = IOUtils.toString(getClass().getResource("/web/controller/note-controller/update-note-request.json"), Charset.defaultCharset());
@@ -121,7 +119,7 @@ public class NoteIntegrationTest {
     @Test
     public void getNotesByDiaryTest() throws Exception {
         String username = "getNotesByDiaryUser";
-        createUser(mockMvc, username, Role.PATIENT);
+        createUser(mockMvc, username, Role.CLIENT);
         HttpHeaders authHeader = tokenObtainer.obtainAuthHeader(mockMvc, username, PASSWORD);
         String olderNode = createNoteAndGetId(username, authHeader);
         String newerNode = createNoteAndGetId(username, authHeader);
@@ -140,7 +138,7 @@ public class NoteIntegrationTest {
     @Test
     public void accessDeniedToForeignNotes() throws Exception {
         String username = "UserWithAccess";
-        createUser(mockMvc, username, Role.PATIENT);
+        createUser(mockMvc, username, Role.CLIENT);
         HttpHeaders authHeader = tokenObtainer.obtainAuthHeader(mockMvc, username, PASSWORD);
         String olderNode = createNoteAndGetId(username, authHeader);
         String newerNode = createNoteAndGetId(username, authHeader);
@@ -156,7 +154,7 @@ public class NoteIntegrationTest {
                 .andExpect(jsonPath("$[1].id", is(olderNode)));
 
         String userWithoutAccess = "UserWithoutAccess";
-        createUser(mockMvc, userWithoutAccess, Role.PATIENT);
+        createUser(mockMvc, userWithoutAccess, Role.CLIENT);
         HttpHeaders authHeaderWithoutAccess = tokenObtainer.obtainAuthHeader(mockMvc, userWithoutAccess, PASSWORD);
 
         mockMvc.perform(

@@ -2,5 +2,5 @@
   "username": "duplicateUser",
   "password": "111111111",
   "email": "test@test.com",
-  "role": "PATIENT"
+  "role": "CLIENT"
 }

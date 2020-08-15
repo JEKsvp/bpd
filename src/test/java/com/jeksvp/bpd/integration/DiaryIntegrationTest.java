@@ -30,9 +30,9 @@ public class DiaryIntegrationTest {
     private TokenObtainer tokenObtainer;
 
     @Test
-    public void patientMustHasDiary() throws Exception {
-        String username = "testPatient";
-        UserCreator.createUser(mockMvc, username, Role.PATIENT);
+    public void clientMustHasDiary() throws Exception {
+        String username = "testClient";
+        UserCreator.createUser(mockMvc, username, Role.CLIENT);
         HttpHeaders authHeader = tokenObtainer.obtainAuthHeader(mockMvc, username, UserCreator.PASSWORD);
         mockMvc.perform(
                 get("/api/v1/users/{username}/diary", username)
@@ -43,9 +43,9 @@ public class DiaryIntegrationTest {
     }
 
     @Test
-    public void psychotherapistMustNotHasDiary() throws Exception {
-        String username = "testPsychotherapist";
-        UserCreator.createUser(mockMvc, username, Role.PSYCHOTHERAPIST);
+    public void therapistMustNotHasDiary() throws Exception {
+        String username = "testTherapist";
+        UserCreator.createUser(mockMvc, username, Role.THERAPIST);
         HttpHeaders authHeader = tokenObtainer.obtainAuthHeader(mockMvc, username, UserCreator.PASSWORD);
         mockMvc.perform(
                 get("/api/v1/users/{username}/diary", username)

@@ -33,15 +33,15 @@ public class SignUpRequest {
 
     private String aboutMe;
 
-    @AssertTrue(message = "Required fields for psychotherapist is empty.")
-    public boolean isValidPsychotherapistFields() {
-        if (Role.PSYCHOTHERAPIST.equals(this.role)) {
-            return isValidAsPsychotherapist();
+    @AssertTrue(message = "Required fields for therapist is empty.")
+    public boolean isValidTherapistFields() {
+        if (Role.THERAPIST.equals(this.role)) {
+            return isValidAsTherapist();
         }
         return true;
     }
 
-    private boolean isValidAsPsychotherapist() {
+    private boolean isValidAsTherapist() {
         return StringUtils.isNotBlank(this.firstName)
                 && StringUtils.isNotBlank(this.lastName);
     }
