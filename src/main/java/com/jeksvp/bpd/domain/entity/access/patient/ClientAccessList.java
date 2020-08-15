@@ -15,16 +15,16 @@ import java.util.List;
 @EqualsAndHashCode
 @ToString
 @Getter
-public class PatientAccessList {
+public class ClientAccessList {
 
     @Id
     private String username;
 
-    private List<PatientAccess> accesses;
+    private List<ClientAccess> accesses;
 
-    public static PatientAccessList create(User user) {
-        return PatientAccessList.builder()
-                .username(user.getUsername())
+    public static ClientAccessList create(String username) {
+        return ClientAccessList.builder()
+                .username(username)
                 .accesses(new ArrayList<>())
                 .build();
     }

@@ -10,11 +10,11 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class TherapistResponse {
+public class TherapistAccessResponse {
     private String username;
 
-    public static TherapistResponse create(TherapistAccess therapistAccess) {
-        return TherapistResponse.builder()
+    public static TherapistAccessResponse create(TherapistAccess therapistAccess) {
+        return TherapistAccessResponse.builder()
                 .username(therapistAccess.getUsername())
                 .build();
     }

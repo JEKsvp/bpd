@@ -9,7 +9,7 @@ import lombok.*;
 @EqualsAndHashCode
 @ToString
 @Getter
-public class PatientAccess {
+public class ClientAccess {
 
     private String username;
 

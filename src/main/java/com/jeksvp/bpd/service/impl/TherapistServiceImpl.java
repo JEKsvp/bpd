@@ -5,7 +5,7 @@ import com.jeksvp.bpd.exceptions.ApiErrorContainer;
 import com.jeksvp.bpd.exceptions.ApiException;
 import com.jeksvp.bpd.repository.TherapistAccessRepository;
 import com.jeksvp.bpd.service.TherapistService;
-import com.jeksvp.bpd.web.dto.response.TherapistResponse;
+import com.jeksvp.bpd.web.dto.response.TherapistAccessResponse;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,12 +21,11 @@ public class TherapistServiceImpl implements TherapistService {
     }
 
     @Override
-    public List<TherapistResponse> getTherapistsOfUser(String username) {
+    public List<TherapistAccessResponse> getAccessedTherapistsOfUser(String username) {
         return therapistAccessRepository.findById(username)
                 .orElseThrow(() -> new ApiException(ApiErrorContainer.THERAPISTS_NOT_FOUND))
-                .getAccesses()
-                .stream()
-                .map(TherapistResponse::create)
+                .getAccesses().stream()
+                .map(TherapistAccessResponse::create)
                 .collect(Collectors.toList());
     }
 

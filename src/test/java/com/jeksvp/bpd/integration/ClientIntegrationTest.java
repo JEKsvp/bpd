@@ -23,7 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = IntegrationTestConfiguration.class)
-public class TherapistIntegrationTest {
+public class ClientIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -32,26 +32,26 @@ public class TherapistIntegrationTest {
     private TokenObtainer tokenObtainer;
 
     @Test
-    public void emptyTherapistListForClientAfterSignUp() throws Exception {
-        String username = "emptyTherapistsClientSignUp";
-        UserCreator.createUser(mockMvc, username, Role.PATIENT);
+    public void emptyClientsListForTherapistAfterSignUp() throws Exception {
+        String username = "emptyClientsTherapistSignUp";
+        UserCreator.createUser(mockMvc, username, Role.PSYCHOTHERAPIST);
         HttpHeaders authHeader = tokenObtainer.obtainAuthHeader(mockMvc, username, UserCreator.PASSWORD);
         mockMvc.perform(
-                get("/api/v1/users/current/therapists")
+                get("/api/v1/users/current/clients")
                         .headers(authHeader))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(content().json("[]"));
     }
 
     @Test
-    public void notFoundTherapistListForTherapistAfterSignUp() throws Exception {
-        String username = "404TherapistsTherapistSignUp";
-        UserCreator.createUser(mockMvc, username, Role.PSYCHOTHERAPIST);
+    public void notFoundClientListForClientAfterSignUp() throws Exception {
+        String username = "404ClientsClientSignUp";
+        UserCreator.createUser(mockMvc, username, Role.PATIENT);
         HttpHeaders authHeader = tokenObtainer.obtainAuthHeader(mockMvc, username, UserCreator.PASSWORD);
 
-        String responseBody = IOUtils.toString(getClass().getResource("/web/controller/therapist-controller/therapists-not-found-response.json"), Charset.defaultCharset());
+        String responseBody = IOUtils.toString(getClass().getResource("/web/controller/client-controller/clients-not-found-response.json"), Charset.defaultCharset());
         mockMvc.perform(
-                get("/api/v1/users/current/therapists")
+                get("/api/v1/users/current/clients")
                         .headers(authHeader))
                 .andExpect(status().is(404))
                 .andExpect(content().json(responseBody));
