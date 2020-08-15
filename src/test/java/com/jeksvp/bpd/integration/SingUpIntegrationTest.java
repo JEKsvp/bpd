@@ -68,4 +68,16 @@ public class SingUpIntegrationTest {
                 .andExpect(jsonPath("access_token").exists())
                 .andExpect(jsonPath("refresh_token").exists());
     }
+
+    @Test
+    public void cantCreateUserWithUnacceptableName() throws Exception {
+        String requestBody = IOUtils.toString(getClass().getResource("/web/controller/signup-controller/unacceptable-username-sign-up-request.json"), Charset.defaultCharset());
+        String responseBody = IOUtils.toString(getClass().getResource("/web/controller/signup-controller/unacceptable-username-sign-up-response.json"), Charset.defaultCharset());
+        mockMvc.perform(
+                post("/api/v1/signup")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestBody))
+                .andExpect(status().is4xxClientError())
+                .andExpect(content().json(responseBody));
+    }
 }

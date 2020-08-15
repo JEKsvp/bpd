@@ -1,6 +1,6 @@
-package com.jeksvp.bpd.domain.entity.diary;
+package com.jeksvp.bpd.domain.entity.access.therapist;
 
-
+import com.jeksvp.bpd.domain.entity.User;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -10,30 +10,22 @@ import java.util.List;
 
 @Document
 @Builder(access = AccessLevel.PRIVATE)
-@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
 @ToString
-public class Diary {
+@Getter
+public class TherapistAccessList {
 
     @Id
     private String username;
 
-    private List<Note> notes;
+    private List<TherapistAccess> accesses;
 
-    public static Diary create(String username) {
-        return Diary.builder()
+    public static TherapistAccessList create(String username) {
+        return TherapistAccessList.builder()
                 .username(username)
-                .notes(new ArrayList<>())
+                .accesses(new ArrayList<>())
                 .build();
-    }
-
-    public void addNote(Note note) {
-        notes.add(note);
-    }
-
-    public void removeNote(String noteId) {
-        notes.removeIf(note -> noteId.equals(note.getId()));
     }
 }
