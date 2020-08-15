@@ -1,10 +1,9 @@
 {
   "username": "psycho",
+  "password": "111111",
   "email": "psycho@gmail.com",
+  "role": "THERAPIST",
   "firstName": "Олег",
   "lastName": "Олегов",
-  "aboutMe": "Я Олег Олегович Олегов",
-  "roles": [
-    "PSYCHOTHERAPIST"
-  ]
+  "aboutMe": "Я Олег Олегович Олегов"
 }

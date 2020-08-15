@@ -105,23 +105,23 @@ public class SignUpControllerTest {
     }
 
     @Test
-    public void emptyFirstNamePsychotherapistTest() throws Exception {
+    public void emptyFirstNameTherapistTest() throws Exception {
         mvc.perform(post("/api/v1/signup")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(testFileReader.getStringFromFile("/web/controller/signup-controller/empty-first-name-psychotherapist-request.json")))
+                .content(testFileReader.getStringFromFile("/web/controller/signup-controller/empty-first-name-therapist-request.json")))
                 .andExpect(status().is4xxClientError())
                 .andExpect(content()
-                        .json(testFileReader.getStringFromFile("/web/controller/signup-controller/empty-first-name-psychotherapist-response.json")));
+                        .json(testFileReader.getStringFromFile("/web/controller/signup-controller/empty-first-name-therapist-response.json")));
     }
 
     @Test
-    public void emptyLastNamePsychotherapistTest() throws Exception {
+    public void emptyLastNameTherapistTest() throws Exception {
         mvc.perform(post("/api/v1/signup")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(testFileReader.getStringFromFile("/web/controller/signup-controller/empty-last-name-psychotherapist-request.json")))
+                .content(testFileReader.getStringFromFile("/web/controller/signup-controller/empty-last-name-therapist-request.json")))
                 .andExpect(status().is4xxClientError())
                 .andExpect(content()
-                        .json(testFileReader.getStringFromFile("/web/controller/signup-controller/empty-last-name-psychotherapist-response.json")));
+                        .json(testFileReader.getStringFromFile("/web/controller/signup-controller/empty-last-name-therapist-response.json")));
     }
 
     @Test
@@ -131,16 +131,16 @@ public class SignUpControllerTest {
 
         mvc.perform(post("/api/v1/signup")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(testFileReader.getStringFromFile("/web/controller/signup-controller/valid-sign-up-as-patient-request.json")))
+                .content(testFileReader.getStringFromFile("/web/controller/signup-controller/valid-sign-up-as-client-request.json")))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(content()
-                        .json(testFileReader.getStringFromFile("/web/controller/signup-controller/valid-sign-up-as-patient-response.json")));
+                        .json(testFileReader.getStringFromFile("/web/controller/signup-controller/valid-sign-up-as-client-response.json")));
     }
 
     private UserResponse buildUserResponse() {
         return UserResponse.builder()
                 .email("abadeksvp@gmail.com")
-                .roles(Collections.singletonList(Role.PATIENT))
+                .roles(Collections.singletonList(Role.CLIENT))
                 .username("jeksvp")
                 .build();
     }

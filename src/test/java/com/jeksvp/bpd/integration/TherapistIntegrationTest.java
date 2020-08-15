@@ -34,7 +34,7 @@ public class TherapistIntegrationTest {
     @Test
     public void emptyTherapistListForClientAfterSignUp() throws Exception {
         String username = "emptyTherapistsClientSignUp";
-        UserCreator.createUser(mockMvc, username, Role.PATIENT);
+        UserCreator.createUser(mockMvc, username, Role.CLIENT);
         HttpHeaders authHeader = tokenObtainer.obtainAuthHeader(mockMvc, username, UserCreator.PASSWORD);
         mockMvc.perform(
                 get("/api/v1/users/current/therapists")
@@ -46,7 +46,7 @@ public class TherapistIntegrationTest {
     @Test
     public void notFoundTherapistListForTherapistAfterSignUp() throws Exception {
         String username = "404TherapistsTherapistSignUp";
-        UserCreator.createUser(mockMvc, username, Role.PSYCHOTHERAPIST);
+        UserCreator.createUser(mockMvc, username, Role.THERAPIST);
         HttpHeaders authHeader = tokenObtainer.obtainAuthHeader(mockMvc, username, UserCreator.PASSWORD);
 
         String responseBody = IOUtils.toString(getClass().getResource("/web/controller/therapist-controller/therapists-not-found-response.json"), Charset.defaultCharset());

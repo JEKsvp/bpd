@@ -1,4 +1,4 @@
-package com.jeksvp.bpd.domain.entity.access.patient;
+package com.jeksvp.bpd.domain.entity.access.client;
 
 import com.jeksvp.bpd.domain.entity.access.AccessStatus;
 import lombok.*;

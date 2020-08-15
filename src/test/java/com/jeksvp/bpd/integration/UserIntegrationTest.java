@@ -13,7 +13,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static com.jeksvp.bpd.integration.DefaultUser.*;
-import static org.hamcrest.Matchers.emptyOrNullString;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -45,7 +44,7 @@ public class UserIntegrationTest {
     @Test
     public void userCantGetUserWithoutAccess() throws Exception {
         String username = "anotherUserCantGetEmail";
-        UserCreator.createUser(mockMvc, username, Role.PATIENT);
+        UserCreator.createUser(mockMvc, username, Role.CLIENT);
         HttpHeaders authHeader = tokenObtainer.obtainAuthHeader(mockMvc, username, UserCreator.PASSWORD);
         mockMvc.perform(
                 get("/api/v1/users/${username}", JEKSVP_USERNAME)

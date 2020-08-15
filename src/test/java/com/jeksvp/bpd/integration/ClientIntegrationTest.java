@@ -34,7 +34,7 @@ public class ClientIntegrationTest {
     @Test
     public void emptyClientsListForTherapistAfterSignUp() throws Exception {
         String username = "emptyClientsTherapistSignUp";
-        UserCreator.createUser(mockMvc, username, Role.PSYCHOTHERAPIST);
+        UserCreator.createUser(mockMvc, username, Role.THERAPIST);
         HttpHeaders authHeader = tokenObtainer.obtainAuthHeader(mockMvc, username, UserCreator.PASSWORD);
         mockMvc.perform(
                 get("/api/v1/users/current/clients")
@@ -46,7 +46,7 @@ public class ClientIntegrationTest {
     @Test
     public void notFoundClientListForClientAfterSignUp() throws Exception {
         String username = "404ClientsClientSignUp";
-        UserCreator.createUser(mockMvc, username, Role.PATIENT);
+        UserCreator.createUser(mockMvc, username, Role.CLIENT);
         HttpHeaders authHeader = tokenObtainer.obtainAuthHeader(mockMvc, username, UserCreator.PASSWORD);
 
         String responseBody = IOUtils.toString(getClass().getResource("/web/controller/client-controller/clients-not-found-response.json"), Charset.defaultCharset());

@@ -1,6 +1,6 @@
 package com.jeksvp.bpd.service.impl;
 
-import com.jeksvp.bpd.domain.entity.access.patient.ClientAccessList;
+import com.jeksvp.bpd.domain.entity.access.client.ClientAccessList;
 import com.jeksvp.bpd.exceptions.ApiErrorContainer;
 import com.jeksvp.bpd.exceptions.ApiException;
 import com.jeksvp.bpd.repository.ClientAccessRepository;

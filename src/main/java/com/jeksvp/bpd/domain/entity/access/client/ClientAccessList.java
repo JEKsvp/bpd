@@ -1,6 +1,5 @@
-package com.jeksvp.bpd.domain.entity.access.patient;
+package com.jeksvp.bpd.domain.entity.access.client;
 
-import com.jeksvp.bpd.domain.entity.User;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;

@@ -28,9 +28,9 @@ public class SingUpIntegrationTest {
     private MockMvc mockMvc;
 
     @Test
-    public void singUpAsPatientAndGetTokenTest() throws Exception {
-        String requestBody = IOUtils.toString(getClass().getResource("/web/controller/signup-controller/valid-sign-up-as-patient-request.json"), Charset.defaultCharset());
-        String responseBody = IOUtils.toString(getClass().getResource("/web/controller/signup-controller/valid-sign-up-as-patient-response.json"), Charset.defaultCharset());
+    public void singUpAsClientAndGetTokenTest() throws Exception {
+        String requestBody = IOUtils.toString(getClass().getResource("/web/controller/signup-controller/valid-sign-up-as-client-request.json"), Charset.defaultCharset());
+        String responseBody = IOUtils.toString(getClass().getResource("/web/controller/signup-controller/valid-sign-up-as-client-response.json"), Charset.defaultCharset());
         mockMvc.perform(
                 post("/api/v1/signup")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -49,9 +49,9 @@ public class SingUpIntegrationTest {
     }
 
     @Test
-    public void singUpAsPsychotherapistAndGetTokenTest() throws Exception {
-        String requestBody = IOUtils.toString(getClass().getResource("/web/controller/signup-controller/valid-sign-up-as-psychotherapist-request.json"), Charset.defaultCharset());
-        String responseBody = IOUtils.toString(getClass().getResource("/web/controller/signup-controller/valid-sign-up-as-psychotherapist-response.json"), Charset.defaultCharset());
+    public void singUpAsTherapistAndGetTokenTest() throws Exception {
+        String requestBody = IOUtils.toString(getClass().getResource("/web/controller/signup-controller/valid-sign-up-as-therapist-request.json"), Charset.defaultCharset());
+        String responseBody = IOUtils.toString(getClass().getResource("/web/controller/signup-controller/valid-sign-up-as-therapist-response.json"), Charset.defaultCharset());
         mockMvc.perform(
                 post("/api/v1/signup")
                         .contentType(MediaType.APPLICATION_JSON)
