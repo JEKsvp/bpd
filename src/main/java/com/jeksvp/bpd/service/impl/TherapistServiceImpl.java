@@ -50,18 +50,8 @@ public class TherapistServiceImpl implements TherapistService {
 
     @Override
     public PageableDto<TherapistResponse> getTherapists(TherapistPageableFilter filter) {
-        Predicate filterPredicate = buildTherapistRequest(filter);
         PageRequest pageRequest = PageRequest.of(filter.getPage(), filter.getSize());
-
-        Page<User> therapistsPage = userRepository.findAll(filterPredicate, pageRequest);
+        Page<User> therapistsPage = userRepository.findAll(filter.getMongoPredicate(), pageRequest);
         return new PageableDto<>(therapistsPage, TherapistResponse::create);
-    }
-
-    private Predicate buildTherapistRequest(TherapistPageableFilter filter) {
-        BooleanExpression predicate = QUser.user.roles.contains(Role.THERAPIST);
-        if (filter.getQuery() != null) {
-            predicate = predicate.and(QUser.user.username.contains(filter.getQuery()));
-        }
-        return predicate;
     }
 }

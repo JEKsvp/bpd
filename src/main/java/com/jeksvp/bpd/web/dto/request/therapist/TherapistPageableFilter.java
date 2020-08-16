@@ -1,6 +1,10 @@
 package com.jeksvp.bpd.web.dto.request.therapist;
 
+import com.jeksvp.bpd.domain.entity.QUser;
+import com.jeksvp.bpd.domain.entity.Role;
 import com.jeksvp.bpd.web.dto.request.PageableFilter;
+import com.querydsl.core.types.Predicate;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import lombok.*;
 
 @Data
@@ -9,6 +13,14 @@ import lombok.*;
 @EqualsAndHashCode(callSuper = true)
 public class TherapistPageableFilter extends PageableFilter {
     private String query;
+
+    public Predicate getMongoPredicate() {
+        BooleanExpression predicate = QUser.user.roles.contains(Role.THERAPIST);
+        if (this.getQuery() != null) {
+            predicate = predicate.and(QUser.user.username.contains(this.getQuery()));
+        }
+        return predicate;
+    }
 }
 
 
