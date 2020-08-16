@@ -1,10 +1,8 @@
 package com.jeksvp.bpd.service;
 
-import com.jeksvp.bpd.web.dto.response.UserResponse;
+import com.jeksvp.bpd.web.dto.response.user.UserResponse;
 
 public interface UserService {
 
-    UserResponse getUser(String  userId);
-
-    UserResponse getUserByUsername(String username);
+    UserResponse getByUsername(String username);
 }

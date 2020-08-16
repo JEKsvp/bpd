@@ -10,6 +10,8 @@ import javax.validation.constraints.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode
+@ToString
 public class SignUpRequest {
 
     @Size(min = 1, max = 30)

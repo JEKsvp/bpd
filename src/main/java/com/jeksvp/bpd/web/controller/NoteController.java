@@ -3,7 +3,7 @@ package com.jeksvp.bpd.web.controller;
 import com.jeksvp.bpd.service.NoteService;
 import com.jeksvp.bpd.web.dto.request.note.CreateNoteRequest;
 import com.jeksvp.bpd.web.dto.request.note.UpdateNoteRequest;
-import com.jeksvp.bpd.web.dto.response.NoteResponse;
+import com.jeksvp.bpd.web.dto.response.note.NoteResponse;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;

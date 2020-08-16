@@ -4,6 +4,7 @@ import lombok.SneakyThrows;
 import org.springframework.boot.json.JacksonJsonParser;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.stereotype.Service;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.util.LinkedMultiValueMap;
@@ -46,5 +47,10 @@ public class TokenObtainer {
         String token = obtainAccessToken(mockMvc, login, password);
         map.add("Authorization", "Bearer " + token);
         return new HttpHeaders(map);
+    }
+
+    @SneakyThrows
+    public HttpHeaders obtainDefaultClientHeader(MockMvc mockMvc) {
+        return obtainAuthHeader(mockMvc, DefaultUser.JEKSVP_USERNAME, DefaultUser.JEKSVP_PASSWORD);
     }
 }

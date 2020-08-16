@@ -1,4 +1,4 @@
-package com.jeksvp.bpd.web.dto.response;
+package com.jeksvp.bpd.web.dto.response.user;
 
 import com.jeksvp.bpd.domain.entity.Role;
 import com.jeksvp.bpd.domain.entity.User;

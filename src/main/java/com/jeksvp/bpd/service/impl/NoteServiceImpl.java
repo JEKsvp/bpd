@@ -8,7 +8,7 @@ import com.jeksvp.bpd.service.NoteService;
 import com.jeksvp.bpd.web.dto.creator.Creator;
 import com.jeksvp.bpd.web.dto.request.note.CreateNoteRequest;
 import com.jeksvp.bpd.web.dto.request.note.UpdateNoteRequest;
-import com.jeksvp.bpd.web.dto.response.NoteResponse;
+import com.jeksvp.bpd.web.dto.response.note.NoteResponse;
 import com.jeksvp.bpd.web.dto.updater.Updater;
 import org.springframework.stereotype.Service;
 

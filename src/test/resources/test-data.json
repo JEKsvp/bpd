@@ -16,6 +16,9 @@
   {
     "_class": "com.jeksvp.bpd.domain.entity.User",
     "username": "psycho",
+    "firstName": "psycho first name",
+    "lastName": "psycho last name",
+    "aboutMe": "I'am a therapist",
     "password": "$2a$10$Whfna.9FBPLRH.XZmLW6geQ6jtjkEikU8/wMlDXtNXjmuahM3jsCa",
     "email": "psycho@test.com",
     "roles": [

@@ -2,7 +2,7 @@ package com.jeksvp.bpd.web.controller;
 
 import com.jeksvp.bpd.service.SignUpService;
 import com.jeksvp.bpd.web.dto.request.SignUpRequest;
-import com.jeksvp.bpd.web.dto.response.UserResponse;
+import com.jeksvp.bpd.web.dto.response.user.UserResponse;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;

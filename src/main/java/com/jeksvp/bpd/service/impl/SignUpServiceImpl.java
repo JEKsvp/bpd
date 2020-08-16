@@ -5,7 +5,7 @@ import com.jeksvp.bpd.service.SignUpService;
 import com.jeksvp.bpd.service.UnacceptableUsernameValidator;
 import com.jeksvp.bpd.web.dto.creator.impl.UserCreator;
 import com.jeksvp.bpd.web.dto.request.SignUpRequest;
-import com.jeksvp.bpd.web.dto.response.UserResponse;
+import com.jeksvp.bpd.web.dto.response.user.UserResponse;
 import com.jeksvp.bpd.domain.entity.User;
 import com.jeksvp.bpd.exceptions.ApiErrorContainer;
 import com.jeksvp.bpd.exceptions.ApiException;

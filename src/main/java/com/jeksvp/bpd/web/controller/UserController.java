@@ -2,7 +2,7 @@ package com.jeksvp.bpd.web.controller;
 
 import com.jeksvp.bpd.service.UserService;
 import com.jeksvp.bpd.utils.SecurityUtils;
-import com.jeksvp.bpd.web.dto.response.UserResponse;
+import com.jeksvp.bpd.web.dto.response.user.UserResponse;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,12 +20,12 @@ public class UserController {
 
     @GetMapping("/{username}")
     public UserResponse getUser(@PathVariable String username) {
-        return userService.getUserByUsername(username);
+        return userService.getByUsername(username);
     }
 
     @GetMapping("/current")
     public UserResponse getCurrentUser() {
         String currentUserName = SecurityUtils.getCurrentUserName();
-        return userService.getUserByUsername(currentUserName);
+        return userService.getByUsername(currentUserName);
     }
 }
