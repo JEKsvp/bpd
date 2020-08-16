@@ -17,7 +17,9 @@ public class TherapistPageableFilter extends PageableFilter {
     public Predicate getMongoPredicate() {
         BooleanExpression predicate = QUser.user.roles.contains(Role.THERAPIST);
         if (this.getQuery() != null) {
-            predicate = predicate.and(QUser.user.username.contains(this.getQuery()));
+            predicate = predicate.and(QUser.user.username.containsIgnoreCase(this.getQuery()))
+                    .or(QUser.user.firstName.containsIgnoreCase(this.getQuery()))
+                    .or(QUser.user.lastName.containsIgnoreCase(this.getQuery()));
         }
         return predicate;
     }
