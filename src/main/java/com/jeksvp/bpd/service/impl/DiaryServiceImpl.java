@@ -5,7 +5,7 @@ import com.jeksvp.bpd.exceptions.ApiErrorContainer;
 import com.jeksvp.bpd.exceptions.ApiException;
 import com.jeksvp.bpd.repository.DiaryRepository;
 import com.jeksvp.bpd.service.DiaryService;
-import com.jeksvp.bpd.web.dto.response.DiaryResponse;
+import com.jeksvp.bpd.web.dto.response.diary.DiaryResponse;
 import org.springframework.stereotype.Service;
 
 @Service

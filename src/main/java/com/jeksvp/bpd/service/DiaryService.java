@@ -1,6 +1,6 @@
 package com.jeksvp.bpd.service;
 
-import com.jeksvp.bpd.web.dto.response.DiaryResponse;
+import com.jeksvp.bpd.web.dto.response.diary.DiaryResponse;
 
 public interface DiaryService {
 

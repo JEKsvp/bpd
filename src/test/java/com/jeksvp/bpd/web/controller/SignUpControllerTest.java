@@ -5,7 +5,7 @@ import com.jeksvp.bpd.domain.entity.Role;
 import com.jeksvp.bpd.exceptions.ApiErrorContainer;
 import com.jeksvp.bpd.exceptions.ApiException;
 import com.jeksvp.bpd.service.SignUpService;
-import com.jeksvp.bpd.web.dto.response.UserResponse;
+import com.jeksvp.bpd.web.dto.response.user.UserResponse;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;

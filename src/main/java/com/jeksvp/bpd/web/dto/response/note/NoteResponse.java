@@ -1,4 +1,4 @@
-package com.jeksvp.bpd.web.dto.response;
+package com.jeksvp.bpd.web.dto.response.note;
 
 import com.jeksvp.bpd.domain.entity.diary.Note;
 import com.jeksvp.bpd.web.dto.common.*;

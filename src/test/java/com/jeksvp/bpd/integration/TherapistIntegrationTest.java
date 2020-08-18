@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -54,6 +55,43 @@ public class TherapistIntegrationTest {
                 get("/api/v1/users/current/therapists")
                         .headers(authHeader))
                 .andExpect(status().is(404))
+                .andExpect(content().json(responseBody));
+    }
+
+    @Test
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
+    public void getPageOfTherapistsTest() throws Exception {
+        String username1 = "getPageOfTherapistsTest1";
+        String username2 = "getPageOfTherapistsTest2";
+
+        UserCreator.createUser(mockMvc, username1, Role.THERAPIST);
+        UserCreator.createUser(mockMvc, username2, Role.THERAPIST);
+        HttpHeaders authHeader = tokenObtainer.obtainDefaultClientHeader(mockMvc);
+
+        String responseBody = IOUtils.toString(getClass().getResource("/web/controller/therapist-controller/therapists-response.json"), Charset.defaultCharset());
+        mockMvc.perform(
+                get("/api/v1/therapists")
+                        .headers(authHeader))
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(content().json(responseBody));
+    }
+
+    @Test
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
+    public void getPageOfTherapistsByQueryTest() throws Exception {
+        String username1 = "getPageOfTherapistsTest1";
+        String username2 = "getPageOfTherapistsTest2";
+
+        UserCreator.createUser(mockMvc, username1, Role.THERAPIST);
+        UserCreator.createUser(mockMvc, username2, Role.THERAPIST);
+        HttpHeaders authHeader = tokenObtainer.obtainDefaultClientHeader(mockMvc);
+
+        String responseBody = IOUtils.toString(getClass().getResource("/web/controller/therapist-controller/therapists-by-query-response.json"), Charset.defaultCharset());
+        mockMvc.perform(
+                get("/api/v1/therapists")
+                        .headers(authHeader)
+                        .queryParam("query", "getPageOfTherapists"))
+                .andExpect(status().is2xxSuccessful())
                 .andExpect(content().json(responseBody));
     }
 }

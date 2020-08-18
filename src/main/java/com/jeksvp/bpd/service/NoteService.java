@@ -2,7 +2,7 @@ package com.jeksvp.bpd.service;
 
 import com.jeksvp.bpd.web.dto.request.note.CreateNoteRequest;
 import com.jeksvp.bpd.web.dto.request.note.UpdateNoteRequest;
-import com.jeksvp.bpd.web.dto.response.NoteResponse;
+import com.jeksvp.bpd.web.dto.response.note.NoteResponse;
 
 import java.util.List;
 

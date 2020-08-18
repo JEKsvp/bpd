@@ -5,7 +5,7 @@ import com.jeksvp.bpd.domain.entity.Role;
 import com.jeksvp.bpd.exceptions.ApiErrorContainer;
 import com.jeksvp.bpd.exceptions.ApiException;
 import com.jeksvp.bpd.service.UserService;
-import com.jeksvp.bpd.web.dto.response.UserResponse;
+import com.jeksvp.bpd.web.dto.response.user.UserResponse;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +36,7 @@ public class UserControllerTest {
 
     @Test
     public void returnUserById() throws Exception {
-        when(userService.getUserByUsername("testUser")).thenReturn(testUser());
+        when(userService.getByUsername("testUser")).thenReturn(testUser());
 
         mvc.perform(get("/api/v1/users/{username}", "testUser"))
                 .andExpect(status().isOk())
@@ -46,7 +46,7 @@ public class UserControllerTest {
 
     @Test
     public void returnErrorWhenUserNotFound() throws Exception {
-        when(userService.getUserByUsername("testUser"))
+        when(userService.getByUsername("testUser"))
                 .thenThrow(new ApiException(ApiErrorContainer.RESOURCE_NOT_FOUND, "User not found"));
 
         mvc.perform(get("/api/v1/users/{username}", "testUser"))

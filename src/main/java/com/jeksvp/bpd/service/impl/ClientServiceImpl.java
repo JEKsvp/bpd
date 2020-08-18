@@ -1,11 +1,14 @@
 package com.jeksvp.bpd.service.impl;
 
+import com.jeksvp.bpd.domain.entity.access.AccessStatus;
+import com.jeksvp.bpd.domain.entity.access.client.ClientAccess;
 import com.jeksvp.bpd.domain.entity.access.client.ClientAccessList;
 import com.jeksvp.bpd.exceptions.ApiErrorContainer;
 import com.jeksvp.bpd.exceptions.ApiException;
 import com.jeksvp.bpd.repository.ClientAccessRepository;
 import com.jeksvp.bpd.service.ClientService;
-import com.jeksvp.bpd.web.dto.response.ClientAccessResponse;
+import com.jeksvp.bpd.web.dto.request.client.ClientAccessFilter;
+import com.jeksvp.bpd.web.dto.response.client.ClientAccessResponse;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,9 +25,15 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     public List<ClientAccessResponse> getAccessedClientsOfUser(String username) {
+        return getAccessedClientsOfUser(username, ClientAccessFilter.builder().build());
+    }
+
+    @Override
+    public List<ClientAccessResponse> getAccessedClientsOfUser(String username, ClientAccessFilter filter) {
         return clientAccessRepository.findById(username)
                 .orElseThrow(() -> new ApiException(ApiErrorContainer.CLIENTS_NOT_FOUND))
                 .getAccesses().stream()
+                .filter(filter::passed)
                 .map(ClientAccessResponse::create)
                 .collect(Collectors.toList());
     }

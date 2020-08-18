@@ -1,7 +1,7 @@
 package com.jeksvp.bpd.web.controller;
 
 import com.jeksvp.bpd.service.DiaryService;
-import com.jeksvp.bpd.web.dto.response.DiaryResponse;
+import com.jeksvp.bpd.web.dto.response.diary.DiaryResponse;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;

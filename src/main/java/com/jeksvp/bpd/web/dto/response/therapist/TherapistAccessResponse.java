@@ -1,4 +1,4 @@
-package com.jeksvp.bpd.web.dto.response;
+package com.jeksvp.bpd.web.dto.response.therapist;
 
 import com.jeksvp.bpd.domain.entity.access.therapist.TherapistAccess;
 import lombok.AllArgsConstructor;

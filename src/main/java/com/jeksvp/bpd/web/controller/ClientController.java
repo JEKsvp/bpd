@@ -2,7 +2,8 @@ package com.jeksvp.bpd.web.controller;
 
 import com.jeksvp.bpd.service.ClientService;
 import com.jeksvp.bpd.utils.SecurityUtils;
-import com.jeksvp.bpd.web.dto.response.ClientAccessResponse;
+import com.jeksvp.bpd.web.dto.request.client.ClientAccessFilter;
+import com.jeksvp.bpd.web.dto.response.client.ClientAccessResponse;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -18,8 +19,8 @@ public class ClientController {
     }
 
     @GetMapping("/api/v1/users/current/clients")
-    public List<ClientAccessResponse> getAccessedClientsList() {
+    public List<ClientAccessResponse> getAccessedClientsListWithParams(ClientAccessFilter filter) {
         String currentUserName = SecurityUtils.getCurrentUserName();
-        return clientService.getAccessedClientsOfUser(currentUserName);
+        return clientService.getAccessedClientsOfUser(currentUserName, filter);
     }
 }

@@ -1,0 +1,20 @@
+{
+  "data": [
+    {
+      "username": "getPageOfTherapistsTest1",
+      "firstName": "getPageOfTherapistsTest1 fist name",
+      "lastName": "getPageOfTherapistsTest1 last name"
+    },
+    {
+      "username": "getPageOfTherapistsTest2",
+      "firstName": "getPageOfTherapistsTest2 fist name",
+      "lastName": "getPageOfTherapistsTest2 last name"
+    }
+  ],
+  "paging": {
+    "size": 20,
+    "totalElements": 2,
+    "totalPages": 1,
+    "number": 0
+  }
+}
