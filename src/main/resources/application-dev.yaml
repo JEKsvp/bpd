@@ -26,3 +26,19 @@ spring:
       username: root
       password: testpassword
       authentication-database: admin
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      client-id: bpd-produser
+    consumer:
+      client-id: bpd-consumer
+      group-id: bpd-group
+      auto-offset-reset: earliest
+    security:
+      enabled: true
+      protocol: SASL_PLAINTEXT
+    properties:
+      sasl:
+        mechanism: PLAIN
+        jaas:
+          config: org.apache.kafka.common.security.plain.PlainLoginModule required username="admin" password="admin-secret";

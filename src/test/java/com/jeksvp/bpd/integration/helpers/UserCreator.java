@@ -1,4 +1,4 @@
-package com.jeksvp.bpd.integration;
+package com.jeksvp.bpd.integration.helpers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jeksvp.bpd.domain.entity.Role;

@@ -1,4 +1,4 @@
-package com.jeksvp.bpd.integration;
+package com.jeksvp.bpd.integration.models;
 
 public class DefaultUser {
     public static final String JEKSVP_USERNAME = "jeksvp";

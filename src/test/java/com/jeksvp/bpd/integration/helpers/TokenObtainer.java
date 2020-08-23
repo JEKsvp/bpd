@@ -1,17 +1,17 @@
-package com.jeksvp.bpd.integration;
+package com.jeksvp.bpd.integration.helpers;
 
+import com.jeksvp.bpd.integration.models.DefaultUser;
 import lombok.SneakyThrows;
 import org.springframework.boot.json.JacksonJsonParser;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.stereotype.Service;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
-import static com.jeksvp.bpd.integration.DefaultClient.CLIENT_ID;
-import static com.jeksvp.bpd.integration.DefaultClient.SECRET;
+import static com.jeksvp.bpd.integration.models.DefaultClient.CLIENT_ID;
+import static com.jeksvp.bpd.integration.models.DefaultClient.SECRET;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;

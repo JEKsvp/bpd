@@ -1,6 +1,6 @@
 package com.jeksvp.bpd.configuration;
 
-import com.jeksvp.bpd.integration.TokenObtainer;
+import com.jeksvp.bpd.integration.helpers.TokenObtainer;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.ClassPathResource;

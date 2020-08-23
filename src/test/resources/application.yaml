@@ -2,6 +2,7 @@ server:
   port: 8081
 
 
+
 security:
   oauth2:
     resource:
@@ -22,3 +23,5 @@ spring:
     mongodb:
       database: embeded_db
       uri: localhost
+  main:
+    allow-bean-definition-overriding: true

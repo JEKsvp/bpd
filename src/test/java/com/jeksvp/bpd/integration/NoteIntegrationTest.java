@@ -2,6 +2,7 @@ package com.jeksvp.bpd.integration;
 
 import com.jeksvp.bpd.configuration.IntegrationTestConfiguration;
 import com.jeksvp.bpd.domain.entity.Role;
+import com.jeksvp.bpd.integration.helpers.TokenObtainer;
 import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,9 +19,9 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.nio.charset.Charset;
 
-import static com.jeksvp.bpd.integration.DefaultUser.JEKSVP_PASSWORD;
-import static com.jeksvp.bpd.integration.DefaultUser.JEKSVP_USERNAME;
-import static com.jeksvp.bpd.integration.UserCreator.createUser;
+import static com.jeksvp.bpd.integration.models.DefaultUser.JEKSVP_PASSWORD;
+import static com.jeksvp.bpd.integration.models.DefaultUser.JEKSVP_USERNAME;
+import static com.jeksvp.bpd.integration.helpers.UserCreator.createUser;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
