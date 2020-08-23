@@ -1,5 +1,7 @@
 package com.jeksvp.bpd.integration.helpers.kafka;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.listener.ContainerProperties;
@@ -10,11 +12,13 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class TestConsumer<K, V> {
 
     private final CountDownLatch countDownLatch = new CountDownLatch(1);
     private String lastReceivedMessage = null;
+    private ObjectMapper objectMapper = new ObjectMapper();
 
     public TestConsumer(String topic,
                         ConsumerFactory<? extends K, ? extends V> consumerFactory) {
@@ -27,8 +31,12 @@ public class TestConsumer<K, V> {
         kafkaMessageListenerContainer.start();
     }
 
+    @SneakyThrows
     public void assertNextMessage(String expected) {
-        assertEquals(expected, lastReceivedMessage);
+        assertNotNull(lastReceivedMessage, "There is no message from kafka");
+        JsonNode expectedJson = objectMapper.readTree(expected);
+        JsonNode actualJson = objectMapper.readTree(lastReceivedMessage);
+        assertEquals(expectedJson, actualJson);
     }
 
     @SneakyThrows

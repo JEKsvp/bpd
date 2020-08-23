@@ -50,6 +50,11 @@ public class User implements UserDetails {
                 .build();
     }
 
+    public boolean hasRole(Role role) {
+        return this.roles.stream()
+                .anyMatch(role::equals);
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return roles.stream()

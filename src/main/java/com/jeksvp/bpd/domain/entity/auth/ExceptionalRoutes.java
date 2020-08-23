@@ -14,6 +14,7 @@ public enum ExceptionalRoutes {
     CURRENT_USER_REQUEST("/api/v1/users/current"),
     CURRENT_USER_THERAPISTS_REQUEST("/api/v1/users/current/therapists"),
     CURRENT_USER_CLIENTS_REQUEST("/api/v1/users/current/clients"),
+    SEND_ACCESS_REQUEST("/api/v1/access-request"),
     THERAPISTS_REQUEST("/api/v1/therapists"),
     SIGN_UP_REQUEST("/api/v1/signup");
 

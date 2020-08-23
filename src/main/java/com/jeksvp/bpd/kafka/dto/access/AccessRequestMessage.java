@@ -1,12 +1,13 @@
 package com.jeksvp.bpd.kafka.dto.access;
 
+import com.jeksvp.bpd.utils.ClockSource;
 import com.jeksvp.bpd.utils.SecurityUtils;
+import com.jeksvp.bpd.utils.UuidSource;
 import lombok.*;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import java.time.Clock;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Builder(access = AccessLevel.PRIVATE)
 @Getter
@@ -28,12 +29,12 @@ public class AccessRequestMessage {
     @NotBlank
     private LocalDateTime createDate;
 
-    public static AccessRequestMessage create(String toUsername) {
+    public static AccessRequestMessage create(String toUsername, ClockSource clockSource, UuidSource uuidSource) {
         return AccessRequestMessage.builder()
-                .id(UUID.randomUUID().toString())
+                .id(uuidSource.random().toString())
                 .fromUsername(SecurityUtils.getCurrentUserName())
                 .toUsername(toUsername)
-                .createDate(LocalDateTime.now())
+                .createDate(LocalDateTime.now(clockSource.getClock()))
                 .build();
     }
 }

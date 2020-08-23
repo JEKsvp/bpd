@@ -3,7 +3,7 @@ package com.jeksvp.bpd.integration;
 import com.jeksvp.bpd.configuration.IntegrationTestConfiguration;
 import com.jeksvp.bpd.domain.entity.Role;
 import com.jeksvp.bpd.integration.helpers.TokenObtainer;
-import com.jeksvp.bpd.integration.helpers.UserCreator;
+import com.jeksvp.bpd.integration.helpers.TestUserCreator;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,8 +46,8 @@ public class UserIntegrationTest {
     @Test
     public void userCantGetUserWithoutAccess() throws Exception {
         String username = "anotherUserCantGetEmail";
-        UserCreator.createUser(mockMvc, username, Role.CLIENT);
-        HttpHeaders authHeader = tokenObtainer.obtainAuthHeader(mockMvc, username, UserCreator.PASSWORD);
+        TestUserCreator.createUser(mockMvc, username, Role.CLIENT);
+        HttpHeaders authHeader = tokenObtainer.obtainAuthHeader(mockMvc, username, TestUserCreator.PASSWORD);
         mockMvc.perform(
                 get("/api/v1/users/${username}", JEKSVP_USERNAME)
                         .headers(authHeader))

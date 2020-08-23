@@ -1,7 +1,10 @@
 package com.jeksvp.bpd.domain.entity.diary;
 
+import com.jeksvp.bpd.utils.ClockSource;
+import com.jeksvp.bpd.utils.UuidSource;
 import lombok.*;
 
+import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -25,15 +28,17 @@ public class Note {
                               EmotionalEvaluation emotionalEvaluation,
                               BodyReaction bodyReaction,
                               MyThoughts myThoughts,
-                              OppositeThoughts oppositeThoughts) {
+                              OppositeThoughts oppositeThoughts,
+                              ClockSource clockSource,
+                              UuidSource uuidSource) {
         return Note.builder()
-                .id(UUID.randomUUID().toString())
+                .id(uuidSource.random().toString())
                 .event(event)
                 .emotionalEvaluation(emotionalEvaluation)
                 .bodyReaction(bodyReaction)
                 .myThoughts(myThoughts)
                 .oppositeThoughts(oppositeThoughts)
-                .createDate(LocalDateTime.now())
+                .createDate(LocalDateTime.now(clockSource.getClock()))
                 .build();
     }
 }

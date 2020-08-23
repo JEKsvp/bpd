@@ -21,7 +21,7 @@ import java.nio.charset.Charset;
 
 import static com.jeksvp.bpd.integration.models.DefaultUser.JEKSVP_PASSWORD;
 import static com.jeksvp.bpd.integration.models.DefaultUser.JEKSVP_USERNAME;
-import static com.jeksvp.bpd.integration.helpers.UserCreator.createUser;
+import static com.jeksvp.bpd.integration.helpers.TestUserCreator.createUser;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;

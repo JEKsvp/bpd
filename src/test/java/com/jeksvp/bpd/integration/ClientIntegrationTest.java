@@ -3,7 +3,7 @@ package com.jeksvp.bpd.integration;
 import com.jeksvp.bpd.configuration.IntegrationTestConfiguration;
 import com.jeksvp.bpd.domain.entity.Role;
 import com.jeksvp.bpd.integration.helpers.TokenObtainer;
-import com.jeksvp.bpd.integration.helpers.UserCreator;
+import com.jeksvp.bpd.integration.helpers.TestUserCreator;
 import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -36,8 +36,8 @@ public class ClientIntegrationTest {
     @Test
     public void emptyClientsListForTherapistAfterSignUp() throws Exception {
         String username = "emptyClientsTherapistSignUp";
-        UserCreator.createUser(mockMvc, username, Role.THERAPIST);
-        HttpHeaders authHeader = tokenObtainer.obtainAuthHeader(mockMvc, username, UserCreator.PASSWORD);
+        TestUserCreator.createUser(mockMvc, username, Role.THERAPIST);
+        HttpHeaders authHeader = tokenObtainer.obtainAuthHeader(mockMvc, username, TestUserCreator.PASSWORD);
         mockMvc.perform(
                 get("/api/v1/users/current/clients")
                         .headers(authHeader))
@@ -48,8 +48,8 @@ public class ClientIntegrationTest {
     @Test
     public void notFoundClientListForClientAfterSignUp() throws Exception {
         String username = "404ClientsClientSignUp";
-        UserCreator.createUser(mockMvc, username, Role.CLIENT);
-        HttpHeaders authHeader = tokenObtainer.obtainAuthHeader(mockMvc, username, UserCreator.PASSWORD);
+        TestUserCreator.createUser(mockMvc, username, Role.CLIENT);
+        HttpHeaders authHeader = tokenObtainer.obtainAuthHeader(mockMvc, username, TestUserCreator.PASSWORD);
 
         String responseBody = IOUtils.toString(getClass().getResource("/web/controller/client-controller/clients-not-found-response.json"), Charset.defaultCharset());
         mockMvc.perform(

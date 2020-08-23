@@ -3,7 +3,7 @@ package com.jeksvp.bpd.integration;
 import com.jeksvp.bpd.configuration.IntegrationTestConfiguration;
 import com.jeksvp.bpd.domain.entity.Role;
 import com.jeksvp.bpd.integration.helpers.TokenObtainer;
-import com.jeksvp.bpd.integration.helpers.UserCreator;
+import com.jeksvp.bpd.integration.helpers.TestUserCreator;
 import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -37,8 +37,8 @@ public class TherapistIntegrationTest {
     @Test
     public void emptyTherapistListForClientAfterSignUp() throws Exception {
         String username = "emptyTherapistsClientSignUp";
-        UserCreator.createUser(mockMvc, username, Role.CLIENT);
-        HttpHeaders authHeader = tokenObtainer.obtainAuthHeader(mockMvc, username, UserCreator.PASSWORD);
+        TestUserCreator.createUser(mockMvc, username, Role.CLIENT);
+        HttpHeaders authHeader = tokenObtainer.obtainAuthHeader(mockMvc, username, TestUserCreator.PASSWORD);
         mockMvc.perform(
                 get("/api/v1/users/current/therapists")
                         .headers(authHeader))
@@ -49,8 +49,8 @@ public class TherapistIntegrationTest {
     @Test
     public void notFoundTherapistListForTherapistAfterSignUp() throws Exception {
         String username = "404TherapistsTherapistSignUp";
-        UserCreator.createUser(mockMvc, username, Role.THERAPIST);
-        HttpHeaders authHeader = tokenObtainer.obtainAuthHeader(mockMvc, username, UserCreator.PASSWORD);
+        TestUserCreator.createUser(mockMvc, username, Role.THERAPIST);
+        HttpHeaders authHeader = tokenObtainer.obtainAuthHeader(mockMvc, username, TestUserCreator.PASSWORD);
 
         String responseBody = IOUtils.toString(getClass().getResource("/web/controller/therapist-controller/therapists-not-found-response.json"), Charset.defaultCharset());
         mockMvc.perform(
@@ -66,8 +66,8 @@ public class TherapistIntegrationTest {
         String username1 = "getPageOfTherapistsTest1";
         String username2 = "getPageOfTherapistsTest2";
 
-        UserCreator.createUser(mockMvc, username1, Role.THERAPIST);
-        UserCreator.createUser(mockMvc, username2, Role.THERAPIST);
+        TestUserCreator.createUser(mockMvc, username1, Role.THERAPIST);
+        TestUserCreator.createUser(mockMvc, username2, Role.THERAPIST);
         HttpHeaders authHeader = tokenObtainer.obtainDefaultClientHeader(mockMvc);
 
         String responseBody = IOUtils.toString(getClass().getResource("/web/controller/therapist-controller/therapists-response.json"), Charset.defaultCharset());
@@ -84,8 +84,8 @@ public class TherapistIntegrationTest {
         String username1 = "getPageOfTherapistsTest1";
         String username2 = "getPageOfTherapistsTest2";
 
-        UserCreator.createUser(mockMvc, username1, Role.THERAPIST);
-        UserCreator.createUser(mockMvc, username2, Role.THERAPIST);
+        TestUserCreator.createUser(mockMvc, username1, Role.THERAPIST);
+        TestUserCreator.createUser(mockMvc, username2, Role.THERAPIST);
         HttpHeaders authHeader = tokenObtainer.obtainDefaultClientHeader(mockMvc);
 
         String responseBody = IOUtils.toString(getClass().getResource("/web/controller/therapist-controller/therapists-by-query-response.json"), Charset.defaultCharset());
