@@ -49,11 +49,11 @@ public class AccessServiceImpl implements AccessService {
         TherapistAccessList therapistAccessList = therapistAccessRepository.findById(SecurityUtils.getCurrentUserName())
                 .orElseThrow(() -> new ApiException(ApiErrorContainer.THERAPISTS_ACCESS_LIST_NOT_FOUND));
 
+        AccessRequestMsg accessRequestMsg = pendingAccessRequestMsgCreator.create(accessRequest);
+        accessRequestProducer.sendAccessRequestMessage(accessRequestMsg);
+
         TherapistAccess therapistAccess = pendingTherapistAccessCreator.create(accessRequest);
         therapistAccessList.addAccess(therapistAccess);
         therapistAccessRepository.save(therapistAccessList);
-
-        AccessRequestMsg accessRequestMsg = pendingAccessRequestMsgCreator.create(accessRequest);
-        accessRequestProducer.sendAccessRequestMessage(accessRequestMsg);
     }
 }
