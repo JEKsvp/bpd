@@ -1,7 +1,7 @@
-package com.jeksvp.bpd.web.dto.creator.impl;
+package com.jeksvp.bpd.web.dto.creator;
 
 import com.jeksvp.bpd.domain.entity.User;
-import com.jeksvp.bpd.web.dto.creator.Creator;
+import com.jeksvp.bpd.support.Creator;
 import com.jeksvp.bpd.web.dto.request.SignUpRequest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;

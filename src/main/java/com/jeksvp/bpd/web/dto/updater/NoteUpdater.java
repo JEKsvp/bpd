@@ -1,8 +1,8 @@
-package com.jeksvp.bpd.web.dto.updater.impl;
+package com.jeksvp.bpd.web.dto.updater;
 
 import com.jeksvp.bpd.domain.entity.diary.Note;
 import com.jeksvp.bpd.web.dto.request.note.UpdateNoteRequest;
-import com.jeksvp.bpd.web.dto.updater.Updater;
+import com.jeksvp.bpd.support.Updater;
 import org.springframework.stereotype.Component;
 
 @Component

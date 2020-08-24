@@ -20,12 +20,16 @@ public class TherapistAccessList {
     @Id
     private String username;
 
-    private List<TherapistAccess> accesses;
+    private List<TherapistAccess> accesses = new ArrayList<>();
 
     public static TherapistAccessList create(String username) {
         return TherapistAccessList.builder()
                 .username(username)
                 .accesses(new ArrayList<>())
                 .build();
+    }
+
+    public void addAccess(TherapistAccess access) {
+        accesses.add(access);
     }
 }

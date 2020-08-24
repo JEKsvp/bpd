@@ -1,9 +1,9 @@
-package com.jeksvp.bpd.web.dto.creator.impl;
+package com.jeksvp.bpd.web.dto.creator;
 
 import com.jeksvp.bpd.domain.entity.diary.*;
 import com.jeksvp.bpd.utils.ClockSource;
 import com.jeksvp.bpd.utils.UuidSource;
-import com.jeksvp.bpd.web.dto.creator.Creator;
+import com.jeksvp.bpd.support.Creator;
 import com.jeksvp.bpd.web.dto.request.note.CreateNoteRequest;
 import org.springframework.stereotype.Component;
 

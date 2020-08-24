@@ -1,8 +1,7 @@
 package com.jeksvp.bpd.kafka.producer.impl;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jeksvp.bpd.kafka.dto.access.AccessRequestMessage;
+import com.jeksvp.bpd.kafka.dto.access.AccessRequestMsg;
 import com.jeksvp.bpd.kafka.producer.AccessRequestProducer;
 import lombok.SneakyThrows;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -28,10 +27,10 @@ public class AccessRequestProducerImpl implements AccessRequestProducer {
 
     @SneakyThrows
     @Override
-    public void sendAccessRequestMessage(@Valid AccessRequestMessage accessRequestMessage) {
-        String message = objectMapper.writeValueAsString(accessRequestMessage);
+    public void sendAccessRequestMessage(@Valid AccessRequestMsg accessRequestMsg) {
+        String message = objectMapper.writeValueAsString(accessRequestMsg);
         ListenableFuture<SendResult<String, String>> future =
-                kafkaTemplate.send(ACCESS_REQUEST_TOPIC, accessRequestMessage.getId(), message);
+                kafkaTemplate.send(ACCESS_REQUEST_TOPIC, accessRequestMsg.getId(), message);
         future.get();
     }
 }

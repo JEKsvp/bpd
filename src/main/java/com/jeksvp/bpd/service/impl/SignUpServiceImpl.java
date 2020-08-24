@@ -3,7 +3,7 @@ package com.jeksvp.bpd.service.impl;
 import com.jeksvp.bpd.service.SignUpInitializer;
 import com.jeksvp.bpd.service.SignUpService;
 import com.jeksvp.bpd.service.UnacceptableUsernameValidator;
-import com.jeksvp.bpd.web.dto.creator.impl.UserCreator;
+import com.jeksvp.bpd.web.dto.creator.UserCreator;
 import com.jeksvp.bpd.web.dto.request.SignUpRequest;
 import com.jeksvp.bpd.web.dto.response.user.UserResponse;
 import com.jeksvp.bpd.domain.entity.User;

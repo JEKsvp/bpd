@@ -1,7 +1,5 @@
 package com.jeksvp.bpd.service.impl;
 
-import com.jeksvp.bpd.domain.entity.access.AccessStatus;
-import com.jeksvp.bpd.domain.entity.access.client.ClientAccess;
 import com.jeksvp.bpd.domain.entity.access.client.ClientAccessList;
 import com.jeksvp.bpd.exceptions.ApiErrorContainer;
 import com.jeksvp.bpd.exceptions.ApiException;
@@ -31,7 +29,7 @@ public class ClientServiceImpl implements ClientService {
     @Override
     public List<ClientAccessResponse> getAccessedClientsOfUser(String username, ClientAccessFilter filter) {
         return clientAccessRepository.findById(username)
-                .orElseThrow(() -> new ApiException(ApiErrorContainer.CLIENTS_NOT_FOUND))
+                .orElseThrow(() -> new ApiException(ApiErrorContainer.CLIENTS_ACCESS_LIST_NOT_FOUND))
                 .getAccesses().stream()
                 .filter(filter::passed)
                 .map(ClientAccessResponse::create)

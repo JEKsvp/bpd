@@ -1,4 +1,4 @@
-package com.jeksvp.bpd.filter;
+package com.jeksvp.bpd.security.filter;
 
 import com.jeksvp.bpd.domain.entity.auth.ExceptionalRoutes;
 import com.jeksvp.bpd.domain.entity.auth.ExceptionalUsername;

@@ -3,11 +3,16 @@ package com.jeksvp.bpd.integration;
 import com.jeksvp.bpd.configuration.IntegrationTestConfiguration;
 import com.jeksvp.bpd.configuration.KafkaTestConfiguration;
 import com.jeksvp.bpd.domain.entity.Role;
+import com.jeksvp.bpd.domain.entity.access.AccessStatus;
+import com.jeksvp.bpd.domain.entity.access.therapist.TherapistAccess;
+import com.jeksvp.bpd.domain.entity.access.therapist.TherapistAccessList;
 import com.jeksvp.bpd.integration.helpers.TestTime;
 import com.jeksvp.bpd.integration.helpers.TestUserCreator;
 import com.jeksvp.bpd.integration.helpers.TokenObtainer;
 import com.jeksvp.bpd.integration.helpers.kafka.TestConsumer;
+import com.jeksvp.bpd.integration.models.DefaultUser;
 import com.jeksvp.bpd.kafka.Topics;
+import com.jeksvp.bpd.repository.TherapistAccessRepository;
 import com.jeksvp.bpd.utils.ClockSource;
 import com.jeksvp.bpd.utils.UuidSource;
 import org.apache.commons.io.IOUtils;
@@ -29,10 +34,10 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.nio.charset.Charset;
-import java.time.*;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -56,6 +61,9 @@ public class AccessRequestTest {
 
     @Autowired
     private TokenObtainer tokenObtainer;
+
+    @Autowired
+    private TherapistAccessRepository therapistAccessRepository;
 
     @MockBean
     private UuidSource uuidSource;
@@ -147,7 +155,7 @@ public class AccessRequestTest {
                 .thenReturn(TestTime.DEFAULT_CLOCK);
 
         String requestBody = IOUtils.toString(getClass().getResource("/web/controller/access-controller/send-to-therapist-request.json"), Charset.defaultCharset());
-        String kafkaMessage = IOUtils.toString(getClass().getResource("/kafka/access-request-message.json"), Charset.defaultCharset());
+        String kafkaMessage = IOUtils.toString(getClass().getResource("/kafka/pending-access-request-message.json"), Charset.defaultCharset());
         mockMvc.perform(
                 post("/api/v1/access-request")
                         .headers(defaultAuthHeader)
@@ -155,7 +163,19 @@ public class AccessRequestTest {
                         .content(requestBody))
                 .andExpect(status().is(200));
 
+        TherapistAccessList therapistAccessList = therapistAccessRepository.findById(DefaultUser.JEKSVP_USERNAME)
+                .orElseThrow();
+
+        assertTrue(therapistAccessList.getAccesses().stream()
+                .anyMatch(this::findExpectedPendingAccess)
+        );
+
         testConsumer.await(5, TimeUnit.SECONDS);
         testConsumer.assertNextMessage(kafkaMessage);
+    }
+
+    private boolean findExpectedPendingAccess(TherapistAccess therapistAccess) {
+        return DefaultUser.PSYCHO_USERNAME.equals(therapistAccess.getUsername())
+                && AccessStatus.PENDING.equals(therapistAccess.getStatus());
     }
 }
