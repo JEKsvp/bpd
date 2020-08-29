@@ -32,15 +32,11 @@ public class TestConsumer<K, V> {
     }
 
     @SneakyThrows
-    public void assertNextMessage(String expected) {
+    public void assertNextMessage(String expected, long timeoutInSeconds) {
+        this.countDownLatch.await(timeoutInSeconds, TimeUnit.SECONDS);
         assertNotNull(lastReceivedMessage, "There is no message from kafka");
         JsonNode expectedJson = objectMapper.readTree(expected);
         JsonNode actualJson = objectMapper.readTree(lastReceivedMessage);
         assertEquals(expectedJson, actualJson);
-    }
-
-    @SneakyThrows
-    public void await(long timeout, TimeUnit unit) {
-        this.countDownLatch.await(timeout, unit);
     }
 }

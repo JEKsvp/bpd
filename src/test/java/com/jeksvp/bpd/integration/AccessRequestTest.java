@@ -169,9 +169,7 @@ public class AccessRequestTest {
         assertTrue(therapistAccessList.getAccesses().stream()
                 .anyMatch(this::findExpectedPendingAccess)
         );
-
-        testConsumer.await(5, TimeUnit.SECONDS);
-        testConsumer.assertNextMessage(kafkaMessage);
+        testConsumer.assertNextMessage(kafkaMessage, 5);
     }
 
     private boolean findExpectedPendingAccess(TherapistAccess therapistAccess) {
