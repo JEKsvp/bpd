@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jeksvp.bpd.kafka.GroupIds;
 import com.jeksvp.bpd.kafka.Topics;
 import com.jeksvp.bpd.kafka.dto.access.AccessRequestMsg;
-import com.jeksvp.bpd.service.AccessService;
+import com.jeksvp.bpd.service.access.AccessService;
 import lombok.SneakyThrows;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;

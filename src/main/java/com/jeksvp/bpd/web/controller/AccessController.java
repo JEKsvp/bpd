@@ -1,6 +1,6 @@
 package com.jeksvp.bpd.web.controller;
 
-import com.jeksvp.bpd.service.AccessService;
+import com.jeksvp.bpd.service.access.AccessService;
 import com.jeksvp.bpd.web.dto.request.access.AccessRequest;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
