@@ -7,6 +7,7 @@ import com.jeksvp.bpd.exceptions.ApiException;
 import com.jeksvp.bpd.repository.TherapistAccessRepository;
 import com.jeksvp.bpd.repository.UserRepository;
 import com.jeksvp.bpd.service.TherapistService;
+import com.jeksvp.bpd.web.dto.request.therapist.TherapistAccessFilter;
 import com.jeksvp.bpd.web.dto.request.therapist.TherapistPageableFilter;
 import com.jeksvp.bpd.web.dto.response.paging.PageableDto;
 import com.jeksvp.bpd.web.dto.response.therapist.TherapistAccessResponse;
@@ -31,10 +32,11 @@ public class TherapistServiceImpl implements TherapistService {
     }
 
     @Override
-    public List<TherapistAccessResponse> getAccessedTherapistsOfUser(String username) {
+    public List<TherapistAccessResponse> getTherapistAccesses(String username, TherapistAccessFilter filter) {
         return therapistAccessRepository.findById(username)
                 .orElseThrow(() -> new ApiException(ApiErrorContainer.THERAPISTS_ACCESS_LIST_NOT_FOUND))
                 .getAccesses().stream()
+                .filter(filter::passed)
                 .map(TherapistAccessResponse::create)
                 .collect(Collectors.toList());
     }

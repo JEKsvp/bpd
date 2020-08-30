@@ -18,9 +18,9 @@ public class ClientController {
         this.clientService = clientService;
     }
 
-    @GetMapping("/api/v1/users/current/clients")
+    @GetMapping("/api/v1/users/current/client-accesses")
     public List<ClientAccessResponse> getAccessedClientsListWithParams(ClientAccessFilter filter) {
         String currentUserName = SecurityUtils.getCurrentUserName();
-        return clientService.getAccessedClientsOfUser(currentUserName, filter);
+        return clientService.getAccessedTherapistsOfUser(currentUserName, filter);
     }
 }

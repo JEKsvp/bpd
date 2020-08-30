@@ -1,14 +1,14 @@
 package com.jeksvp.bpd.web.dto.creator;
 
 import com.jeksvp.bpd.domain.entity.access.AccessStatus;
-import com.jeksvp.bpd.domain.entity.access.therapist.TherapistAccess;
+import com.jeksvp.bpd.domain.entity.access.client.ClientAccess;
 import com.jeksvp.bpd.support.Creator;
 import com.jeksvp.bpd.utils.ClockSource;
 import com.jeksvp.bpd.web.dto.request.access.AccessRequest;
 import org.springframework.stereotype.Component;
 
 @Component
-public class PendingTherapistAccessCreator implements Creator<AccessRequest, TherapistAccess> {
+public class PendingTherapistAccessCreator implements Creator<AccessRequest, ClientAccess> {
 
     private final ClockSource clockSource;
 
@@ -17,8 +17,8 @@ public class PendingTherapistAccessCreator implements Creator<AccessRequest, The
     }
 
     @Override
-    public TherapistAccess create(AccessRequest accessRequest) {
-        return TherapistAccess.create(
+    public ClientAccess create(AccessRequest accessRequest) {
+        return ClientAccess.create(
                 accessRequest.getUsername(),
                 AccessStatus.PENDING,
                 clockSource);

@@ -27,4 +27,9 @@ public class TherapistAccess {
                 .updateDate(LocalDateTime.now(clockSource.getClock()))
                 .build();
     }
+
+    public void update(AccessStatus status, ClockSource clockSource) {
+        this.status = status;
+        this.updateDate = LocalDateTime.now(clockSource.getClock());
+    }
 }

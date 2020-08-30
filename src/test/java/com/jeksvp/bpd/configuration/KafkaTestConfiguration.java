@@ -1,5 +1,7 @@
 package com.jeksvp.bpd.configuration;
 
+import com.jeksvp.bpd.integration.helpers.kafka.KafkaListenerSynchronizationAspect;
+import com.jeksvp.bpd.integration.helpers.kafka.KafkaListenerAwaiter;
 import com.jeksvp.bpd.integration.models.TestConsumerGroup;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
@@ -38,6 +40,16 @@ public class KafkaTestConfiguration {
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         return new DefaultKafkaConsumerFactory<>(props);
+    }
+
+    @Bean
+    public KafkaListenerSynchronizationAspect kafkaListenerSynchronizationAspect(KafkaListenerAwaiter kafkaListenerAwaiter) {
+        return new KafkaListenerSynchronizationAspect(kafkaListenerAwaiter);
+    }
+
+    @Bean
+    public KafkaListenerAwaiter kafkaListenerSynchronizer() {
+        return new KafkaListenerAwaiter();
     }
 
 }

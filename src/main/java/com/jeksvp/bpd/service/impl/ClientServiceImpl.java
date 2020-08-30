@@ -22,14 +22,14 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public List<ClientAccessResponse> getAccessedClientsOfUser(String username) {
-        return getAccessedClientsOfUser(username, ClientAccessFilter.builder().build());
+    public List<ClientAccessResponse> getAccessedTherapistsOfUser(String username) {
+        return getAccessedTherapistsOfUser(username, ClientAccessFilter.builder().build());
     }
 
     @Override
-    public List<ClientAccessResponse> getAccessedClientsOfUser(String username, ClientAccessFilter filter) {
+    public List<ClientAccessResponse> getAccessedTherapistsOfUser(String username, ClientAccessFilter filter) {
         return clientAccessRepository.findById(username)
-                .orElseThrow(() -> new ApiException(ApiErrorContainer.CLIENTS_ACCESS_LIST_NOT_FOUND))
+                .orElseThrow(() -> new ApiException(ApiErrorContainer.CLIENT_ACCESS_LIST_NOT_FOUND))
                 .getAccesses().stream()
                 .filter(filter::passed)
                 .map(ClientAccessResponse::create)

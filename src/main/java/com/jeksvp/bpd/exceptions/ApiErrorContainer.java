@@ -9,8 +9,8 @@ public enum ApiErrorContainer {
     DIARY_ALREADY_EXISTS(HttpStatus.CONFLICT, "Diary already exists"),
     NOTE_NOT_FOUND(HttpStatus.NOT_FOUND, "Note not found"),
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "User not found"),
-    THERAPISTS_ACCESS_LIST_NOT_FOUND(HttpStatus.NOT_FOUND, "Therapists access list not found"),
-    CLIENTS_ACCESS_LIST_NOT_FOUND(HttpStatus.NOT_FOUND, "Clients access list not found"),
+    THERAPISTS_ACCESS_LIST_NOT_FOUND(HttpStatus.NOT_FOUND, "Therapist access list not found"),
+    CLIENT_ACCESS_LIST_NOT_FOUND(HttpStatus.NOT_FOUND, "Client access list not found"),
     VALIDATION_ERROR(HttpStatus.BAD_REQUEST, "Validation error"),
     FORBIDDEN(HttpStatus.FORBIDDEN, "Access denied");
 

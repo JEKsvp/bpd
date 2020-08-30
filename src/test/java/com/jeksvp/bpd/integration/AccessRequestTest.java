@@ -5,14 +5,16 @@ import com.jeksvp.bpd.configuration.KafkaTestConfiguration;
 import com.jeksvp.bpd.domain.entity.Role;
 import com.jeksvp.bpd.domain.entity.access.AccessStatus;
 import com.jeksvp.bpd.domain.entity.access.therapist.TherapistAccess;
-import com.jeksvp.bpd.domain.entity.access.therapist.TherapistAccessList;
+import com.jeksvp.bpd.domain.entity.access.client.ClientAccess;
 import com.jeksvp.bpd.integration.helpers.TestTime;
 import com.jeksvp.bpd.integration.helpers.TestUserCreator;
 import com.jeksvp.bpd.integration.helpers.TokenObtainer;
+import com.jeksvp.bpd.integration.helpers.kafka.KafkaListenerAwaiter;
 import com.jeksvp.bpd.integration.helpers.kafka.TestConsumer;
 import com.jeksvp.bpd.integration.models.DefaultUser;
 import com.jeksvp.bpd.kafka.Topics;
 import com.jeksvp.bpd.repository.TherapistAccessRepository;
+import com.jeksvp.bpd.repository.ClientAccessRepository;
 import com.jeksvp.bpd.utils.ClockSource;
 import com.jeksvp.bpd.utils.UuidSource;
 import org.apache.commons.io.IOUtils;
@@ -26,6 +28,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.kafka.core.ConsumerFactory;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.test.context.EmbeddedKafka;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
@@ -35,7 +38,6 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.nio.charset.Charset;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -57,13 +59,22 @@ public class AccessRequestTest {
     @Autowired
     private ConsumerFactory<String, String> consumerFactory;
 
+    @Autowired
+    private KafkaTemplate<String, String> kafkaTemplate;
+
     private TestConsumer<String, String> testConsumer;
 
     @Autowired
     private TokenObtainer tokenObtainer;
 
     @Autowired
+    private ClientAccessRepository clientAccessRepository;
+
+    @Autowired
     private TherapistAccessRepository therapistAccessRepository;
+
+    @Autowired
+    private KafkaListenerAwaiter kafkaListenerAwaiter;
 
     @MockBean
     private UuidSource uuidSource;
@@ -163,17 +174,33 @@ public class AccessRequestTest {
                         .content(requestBody))
                 .andExpect(status().is(200));
 
-        TherapistAccessList therapistAccessList = therapistAccessRepository.findById(DefaultUser.JEKSVP_USERNAME)
-                .orElseThrow();
 
-        assertTrue(therapistAccessList.getAccesses().stream()
-                .anyMatch(this::findExpectedPendingAccess)
+        assertTrue(clientAccessRepository.findById(DefaultUser.JEKSVP_USERNAME)
+                .orElseThrow().getAccesses().stream()
+                .anyMatch(this::findExpectedTherapistWithPendingAccess)
         );
         testConsumer.assertNextMessage(kafkaMessage, 5);
+        kafkaListenerAwaiter.await(5);
+
+        assertTrue(clientAccessRepository.findById(DefaultUser.JEKSVP_USERNAME)
+                .orElseThrow().getAccesses().stream()
+                .anyMatch(this::findExpectedTherapistWithPendingAccess)
+        );
+
+        assertTrue(therapistAccessRepository.findById(DefaultUser.PSYCHO_USERNAME)
+                .orElseThrow().getAccesses().stream()
+                .anyMatch(this::findExpectedClientWithPendingAccess)
+        );
+
     }
 
-    private boolean findExpectedPendingAccess(TherapistAccess therapistAccess) {
-        return DefaultUser.PSYCHO_USERNAME.equals(therapistAccess.getUsername())
+    private boolean findExpectedTherapistWithPendingAccess(ClientAccess clientAccess) {
+        return DefaultUser.PSYCHO_USERNAME.equals(clientAccess.getUsername())
+                && AccessStatus.PENDING.equals(clientAccess.getStatus());
+    }
+
+    private boolean findExpectedClientWithPendingAccess(TherapistAccess therapistAccess) {
+        return DefaultUser.JEKSVP_USERNAME.equals(therapistAccess.getUsername())
                 && AccessStatus.PENDING.equals(therapistAccess.getStatus());
     }
 }

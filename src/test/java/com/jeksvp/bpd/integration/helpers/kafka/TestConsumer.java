@@ -3,6 +3,7 @@ package com.jeksvp.bpd.integration.helpers.kafka;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.listener.ContainerProperties;
 import org.springframework.kafka.listener.KafkaMessageListenerContainer;
@@ -18,17 +19,19 @@ public class TestConsumer<K, V> {
 
     private final CountDownLatch countDownLatch = new CountDownLatch(1);
     private String lastReceivedMessage = null;
-    private ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     public TestConsumer(String topic,
                         ConsumerFactory<? extends K, ? extends V> consumerFactory) {
         ContainerProperties containerProperties = new ContainerProperties(topic);
-        containerProperties.setMessageListener((MessageListener<String, String>) record -> {
-            this.lastReceivedMessage = record.value();
-            this.countDownLatch.countDown();
-        });
+        containerProperties.setMessageListener((MessageListener<String, String>) this::consumeMessage);
         KafkaMessageListenerContainer<? extends K, ? extends V> kafkaMessageListenerContainer = new KafkaMessageListenerContainer<>(consumerFactory, containerProperties);
         kafkaMessageListenerContainer.start();
+    }
+
+    private void consumeMessage(ConsumerRecord<String, String> record) {
+        this.lastReceivedMessage = record.value();
+        this.countDownLatch.countDown();
     }
 
     @SneakyThrows

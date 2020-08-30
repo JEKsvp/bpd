@@ -14,7 +14,7 @@
     "notes": []
   },
   {
-    "_class": "com.jeksvp.bpd.domain.entity.access.therapist.TherapistAccessList",
+    "_class": "com.jeksvp.bpd.domain.entity.access.client.ClientAccessList",
     "username": "jeksvp",
     "accesses": []
   },
@@ -31,7 +31,7 @@
     ]
   },
   {
-    "_class": "com.jeksvp.bpd.domain.entity.access.client.ClientAccessList",
+    "_class": "com.jeksvp.bpd.domain.entity.access.therapist.TherapistAccessList",
     "username": "psycho",
     "accesses": []
   }

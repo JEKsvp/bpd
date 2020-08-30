@@ -1,7 +1,7 @@
 {
   "id": "ba2a9999-3023-4527-b376-4f0a58de7e5d",
-  "fromUsername": "jeksvp",
-  "toUsername": "psycho",
+  "fromClientUsername": "jeksvp",
+  "toTherapistUsername": "psycho",
   "status": "PENDING",
   "createDate": "2020-08-20T23:20:20"
 }

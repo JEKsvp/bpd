@@ -20,10 +20,10 @@ public class AccessRequestMsg {
     private String id;
 
     @NotBlank
-    private String fromUsername;
+    private String fromClientUsername;
 
     @NotBlank
-    private String toUsername;
+    private String toTherapistUsername;
 
     @NotBlank
     private AccessStatusMsg status;
@@ -31,14 +31,14 @@ public class AccessRequestMsg {
     @NotBlank
     private LocalDateTime createDate;
 
-    public static AccessRequestMsg create(String toUsername,
+    public static AccessRequestMsg create(String toTherapistUsername,
                                           AccessStatusMsg accessStatus,
                                           ClockSource clockSource,
                                           UuidSource uuidSource) {
         return AccessRequestMsg.builder()
                 .id(uuidSource.random().toString())
-                .fromUsername(SecurityUtils.getCurrentUserName())
-                .toUsername(toUsername)
+                .fromClientUsername(SecurityUtils.getCurrentUserName())
+                .toTherapistUsername(toTherapistUsername)
                 .status(accessStatus)
                 .createDate(LocalDateTime.now(clockSource.getClock()))
                 .build();

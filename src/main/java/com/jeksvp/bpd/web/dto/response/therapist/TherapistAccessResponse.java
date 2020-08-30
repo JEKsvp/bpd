@@ -12,10 +12,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class TherapistAccessResponse {
     private String username;
+    private String status;
 
     public static TherapistAccessResponse create(TherapistAccess therapistAccess) {
         return TherapistAccessResponse.builder()
                 .username(therapistAccess.getUsername())
+                .status(therapistAccess.getStatus().name())
                 .build();
     }
 }

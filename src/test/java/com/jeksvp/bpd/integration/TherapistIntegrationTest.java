@@ -35,26 +35,26 @@ public class TherapistIntegrationTest {
     private TokenObtainer tokenObtainer;
 
     @Test
-    public void emptyTherapistListForClientAfterSignUp() throws Exception {
-        String username = "emptyTherapistsClientSignUp";
-        TestUserCreator.createUser(mockMvc, username, Role.CLIENT);
+    public void emptyTherapistAccessesForTherapistAfterSignUp() throws Exception {
+        String username = "emptyClientsTherapistSignUp";
+        TestUserCreator.createUser(mockMvc, username, Role.THERAPIST);
         HttpHeaders authHeader = tokenObtainer.obtainAuthHeader(mockMvc, username, TestUserCreator.PASSWORD);
         mockMvc.perform(
-                get("/api/v1/users/current/therapists")
+                get("/api/v1/users/current/therapist-accesses")
                         .headers(authHeader))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(content().json("[]"));
     }
 
     @Test
-    public void notFoundTherapistListForTherapistAfterSignUp() throws Exception {
-        String username = "404TherapistsTherapistSignUp";
-        TestUserCreator.createUser(mockMvc, username, Role.THERAPIST);
+    public void notFoundTherapistAccessesForClientAfterSignUp() throws Exception {
+        String username = "404ClientsClientSignUp";
+        TestUserCreator.createUser(mockMvc, username, Role.CLIENT);
         HttpHeaders authHeader = tokenObtainer.obtainAuthHeader(mockMvc, username, TestUserCreator.PASSWORD);
 
-        String responseBody = IOUtils.toString(getClass().getResource("/web/controller/therapist-controller/therapists-not-found-response.json"), Charset.defaultCharset());
+        String responseBody = IOUtils.toString(getClass().getResource("/web/controller/therapist-controller/tharapist-accesses-not-found-response.json"), Charset.defaultCharset());
         mockMvc.perform(
-                get("/api/v1/users/current/therapists")
+                get("/api/v1/users/current/therapist-accesses")
                         .headers(authHeader))
                 .andExpect(status().is(404))
                 .andExpect(content().json(responseBody));
