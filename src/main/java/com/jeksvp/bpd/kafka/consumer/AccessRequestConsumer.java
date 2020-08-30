@@ -1,7 +1,7 @@
 package com.jeksvp.bpd.kafka.consumer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jeksvp.bpd.kafka.GroupIds;
+import com.jeksvp.bpd.utils.GroupIds;
 import com.jeksvp.bpd.kafka.Topics;
 import com.jeksvp.bpd.kafka.dto.access.AccessRequestMsg;
 import com.jeksvp.bpd.service.access.AccessService;

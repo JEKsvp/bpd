@@ -4,8 +4,8 @@ import com.jeksvp.bpd.configuration.IntegrationTestConfiguration;
 import com.jeksvp.bpd.configuration.KafkaTestConfiguration;
 import com.jeksvp.bpd.domain.entity.Role;
 import com.jeksvp.bpd.domain.entity.access.AccessStatus;
-import com.jeksvp.bpd.domain.entity.access.therapist.TherapistAccess;
 import com.jeksvp.bpd.domain.entity.access.client.ClientAccess;
+import com.jeksvp.bpd.domain.entity.access.therapist.TherapistAccess;
 import com.jeksvp.bpd.integration.helpers.TestTime;
 import com.jeksvp.bpd.integration.helpers.TestUserCreator;
 import com.jeksvp.bpd.integration.helpers.TokenObtainer;
@@ -13,8 +13,8 @@ import com.jeksvp.bpd.integration.helpers.kafka.KafkaListenerAwaiter;
 import com.jeksvp.bpd.integration.helpers.kafka.TestConsumer;
 import com.jeksvp.bpd.integration.models.DefaultUser;
 import com.jeksvp.bpd.kafka.Topics;
-import com.jeksvp.bpd.repository.TherapistAccessRepository;
 import com.jeksvp.bpd.repository.ClientAccessRepository;
+import com.jeksvp.bpd.repository.TherapistAccessRepository;
 import com.jeksvp.bpd.utils.ClockSource;
 import com.jeksvp.bpd.utils.UuidSource;
 import org.apache.commons.io.IOUtils;
@@ -28,7 +28,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.kafka.core.ConsumerFactory;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.test.context.EmbeddedKafka;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
@@ -58,9 +57,6 @@ public class AccessRequestTest {
 
     @Autowired
     private ConsumerFactory<String, String> consumerFactory;
-
-    @Autowired
-    private KafkaTemplate<String, String> kafkaTemplate;
 
     private TestConsumer<String, String> testConsumer;
 
@@ -140,7 +136,7 @@ public class AccessRequestTest {
     }
 
     @Test
-    public void therapistCantSendRequestToClient() throws Exception {
+    public void therapistCantSendPendingRequestToClient() throws Exception {
         String requestBody = IOUtils.toString(getClass().getResource("/web/controller/access-controller/send-from-therapist-to-client-request.json"), Charset.defaultCharset());
         String responseBody = IOUtils.toString(getClass().getResource("/web/controller/access-controller/send-from-therapist-to-client-response.json"), Charset.defaultCharset());
 
@@ -174,11 +170,6 @@ public class AccessRequestTest {
                         .content(requestBody))
                 .andExpect(status().is(200));
 
-
-        assertTrue(clientAccessRepository.findById(DefaultUser.JEKSVP_USERNAME)
-                .orElseThrow().getAccesses().stream()
-                .anyMatch(this::findExpectedTherapistWithPendingAccess)
-        );
         testConsumer.assertNextMessage(kafkaMessage, 5);
         kafkaListenerAwaiter.await(5);
 

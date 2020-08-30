@@ -1,4 +1,4 @@
-package com.jeksvp.bpd.kafka;
+package com.jeksvp.bpd.utils;
 
 public class GroupIds {
 

@@ -3,7 +3,7 @@ package com.jeksvp.bpd.kafka.dto.updater;
 import com.jeksvp.bpd.domain.entity.access.AccessStatus;
 import com.jeksvp.bpd.domain.entity.access.client.ClientAccess;
 import com.jeksvp.bpd.kafka.dto.access.AccessRequestMsg;
-import com.jeksvp.bpd.kafka.util.AccessStatusResolver;
+import com.jeksvp.bpd.utils.AccessStatusResolver;
 import com.jeksvp.bpd.support.Updater;
 import com.jeksvp.bpd.utils.ClockSource;
 import org.springframework.stereotype.Component;
