@@ -1,8 +1,9 @@
 package com.jeksvp.bpd.web.controller;
 
-import com.jeksvp.bpd.service.TherapistService;
-import com.jeksvp.bpd.web.dto.request.therapist.TherapistAccessFilter;
-import com.jeksvp.bpd.web.dto.response.therapist.TherapistAccessResponse;
+import com.jeksvp.bpd.service.AccessListService;
+import com.jeksvp.bpd.service.access.AccessService;
+import com.jeksvp.bpd.web.dto.request.access.AccessFilter;
+import com.jeksvp.bpd.web.dto.response.access.AccessResponse;
 import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,23 +24,26 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
-@WebMvcTest(TherapistController.class)
-public class TherapistControllerTest {
+@WebMvcTest(AccessController.class)
+public class AccessControllerTest {
 
     @Autowired
     private MockMvc mvc;
 
     @MockBean
-    private TherapistService therapistService;
+    private AccessListService accessListService;
+
+    @MockBean
+    private AccessService accessService;
 
     @Test
     @WithMockUser(username = "psycho")
     public void getClientsByCurrentTherapistTest() throws Exception {
-        when(therapistService.getTherapistAccesses(eq("psycho"), eq(TherapistAccessFilter.builder().build())))
-                .thenReturn(buildTherapistAccessList());
+        when(accessListService.getAccessesOfUser(eq("psycho"), eq(AccessFilter.builder().build())))
+                .thenReturn(buildClientAccessList());
 
-        String responseBody = IOUtils.toString(getClass().getResource("/web/controller/therapist-controller/valid-client-accesses-response.json"), Charset.defaultCharset());
-        mvc.perform(get("/api/v1/users/current/therapist-accesses", "testUser"))
+        String responseBody = IOUtils.toString(getClass().getResource("/web/controller/client-controller/valid-client-accesses-response.json"), Charset.defaultCharset());
+        mvc.perform(get("/api/v1/users/current/accesses", "testUser"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(responseBody));
     }
@@ -47,26 +51,26 @@ public class TherapistControllerTest {
     @Test
     @WithMockUser(username = "psycho")
     public void getClientsByCurrentTherapistAndStatusTest() throws Exception {
-        TherapistAccessFilter filter = TherapistAccessFilter.builder()
+        AccessFilter filter = AccessFilter.builder()
                 .status("PENDING")
                 .build();
-        when(therapistService.getTherapistAccesses(eq("psycho"), eq(filter)))
-                .thenReturn(buildPendingTherapistAccessList());
+        when(accessListService.getAccessesOfUser(eq("psycho"), eq(filter)))
+                .thenReturn(buildPendingClientAccessList());
 
-        String responseBody = IOUtils.toString(getClass().getResource("/web/controller/therapist-controller/filtered-therapist-accesses-response.json"), Charset.defaultCharset());
-        mvc.perform(get("/api/v1/users/current/therapist-accesses", "testUser")
+        String responseBody = IOUtils.toString(getClass().getResource("/web/controller/client-controller/filtered-client-accesses-response.json"), Charset.defaultCharset());
+        mvc.perform(get("/api/v1/users/current/accesses", "testUser")
                 .queryParam("status", "PENDING"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(responseBody));
     }
 
-    private List<TherapistAccessResponse> buildTherapistAccessList() {
+    private List<AccessResponse> buildClientAccessList() {
         return List.of(
-                TherapistAccessResponse.builder()
+                AccessResponse.builder()
                         .username("jeksvp")
                         .status("ACCEPT")
                         .build(),
-                TherapistAccessResponse.builder()
+                AccessResponse.builder()
                         .username("tbolivar")
                         .status("PENDING")
                         .build()
@@ -74,9 +78,9 @@ public class TherapistControllerTest {
     }
 
 
-    private List<TherapistAccessResponse> buildPendingTherapistAccessList() {
+    private List<AccessResponse> buildPendingClientAccessList() {
         return List.of(
-                TherapistAccessResponse.builder()
+                AccessResponse.builder()
                         .username("tbolivar")
                         .status("PENDING")
                         .build()

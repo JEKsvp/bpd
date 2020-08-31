@@ -1,49 +1,22 @@
 package com.jeksvp.bpd.service.impl;
 
 import com.jeksvp.bpd.domain.entity.User;
-import com.jeksvp.bpd.domain.entity.access.therapist.TherapistAccessList;
-import com.jeksvp.bpd.exceptions.ApiErrorContainer;
-import com.jeksvp.bpd.exceptions.ApiException;
-import com.jeksvp.bpd.repository.TherapistAccessRepository;
 import com.jeksvp.bpd.repository.UserRepository;
 import com.jeksvp.bpd.service.TherapistService;
-import com.jeksvp.bpd.web.dto.request.therapist.TherapistAccessFilter;
 import com.jeksvp.bpd.web.dto.request.therapist.TherapistPageableFilter;
 import com.jeksvp.bpd.web.dto.response.paging.PageableDto;
-import com.jeksvp.bpd.web.dto.response.therapist.TherapistAccessResponse;
 import com.jeksvp.bpd.web.dto.response.therapist.TherapistResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 @Service
 public class TherapistServiceImpl implements TherapistService {
 
-    private final TherapistAccessRepository therapistAccessRepository;
     private final UserRepository userRepository;
 
-    public TherapistServiceImpl(TherapistAccessRepository therapistAccessRepository,
-                                UserRepository userRepository) {
-        this.therapistAccessRepository = therapistAccessRepository;
+    public TherapistServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
-    }
-
-    @Override
-    public List<TherapistAccessResponse> getTherapistAccesses(String username, TherapistAccessFilter filter) {
-        return therapistAccessRepository.findById(username)
-                .orElseThrow(() -> new ApiException(ApiErrorContainer.THERAPISTS_ACCESS_LIST_NOT_FOUND))
-                .getAccesses().stream()
-                .filter(filter::passed)
-                .map(TherapistAccessResponse::create)
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public void createAccessTherapistsList(String username) {
-        therapistAccessRepository.save(TherapistAccessList.create(username));
     }
 
     @Override

@@ -35,32 +35,6 @@ public class TherapistIntegrationTest {
     private TokenObtainer tokenObtainer;
 
     @Test
-    public void emptyTherapistAccessesForTherapistAfterSignUp() throws Exception {
-        String username = "emptyClientsTherapistSignUp";
-        TestUserCreator.createUser(mockMvc, username, Role.THERAPIST);
-        HttpHeaders authHeader = tokenObtainer.obtainAuthHeader(mockMvc, username, TestUserCreator.PASSWORD);
-        mockMvc.perform(
-                get("/api/v1/users/current/therapist-accesses")
-                        .headers(authHeader))
-                .andExpect(status().is2xxSuccessful())
-                .andExpect(content().json("[]"));
-    }
-
-    @Test
-    public void notFoundTherapistAccessesForClientAfterSignUp() throws Exception {
-        String username = "404ClientsClientSignUp";
-        TestUserCreator.createUser(mockMvc, username, Role.CLIENT);
-        HttpHeaders authHeader = tokenObtainer.obtainAuthHeader(mockMvc, username, TestUserCreator.PASSWORD);
-
-        String responseBody = IOUtils.toString(getClass().getResource("/web/controller/therapist-controller/tharapist-accesses-not-found-response.json"), Charset.defaultCharset());
-        mockMvc.perform(
-                get("/api/v1/users/current/therapist-accesses")
-                        .headers(authHeader))
-                .andExpect(status().is(404))
-                .andExpect(content().json(responseBody));
-    }
-
-    @Test
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
     public void getPageOfTherapistsTest() throws Exception {
         String username1 = "getPageOfTherapistsTest1";

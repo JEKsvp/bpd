@@ -3,12 +3,10 @@ package com.jeksvp.bpd.service.access.impl;
 import com.jeksvp.bpd.domain.entity.Role;
 import com.jeksvp.bpd.domain.entity.User;
 import com.jeksvp.bpd.domain.entity.access.AccessStatus;
-import com.jeksvp.bpd.domain.entity.access.client.ClientAccessList;
-import com.jeksvp.bpd.domain.entity.access.therapist.TherapistAccessList;
+import com.jeksvp.bpd.domain.entity.access.AccessList;
 import com.jeksvp.bpd.exceptions.ApiErrorContainer;
 import com.jeksvp.bpd.exceptions.ApiException;
-import com.jeksvp.bpd.repository.ClientAccessRepository;
-import com.jeksvp.bpd.repository.TherapistAccessRepository;
+import com.jeksvp.bpd.repository.AccessListRepository;
 import com.jeksvp.bpd.repository.UserRepository;
 import com.jeksvp.bpd.service.access.AccessRequestValidator;
 import com.jeksvp.bpd.utils.AccessStatusResolver;
@@ -21,15 +19,12 @@ import org.springframework.stereotype.Component;
 public class AccessRequestValidatorImpl implements AccessRequestValidator {
 
     private final UserRepository userRepository;
-    private final ClientAccessRepository clientAccessRepository;
-    private final TherapistAccessRepository therapistAccessRepository;
+    private final AccessListRepository accessListRepository;
 
     public AccessRequestValidatorImpl(UserRepository userRepository,
-                                      ClientAccessRepository clientAccessRepository,
-                                      TherapistAccessRepository therapistAccessRepository) {
+                                      AccessListRepository accessListRepository) {
         this.userRepository = userRepository;
-        this.clientAccessRepository = clientAccessRepository;
-        this.therapistAccessRepository = therapistAccessRepository;
+        this.accessListRepository = accessListRepository;
     }
 
     @Override
@@ -75,29 +70,16 @@ public class AccessRequestValidatorImpl implements AccessRequestValidator {
         String toUsername = toUser.getUsername();
         AccessStatus accessStatus = AccessStatusResolver.resolve(status);
         if (!AccessStatus.PENDING.equals(accessStatus)) {
-            if (toUser.hasRole(Role.CLIENT)) {
-                checkRequestFromTherapistToClient(fromUsername, toUsername);
-                checkRequestFromClientToTherapist(toUsername, fromUsername);
-            } else {
-                checkRequestFromClientToTherapist(fromUsername, toUsername);
-                checkRequestFromTherapistToClient(toUsername, fromUsername);
-            }
+            checkAccessStatusRequest(fromUsername, toUsername);
+            checkAccessStatusRequest(toUsername, fromUsername);
         }
     }
 
-    private void checkRequestFromClientToTherapist(String client, String therapist) {
-        ClientAccessList clientAccessList = clientAccessRepository.findById(client)
+    private void checkAccessStatusRequest(String from, String to) {
+        AccessList accessList = accessListRepository.findById(from)
                 .orElseThrow(() -> new ApiException(ApiErrorContainer.CLIENT_ACCESS_LIST_NOT_FOUND));
-        clientAccessList.findAccess(therapist)
+        accessList.findAccess(to)
                 .filter(clientAccess -> AccessStatus.PENDING.equals(clientAccess.getStatus()))
-                .orElseThrow(() -> new ApiException(ApiErrorContainer.THERE_IS_NO_PENDING_REQUEST));
-    }
-
-    private void checkRequestFromTherapistToClient(String therapist, String client) {
-        TherapistAccessList therapistAccessList = therapistAccessRepository.findById(therapist)
-                .orElseThrow(() -> new ApiException(ApiErrorContainer.CLIENT_ACCESS_LIST_NOT_FOUND));
-        therapistAccessList.findAccess(client)
-                .filter(therapistAccess -> AccessStatus.PENDING.equals(therapistAccess.getStatus()))
                 .orElseThrow(() -> new ApiException(ApiErrorContainer.THERE_IS_NO_PENDING_REQUEST));
     }
 }

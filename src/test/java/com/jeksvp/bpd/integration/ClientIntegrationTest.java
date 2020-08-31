@@ -34,28 +34,27 @@ public class ClientIntegrationTest {
     private TokenObtainer tokenObtainer;
 
     @Test
-    public void emptyClientAccessListForClientAfterSignUp() throws Exception {
+    public void emptyAccessListForClientAfterSignUp() throws Exception {
         String username = "emptyClntAccClntAfterSignUp";
         TestUserCreator.createUser(mockMvc, username, Role.CLIENT);
         HttpHeaders authHeader = tokenObtainer.obtainAuthHeader(mockMvc, username, TestUserCreator.PASSWORD);
         mockMvc.perform(
-                get("/api/v1/users/current/client-accesses")
+                get("/api/v1/users/current/accesses")
                         .headers(authHeader))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(content().json("[]"));
     }
 
     @Test
-    public void notFoundClientAccessesForTherapistAfterSignUp() throws Exception {
+    public void emptyAccessListForTherapistAfterSignUp() throws Exception {
         String username = "404TherapistsTherapistSignUp";
         TestUserCreator.createUser(mockMvc, username, Role.THERAPIST);
         HttpHeaders authHeader = tokenObtainer.obtainAuthHeader(mockMvc, username, TestUserCreator.PASSWORD);
 
-        String responseBody = IOUtils.toString(getClass().getResource("/web/controller/therapist-controller/therapists-not-found-response.json"), Charset.defaultCharset());
         mockMvc.perform(
-                get("/api/v1/users/current/client-accesses")
+                get("/api/v1/users/current/accesses")
                         .headers(authHeader))
-                .andExpect(status().is(404))
-                .andExpect(content().json(responseBody));
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(content().json("[]"));
     }
 }
