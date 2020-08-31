@@ -1,5 +1,6 @@
 package com.jeksvp.bpd.config;
 
+import com.jeksvp.bpd.security.filter.HttpRequestAccessResolver;
 import com.jeksvp.bpd.security.filter.AuthorizationFilter;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Value;
@@ -40,8 +41,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     @SneakyThrows
-    public AuthorizationFilter createAuthFilter() {
-        return new AuthorizationFilter();
+    public AuthorizationFilter createAuthFilter(HttpRequestAccessResolver httpRequestAccessResolver) {
+        return new AuthorizationFilter(httpRequestAccessResolver);
     }
 
     @Bean

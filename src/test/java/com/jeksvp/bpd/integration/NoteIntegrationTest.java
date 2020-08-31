@@ -2,6 +2,7 @@ package com.jeksvp.bpd.integration;
 
 import com.jeksvp.bpd.configuration.IntegrationTestConfiguration;
 import com.jeksvp.bpd.domain.entity.Role;
+import com.jeksvp.bpd.integration.helpers.TestUserCreator;
 import com.jeksvp.bpd.integration.helpers.TokenObtainer;
 import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.BeforeEach;
