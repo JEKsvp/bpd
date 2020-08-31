@@ -199,7 +199,7 @@ public class AccessRequestTest {
 
     @Test
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
-    public void sendPendingAccessRequestToTherapist() throws Exception {
+    public void sendPendingAndAcceptAccessRequests() throws Exception {
         when(uuidSource.random())
                 .thenReturn(UUID.fromString("ba2a9999-3023-4527-b376-4f0a58de7e5d"));
         when(clockSource.getClock())

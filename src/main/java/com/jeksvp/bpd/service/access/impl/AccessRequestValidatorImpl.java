@@ -37,23 +37,37 @@ public class AccessRequestValidatorImpl implements AccessRequestValidator {
         User toUser = userRepository.findById(accessRequest.getUsername())
                 .orElseThrow(() -> new ApiException(ApiErrorContainer.USER_NOT_FOUND));
 
+        if (SecurityUtils.hasRole(Role.THERAPIST)) {
+            validateAsTherapist(accessRequest, toUser);
+        }
 
-        if (SecurityUtils.hasRole(Role.THERAPIST) && toUser.hasRole(Role.THERAPIST)) {
+        if (SecurityUtils.hasRole(Role.CLIENT)) {
+            validateAsClient(accessRequest, toUser);
+        }
+
+        validateStatus(toUser, accessRequest.getStatus());
+    }
+
+    private void validateAsTherapist(AccessRequest accessRequest, User toUser) {
+        if (toUser.hasRole(Role.THERAPIST)) {
             throw new ApiException(ApiErrorContainer.USER_NOT_FOUND);
         }
 
-        if (SecurityUtils.hasRole(Role.CLIENT) && toUser.hasRole(Role.CLIENT)) {
-            throw new ApiException(ApiErrorContainer.USER_NOT_FOUND);
-        }
-
-        if (SecurityUtils.hasRole(Role.THERAPIST) && AccessStatusRequest.PENDING.equals(accessRequest.getStatus())) {
+        if (AccessStatusRequest.PENDING.equals(accessRequest.getStatus())) {
             throw new ApiException(ApiErrorContainer.THERAPIST_CANT_PENDING_ACCESS_REQUEST);
         }
+    }
 
-        if (SecurityUtils.hasRole(Role.CLIENT) && AccessStatusRequest.ACCEPT.equals(accessRequest.getStatus())) {
+    private void validateAsClient(AccessRequest accessRequest, User toUser) {
+        if (toUser.hasRole(Role.CLIENT)) {
+            throw new ApiException(ApiErrorContainer.USER_NOT_FOUND);
+        }
+        if (AccessStatusRequest.ACCEPT.equals(accessRequest.getStatus())) {
             throw new ApiException(ApiErrorContainer.CLIENT_CANT_ACCEPT_ACCESS_REQUEST);
         }
-        validateStatus(toUser, accessRequest.getStatus());
+        if (AccessStatusRequest.DECLINE.equals(accessRequest.getStatus())) {
+            throw new ApiException(ApiErrorContainer.CLIENT_CANT_DECLINE_ACCESS_REQUEST);
+        }
     }
 
     private void validateStatus(User toUser, AccessStatusRequest status) {
@@ -61,7 +75,7 @@ public class AccessRequestValidatorImpl implements AccessRequestValidator {
         String toUsername = toUser.getUsername();
         AccessStatus accessStatus = AccessStatusResolver.resolve(status);
         if (!AccessStatus.PENDING.equals(accessStatus)) {
-            if (toClient(toUser)) {
+            if (toUser.hasRole(Role.CLIENT)) {
                 checkRequestFromTherapistToClient(fromUsername, toUsername);
                 checkRequestFromClientToTherapist(toUsername, fromUsername);
             } else {
@@ -69,10 +83,6 @@ public class AccessRequestValidatorImpl implements AccessRequestValidator {
                 checkRequestFromTherapistToClient(toUsername, fromUsername);
             }
         }
-    }
-
-    private boolean toClient(User toUser) {
-        return toUser.hasRole(Role.CLIENT);
     }
 
     private void checkRequestFromClientToTherapist(String client, String therapist) {
