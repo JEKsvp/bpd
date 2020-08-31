@@ -55,4 +55,9 @@ public class AccessList {
         return accesses.stream()
                 .anyMatch(a -> a.getUsername().equals(username));
     }
+
+    public boolean hasAccessStatusFor(String username, AccessStatus accessStatus) {
+        return accesses.stream()
+                .anyMatch(access -> access.getUsername().equals(username) && accessStatus.equals(access.getStatus()));
+    }
 }

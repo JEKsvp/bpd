@@ -15,6 +15,7 @@ public enum ApiErrorContainer {
     CLIENT_CANT_ACCEPT_ACCESS_REQUEST(HttpStatus.CONFLICT, "Client can't ACCEPT access request"),
     CLIENT_CANT_DECLINE_ACCESS_REQUEST(HttpStatus.CONFLICT, "Client can't DECLINE access request"),
     THERAPIST_CANT_PENDING_ACCESS_REQUEST(HttpStatus.CONFLICT, "Therapist can't PENDING access request"),
+    CLIENT_ALREADY_HAS_THERAPIST(HttpStatus.CONFLICT, "Client already has therapist"),
     VALIDATION_ERROR(HttpStatus.BAD_REQUEST, "Validation error"),
     FORBIDDEN(HttpStatus.FORBIDDEN, "Access denied");
 
