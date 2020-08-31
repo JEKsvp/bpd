@@ -19,19 +19,18 @@ public class AccessServiceImpl implements AccessService {
     private final AccessRequestValidator accessRequestValidator;
     private final AccessRequestProducer accessRequestProducer;
     private final AccessRequestMsgCreator accessRequestMsgCreator;
-    private final ClientAccessMessageProcessor clientAccessMessageProcessor;
-    private final TherapistAccessMessageProcessor therapistAccessMessageProcessor;
+    private final AccessMessageProcessorImpl accessMessageProcessorImpl;
     private final UserRepository userRepository;
 
     public AccessServiceImpl(AccessRequestValidator accessRequestValidator,
                              AccessRequestProducer accessRequestProducer,
                              AccessRequestMsgCreator accessRequestMsgCreator,
-                             ClientAccessMessageProcessor clientAccessMessageProcessor, TherapistAccessMessageProcessor therapistAccessMessageProcessor, UserRepository userRepository) {
+                             AccessMessageProcessorImpl accessMessageProcessorImpl,
+                             UserRepository userRepository) {
         this.accessRequestValidator = accessRequestValidator;
         this.accessRequestProducer = accessRequestProducer;
         this.accessRequestMsgCreator = accessRequestMsgCreator;
-        this.clientAccessMessageProcessor = clientAccessMessageProcessor;
-        this.therapistAccessMessageProcessor = therapistAccessMessageProcessor;
+        this.accessMessageProcessorImpl = accessMessageProcessorImpl;
         this.userRepository = userRepository;
     }
 
@@ -52,12 +51,7 @@ public class AccessServiceImpl implements AccessService {
         User toUser = userRepository.findById(accessRequestMsg.getToUsername())
                 .orElseThrow(() -> new ApiException(ApiErrorContainer.USER_NOT_FOUND));
 
-        if (fromUser.hasRole(Role.CLIENT)) {
-            clientAccessMessageProcessor.process(accessRequestMsg, fromUser.getUsername(), toUser.getUsername());
-            therapistAccessMessageProcessor.process(accessRequestMsg, toUser.getUsername(), fromUser.getUsername());
-        } else {
-            therapistAccessMessageProcessor.process(accessRequestMsg, fromUser.getUsername(), toUser.getUsername());
-            clientAccessMessageProcessor.process(accessRequestMsg, toUser.getUsername(), fromUser.getUsername());
-        }
+        accessMessageProcessorImpl.process(accessRequestMsg, fromUser.getUsername(), toUser.getUsername());
+        accessMessageProcessorImpl.process(accessRequestMsg, toUser.getUsername(), fromUser.getUsername());
     }
 }

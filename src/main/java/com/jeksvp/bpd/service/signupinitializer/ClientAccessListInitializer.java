@@ -2,26 +2,26 @@ package com.jeksvp.bpd.service.signupinitializer;
 
 import com.jeksvp.bpd.domain.entity.Role;
 import com.jeksvp.bpd.domain.entity.User;
-import com.jeksvp.bpd.service.ClientService;
+import com.jeksvp.bpd.service.AccessListService;
 import com.jeksvp.bpd.service.SignUpInitializer;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ClientAccessListInitializer implements SignUpInitializer {
 
-    private final ClientService clientService;
+    private final AccessListService accessListService;
 
-    public ClientAccessListInitializer(ClientService clientService) {
-        this.clientService = clientService;
+    public ClientAccessListInitializer(AccessListService accessListService) {
+        this.accessListService = accessListService;
     }
 
     @Override
     public boolean shouldCreate(User user) {
-        return user.getRoles().contains(Role.CLIENT);
+        return true;
     }
 
     @Override
     public void createEntityFor(User user) {
-        clientService.createAccessClientsList(user.getUsername());
+        accessListService.createAccessClientsList(user.getUsername());
     }
 }

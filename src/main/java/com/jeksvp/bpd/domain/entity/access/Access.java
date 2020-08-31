@@ -1,6 +1,5 @@
-package com.jeksvp.bpd.domain.entity.access.therapist;
+package com.jeksvp.bpd.domain.entity.access;
 
-import com.jeksvp.bpd.domain.entity.access.AccessStatus;
 import com.jeksvp.bpd.utils.ClockSource;
 import lombok.*;
 
@@ -12,7 +11,7 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode
 @ToString
 @Getter
-public class TherapistAccess {
+public class Access {
 
     private String username;
 
@@ -20,8 +19,8 @@ public class TherapistAccess {
 
     private LocalDateTime updateDate;
 
-    public static TherapistAccess create(String username, AccessStatus accessStatus, ClockSource clockSource) {
-        return TherapistAccess.builder()
+    public static Access create(String username, AccessStatus accessStatus, ClockSource clockSource) {
+        return Access.builder()
                 .username(username)
                 .status(accessStatus)
                 .updateDate(LocalDateTime.now(clockSource.getClock()))

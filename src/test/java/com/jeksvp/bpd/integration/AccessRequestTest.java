@@ -3,9 +3,8 @@ package com.jeksvp.bpd.integration;
 import com.jeksvp.bpd.configuration.IntegrationTestConfiguration;
 import com.jeksvp.bpd.configuration.KafkaTestConfiguration;
 import com.jeksvp.bpd.domain.entity.Role;
+import com.jeksvp.bpd.domain.entity.access.Access;
 import com.jeksvp.bpd.domain.entity.access.AccessStatus;
-import com.jeksvp.bpd.domain.entity.access.client.ClientAccess;
-import com.jeksvp.bpd.domain.entity.access.therapist.TherapistAccess;
 import com.jeksvp.bpd.integration.helpers.TestTime;
 import com.jeksvp.bpd.integration.helpers.TestUserCreator;
 import com.jeksvp.bpd.integration.helpers.TokenObtainer;
@@ -13,8 +12,7 @@ import com.jeksvp.bpd.integration.helpers.kafka.KafkaListenerAwaiter;
 import com.jeksvp.bpd.integration.helpers.kafka.TestConsumer;
 import com.jeksvp.bpd.integration.models.DefaultUser;
 import com.jeksvp.bpd.kafka.Topics;
-import com.jeksvp.bpd.repository.ClientAccessRepository;
-import com.jeksvp.bpd.repository.TherapistAccessRepository;
+import com.jeksvp.bpd.repository.AccessListRepository;
 import com.jeksvp.bpd.utils.ClockSource;
 import com.jeksvp.bpd.utils.UuidSource;
 import org.apache.commons.io.IOUtils;
@@ -64,10 +62,7 @@ public class AccessRequestTest {
     private TokenObtainer tokenObtainer;
 
     @Autowired
-    private ClientAccessRepository clientAccessRepository;
-
-    @Autowired
-    private TherapistAccessRepository therapistAccessRepository;
+    private AccessListRepository accessListRepository;
 
     @Autowired
     private KafkaListenerAwaiter kafkaListenerAwaiter;
@@ -217,12 +212,12 @@ public class AccessRequestTest {
         testConsumer.assertNextMessage(pendingKafkaMessage, 5);
         kafkaListenerAwaiter.await(5);
 
-        assertTrue(clientAccessRepository.findById(DefaultUser.JEKSVP_USERNAME)
+        assertTrue(accessListRepository.findById(DefaultUser.JEKSVP_USERNAME)
                 .orElseThrow().getAccesses().stream()
                 .anyMatch(clientAccess -> findExpectedTherapistWithStatus(clientAccess, AccessStatus.PENDING))
         );
 
-        assertTrue(therapistAccessRepository.findById(DefaultUser.PSYCHO_USERNAME)
+        assertTrue(accessListRepository.findById(DefaultUser.PSYCHO_USERNAME)
                 .orElseThrow().getAccesses().stream()
                 .anyMatch(therapistAccess -> findExpectedClientWithStatus(therapistAccess, AccessStatus.PENDING))
         );
@@ -239,24 +234,24 @@ public class AccessRequestTest {
         testConsumer.assertNextMessage(acceptKafkaMessage, 5);
         kafkaListenerAwaiter.await(5);
 
-        assertTrue(clientAccessRepository.findById(DefaultUser.JEKSVP_USERNAME)
+        assertTrue(accessListRepository.findById(DefaultUser.JEKSVP_USERNAME)
                 .orElseThrow().getAccesses().stream()
                 .anyMatch(clientAccess -> findExpectedTherapistWithStatus(clientAccess, AccessStatus.ACCEPT))
         );
 
-        assertTrue(therapistAccessRepository.findById(DefaultUser.PSYCHO_USERNAME)
+        assertTrue(accessListRepository.findById(DefaultUser.PSYCHO_USERNAME)
                 .orElseThrow().getAccesses().stream()
                 .anyMatch(therapistAccess -> findExpectedClientWithStatus(therapistAccess, AccessStatus.ACCEPT))
         );
     }
 
-    private boolean findExpectedTherapistWithStatus(ClientAccess clientAccess, AccessStatus status) {
-        return DefaultUser.PSYCHO_USERNAME.equals(clientAccess.getUsername())
-                && status.equals(clientAccess.getStatus());
+    private boolean findExpectedTherapistWithStatus(Access access, AccessStatus status) {
+        return DefaultUser.PSYCHO_USERNAME.equals(access.getUsername())
+                && status.equals(access.getStatus());
     }
 
-    private boolean findExpectedClientWithStatus(TherapistAccess therapistAccess, AccessStatus status) {
-        return DefaultUser.JEKSVP_USERNAME.equals(therapistAccess.getUsername())
-                && status.equals(therapistAccess.getStatus());
+    private boolean findExpectedClientWithStatus(Access access, AccessStatus status) {
+        return DefaultUser.JEKSVP_USERNAME.equals(access.getUsername())
+                && status.equals(access.getStatus());
     }
 }
