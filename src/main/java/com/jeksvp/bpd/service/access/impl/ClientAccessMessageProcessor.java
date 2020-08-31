@@ -5,39 +5,33 @@ import com.jeksvp.bpd.domain.entity.access.client.ClientAccessList;
 import com.jeksvp.bpd.exceptions.ApiErrorContainer;
 import com.jeksvp.bpd.exceptions.ApiException;
 import com.jeksvp.bpd.kafka.dto.access.AccessRequestMsg;
-import com.jeksvp.bpd.kafka.dto.creator.ClientAccessCreator;
-import com.jeksvp.bpd.kafka.dto.updater.ClientAccessUpdater;
 import com.jeksvp.bpd.repository.ClientAccessRepository;
 import com.jeksvp.bpd.service.access.AccessMessageProcessor;
+import com.jeksvp.bpd.utils.AccessStatusResolver;
+import com.jeksvp.bpd.utils.ClockSource;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ClientAccessMessageProcessor implements AccessMessageProcessor {
 
     private final ClientAccessRepository clientAccessRepository;
-    private final ClientAccessCreator clientAccessCreator;
-    private final ClientAccessUpdater clientAccessUpdater;
+    private final ClockSource clockSource;
 
-    public ClientAccessMessageProcessor(ClientAccessRepository clientAccessRepository,
-                                        ClientAccessCreator clientAccessCreator,
-                                        ClientAccessUpdater clientAccessUpdater) {
+    public ClientAccessMessageProcessor(ClientAccessRepository clientAccessRepository, ClockSource clockSource) {
         this.clientAccessRepository = clientAccessRepository;
-        this.clientAccessCreator = clientAccessCreator;
-        this.clientAccessUpdater = clientAccessUpdater;
+        this.clockSource = clockSource;
     }
 
     @Override
-    public void process(AccessRequestMsg accessRequestMsg) {
-        String clientUsername = accessRequestMsg.getFromClientUsername();
+    public void process(AccessRequestMsg accessRequestMsg, String clientUsername, String therapistUsername) {
         ClientAccessList clientAccessList = clientAccessRepository.findById(clientUsername)
                 .orElseThrow(() -> new ApiException(ApiErrorContainer.CLIENT_ACCESS_LIST_NOT_FOUND));
-        String therapistUsername = accessRequestMsg.getToTherapistUsername();
 
         if (clientAccessList.hasAccessStatusFor(therapistUsername)) {
             ClientAccess clientAccess = clientAccessList.findAccess(therapistUsername).orElseThrow();
-            clientAccessUpdater.update(accessRequestMsg, clientAccess);
+            clientAccess.update(AccessStatusResolver.resolve(accessRequestMsg.getStatus()), clockSource);
         } else {
-            ClientAccess clientAccess = clientAccessCreator.create(accessRequestMsg);
+            ClientAccess clientAccess = ClientAccess.create(therapistUsername, AccessStatusResolver.resolve(accessRequestMsg.getStatus()), clockSource);
             clientAccessList.addAccess(clientAccess);
         }
         clientAccessList.removeDeclinedAccesses();

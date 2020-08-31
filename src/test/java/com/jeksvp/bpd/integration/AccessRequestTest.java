@@ -78,11 +78,13 @@ public class AccessRequestTest {
     @MockBean
     private ClockSource clockSource;
 
-    private HttpHeaders defaultAuthHeader;
+    private HttpHeaders defaultClientHeader;
+    private HttpHeaders defaultTherapistHeader;
 
     @BeforeEach
     public void init() {
-        this.defaultAuthHeader = tokenObtainer.obtainDefaultClientHeader(mockMvc);
+        this.defaultClientHeader = tokenObtainer.obtainDefaultClientHeader(mockMvc);
+        this.defaultTherapistHeader = tokenObtainer.obtainDefaultTherapistHeader(mockMvc);
         testConsumer = new TestConsumer<>(Topics.ACCESS_REQUEST_TOPIC, consumerFactory);
     }
 
@@ -92,7 +94,7 @@ public class AccessRequestTest {
         String responseBody = IOUtils.toString(getClass().getResource("/web/controller/access-controller/send-to-non-exists-user-response.json"), Charset.defaultCharset());
         mockMvc.perform(
                 post("/api/v1/access-request")
-                        .headers(defaultAuthHeader)
+                        .headers(defaultClientHeader)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestBody))
                 .andExpect(status().is(404))
@@ -149,49 +151,112 @@ public class AccessRequestTest {
                         .headers(headers)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestBody))
-                .andExpect(status().is(404))
+                .andExpect(status().is(409))
                 .andExpect(content().json(responseBody));
     }
 
     @Test
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
-    public void sendAccessRequestToTherapist() throws Exception {
+    public void cantSendAcceptAccessRequestWithoutPending() throws Exception {
+        String requestBody = IOUtils.toString(getClass().getResource("/web/controller/access-controller/send-valid-accept-request.json"), Charset.defaultCharset());
+        String responseBody = IOUtils.toString(getClass().getResource("/web/controller/access-controller/accept-without-pending-response.json"), Charset.defaultCharset());
+        mockMvc.perform(
+                post("/api/v1/access-request")
+                        .headers(defaultTherapistHeader)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestBody))
+                .andExpect(status().is(409))
+                .andExpect(content().json(responseBody));
+    }
+
+    @Test
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
+    public void cantSendDeclineAccessRequestWithoutPending() throws Exception {
+        String requestBody = IOUtils.toString(getClass().getResource("/web/controller/access-controller/send-valid-decline-request.json"), Charset.defaultCharset());
+        String responseBody = IOUtils.toString(getClass().getResource("/web/controller/access-controller/accept-without-pending-response.json"), Charset.defaultCharset());
+        mockMvc.perform(
+                post("/api/v1/access-request")
+                        .headers(defaultTherapistHeader)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestBody))
+                .andExpect(status().is(409))
+                .andExpect(content().json(responseBody));
+    }
+
+    @Test
+    public void clientCantSendAcceptRequestToTherapist() throws Exception {
+        String requestBody = IOUtils.toString(getClass().getResource("/web/controller/access-controller/send-accept-access-from-user-request.json"), Charset.defaultCharset());
+        String responseBody = IOUtils.toString(getClass().getResource("/web/controller/access-controller/client-cant-accept-response.json"), Charset.defaultCharset());
+
+        mockMvc.perform(
+                post("/api/v1/access-request")
+                        .headers(defaultClientHeader)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestBody))
+                .andExpect(status().is(409))
+                .andExpect(content().json(responseBody));
+    }
+
+    @Test
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
+    public void sendPendingAccessRequestToTherapist() throws Exception {
         when(uuidSource.random())
                 .thenReturn(UUID.fromString("ba2a9999-3023-4527-b376-4f0a58de7e5d"));
         when(clockSource.getClock())
                 .thenReturn(TestTime.DEFAULT_CLOCK);
 
-        String requestBody = IOUtils.toString(getClass().getResource("/web/controller/access-controller/send-to-therapist-request.json"), Charset.defaultCharset());
-        String kafkaMessage = IOUtils.toString(getClass().getResource("/kafka/pending-access-request-message.json"), Charset.defaultCharset());
+        String pendingRequestBody = IOUtils.toString(getClass().getResource("/web/controller/access-controller/send-valid-pending-request.json"), Charset.defaultCharset());
+        String pendingKafkaMessage = IOUtils.toString(getClass().getResource("/kafka/pending-access-request-message.json"), Charset.defaultCharset());
         mockMvc.perform(
                 post("/api/v1/access-request")
-                        .headers(defaultAuthHeader)
+                        .headers(defaultClientHeader)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(requestBody))
+                        .content(pendingRequestBody))
                 .andExpect(status().is(200));
 
-        testConsumer.assertNextMessage(kafkaMessage, 5);
+        testConsumer.assertNextMessage(pendingKafkaMessage, 5);
         kafkaListenerAwaiter.await(5);
 
         assertTrue(clientAccessRepository.findById(DefaultUser.JEKSVP_USERNAME)
                 .orElseThrow().getAccesses().stream()
-                .anyMatch(this::findExpectedTherapistWithPendingAccess)
+                .anyMatch(clientAccess -> findExpectedTherapistWithStatus(clientAccess, AccessStatus.PENDING))
         );
 
         assertTrue(therapistAccessRepository.findById(DefaultUser.PSYCHO_USERNAME)
                 .orElseThrow().getAccesses().stream()
-                .anyMatch(this::findExpectedClientWithPendingAccess)
+                .anyMatch(therapistAccess -> findExpectedClientWithStatus(therapistAccess, AccessStatus.PENDING))
         );
 
+        String acceptRequestBody = IOUtils.toString(getClass().getResource("/web/controller/access-controller/send-valid-accept-request.json"), Charset.defaultCharset());
+        String acceptKafkaMessage = IOUtils.toString(getClass().getResource("/kafka/accept-access-request-message.json"), Charset.defaultCharset());
+        mockMvc.perform(
+                post("/api/v1/access-request")
+                        .headers(defaultTherapistHeader)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(acceptRequestBody))
+                .andExpect(status().is(200));
+
+        testConsumer.assertNextMessage(acceptKafkaMessage, 5);
+        kafkaListenerAwaiter.await(5);
+
+        assertTrue(clientAccessRepository.findById(DefaultUser.JEKSVP_USERNAME)
+                .orElseThrow().getAccesses().stream()
+                .anyMatch(clientAccess -> findExpectedTherapistWithStatus(clientAccess, AccessStatus.ACCEPT))
+        );
+
+        assertTrue(therapistAccessRepository.findById(DefaultUser.PSYCHO_USERNAME)
+                .orElseThrow().getAccesses().stream()
+                .anyMatch(therapistAccess -> findExpectedClientWithStatus(therapistAccess, AccessStatus.ACCEPT))
+        );
     }
 
-    private boolean findExpectedTherapistWithPendingAccess(ClientAccess clientAccess) {
+    private boolean findExpectedTherapistWithStatus(ClientAccess clientAccess, AccessStatus status) {
         return DefaultUser.PSYCHO_USERNAME.equals(clientAccess.getUsername())
-                && AccessStatus.PENDING.equals(clientAccess.getStatus());
+                && status.equals(clientAccess.getStatus());
     }
 
-    private boolean findExpectedClientWithPendingAccess(TherapistAccess therapistAccess) {
+    private boolean findExpectedClientWithStatus(TherapistAccess therapistAccess, AccessStatus status) {
         return DefaultUser.JEKSVP_USERNAME.equals(therapistAccess.getUsername())
-                && AccessStatus.PENDING.equals(therapistAccess.getStatus());
+                && status.equals(therapistAccess.getStatus());
     }
 }

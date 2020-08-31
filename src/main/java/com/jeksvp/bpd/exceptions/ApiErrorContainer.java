@@ -11,6 +11,9 @@ public enum ApiErrorContainer {
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "User not found"),
     THERAPISTS_ACCESS_LIST_NOT_FOUND(HttpStatus.NOT_FOUND, "Therapist access list not found"),
     CLIENT_ACCESS_LIST_NOT_FOUND(HttpStatus.NOT_FOUND, "Client access list not found"),
+    THERE_IS_NO_PENDING_REQUEST(HttpStatus.CONFLICT, "There is no PENDING request"),
+    CLIENT_CANT_ACCEPT_ACCESS_REQUEST(HttpStatus.CONFLICT, "Client can't ACCEPT access request"),
+    THERAPIST_CANT_PENDING_ACCESS_REQUEST(HttpStatus.CONFLICT, "Therapist can't PENDING access request"),
     VALIDATION_ERROR(HttpStatus.BAD_REQUEST, "Validation error"),
     FORBIDDEN(HttpStatus.FORBIDDEN, "Access denied");
 

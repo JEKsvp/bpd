@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 public class KafkaListenerAwaiter {
 
-    private final CountDownLatch countDownLatch = new CountDownLatch(1);
+    private CountDownLatch countDownLatch = new CountDownLatch(1);
 
     void countDown() {
         countDownLatch.countDown();
@@ -20,7 +20,16 @@ public class KafkaListenerAwaiter {
 
     @SneakyThrows
     public void await(long timeoutInSeconds) {
-        boolean isReachedToZero = countDownLatch.await(timeoutInSeconds, TimeUnit.SECONDS);
-        assertTrue(isReachedToZero, "There was no message consume by KafkaListener.");
+        try {
+            boolean isReachedToZero = countDownLatch.await(timeoutInSeconds, TimeUnit.SECONDS);
+            assertTrue(isReachedToZero, "There was no message consume by KafkaListener.");
+        } finally {
+            reset();
+        }
+    }
+
+
+    private void reset() {
+        this.countDownLatch = new CountDownLatch(1);
     }
 }

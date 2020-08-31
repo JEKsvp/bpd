@@ -21,6 +21,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(ApiException.class)
     public ResponseEntity<ApiError> handleApiException(ApiException ex) {
         ApiError apiError = new ApiError(ex.getMessage());
+        log.info("ApiException occurred", ex);
         return new ResponseEntity<>(apiError, ex.getHttpStatus());
     }
 

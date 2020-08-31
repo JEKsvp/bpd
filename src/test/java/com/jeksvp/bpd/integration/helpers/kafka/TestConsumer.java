@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class TestConsumer<K, V> {
 
-    private final CountDownLatch countDownLatch = new CountDownLatch(1);
+    private CountDownLatch countDownLatch = new CountDownLatch(1);
     private String lastReceivedMessage = null;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -36,10 +36,18 @@ public class TestConsumer<K, V> {
 
     @SneakyThrows
     public void assertNextMessage(String expected, long timeoutInSeconds) {
-        this.countDownLatch.await(timeoutInSeconds, TimeUnit.SECONDS);
-        assertNotNull(lastReceivedMessage, "There is no message from kafka");
-        JsonNode expectedJson = objectMapper.readTree(expected);
-        JsonNode actualJson = objectMapper.readTree(lastReceivedMessage);
-        assertEquals(expectedJson, actualJson);
+        try {
+            this.countDownLatch.await(timeoutInSeconds, TimeUnit.SECONDS);
+            assertNotNull(lastReceivedMessage, "There is no message from kafka");
+            JsonNode expectedJson = objectMapper.readTree(expected);
+            JsonNode actualJson = objectMapper.readTree(lastReceivedMessage);
+            assertEquals(expectedJson, actualJson);
+        } finally {
+            reset();
+        }
+    }
+
+    private void reset() {
+        this.countDownLatch = new CountDownLatch(1);
     }
 }
