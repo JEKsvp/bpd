@@ -2,6 +2,8 @@ package com.jeksvp.bpd.integration;
 
 import com.jeksvp.bpd.configuration.IntegrationTestConfiguration;
 import com.jeksvp.bpd.domain.entity.Role;
+import com.jeksvp.bpd.integration.helpers.TokenObtainer;
+import com.jeksvp.bpd.integration.helpers.TestUserCreator;
 import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -32,26 +34,26 @@ public class ClientIntegrationTest {
     private TokenObtainer tokenObtainer;
 
     @Test
-    public void emptyClientsListForTherapistAfterSignUp() throws Exception {
-        String username = "emptyClientsTherapistSignUp";
-        UserCreator.createUser(mockMvc, username, Role.THERAPIST);
-        HttpHeaders authHeader = tokenObtainer.obtainAuthHeader(mockMvc, username, UserCreator.PASSWORD);
+    public void emptyClientAccessListForClientAfterSignUp() throws Exception {
+        String username = "emptyClntAccClntAfterSignUp";
+        TestUserCreator.createUser(mockMvc, username, Role.CLIENT);
+        HttpHeaders authHeader = tokenObtainer.obtainAuthHeader(mockMvc, username, TestUserCreator.PASSWORD);
         mockMvc.perform(
-                get("/api/v1/users/current/clients")
+                get("/api/v1/users/current/client-accesses")
                         .headers(authHeader))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(content().json("[]"));
     }
 
     @Test
-    public void notFoundClientListForClientAfterSignUp() throws Exception {
-        String username = "404ClientsClientSignUp";
-        UserCreator.createUser(mockMvc, username, Role.CLIENT);
-        HttpHeaders authHeader = tokenObtainer.obtainAuthHeader(mockMvc, username, UserCreator.PASSWORD);
+    public void notFoundClientAccessesForTherapistAfterSignUp() throws Exception {
+        String username = "404TherapistsTherapistSignUp";
+        TestUserCreator.createUser(mockMvc, username, Role.THERAPIST);
+        HttpHeaders authHeader = tokenObtainer.obtainAuthHeader(mockMvc, username, TestUserCreator.PASSWORD);
 
-        String responseBody = IOUtils.toString(getClass().getResource("/web/controller/client-controller/clients-not-found-response.json"), Charset.defaultCharset());
+        String responseBody = IOUtils.toString(getClass().getResource("/web/controller/therapist-controller/therapists-not-found-response.json"), Charset.defaultCharset());
         mockMvc.perform(
-                get("/api/v1/users/current/clients")
+                get("/api/v1/users/current/client-accesses")
                         .headers(authHeader))
                 .andExpect(status().is(404))
                 .andExpect(content().json(responseBody));

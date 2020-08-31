@@ -2,6 +2,7 @@ package com.jeksvp.bpd.web.controller;
 
 import com.jeksvp.bpd.service.TherapistService;
 import com.jeksvp.bpd.utils.SecurityUtils;
+import com.jeksvp.bpd.web.dto.request.therapist.TherapistAccessFilter;
 import com.jeksvp.bpd.web.dto.request.therapist.TherapistPageableFilter;
 import com.jeksvp.bpd.web.dto.response.paging.PageableDto;
 import com.jeksvp.bpd.web.dto.response.therapist.TherapistAccessResponse;
@@ -22,10 +23,10 @@ public class TherapistController {
         this.therapistService = therapistService;
     }
 
-    @GetMapping("/users/current/therapists")
-    public List<TherapistAccessResponse> getAccessedTherapistsList() {
+    @GetMapping("/users/current/therapist-accesses")
+    public List<TherapistAccessResponse> getAccessedTherapistsList(TherapistAccessFilter filter) {
         String currentUserName = SecurityUtils.getCurrentUserName();
-        return therapistService.getAccessedTherapistsOfUser(currentUserName);
+        return therapistService.getTherapistAccesses(currentUserName, filter);
     }
 
     @GetMapping("/therapists")

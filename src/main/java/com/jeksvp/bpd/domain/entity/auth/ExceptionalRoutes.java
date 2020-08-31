@@ -12,8 +12,9 @@ import java.util.Arrays;
 public enum ExceptionalRoutes {
     OATH_REQUEST("/oauth/token"),
     CURRENT_USER_REQUEST("/api/v1/users/current"),
-    CURRENT_USER_THERAPISTS_REQUEST("/api/v1/users/current/therapists"),
-    CURRENT_USER_CLIENTS_REQUEST("/api/v1/users/current/clients"),
+    CURRENT_USER_THERAPIST_ACCESSES_REQUEST("/api/v1/users/current/therapist-accesses"),
+    CURRENT_USER_CLIENT_ACCESSES_REQUEST("/api/v1/users/current/client-accesses"),
+    SEND_ACCESS_REQUEST("/api/v1/access-request"),
     THERAPISTS_REQUEST("/api/v1/therapists"),
     SIGN_UP_REQUEST("/api/v1/signup");
 

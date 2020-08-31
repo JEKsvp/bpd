@@ -2,6 +2,7 @@ package com.jeksvp.bpd.web.dto.request.client;
 
 
 import com.jeksvp.bpd.domain.entity.access.client.ClientAccess;
+import com.jeksvp.bpd.domain.entity.access.therapist.TherapistAccess;
 import lombok.*;
 import org.apache.commons.lang3.StringUtils;
 

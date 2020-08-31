@@ -17,7 +17,7 @@ public class TherapistAccessListInitializer implements SignUpInitializer {
 
     @Override
     public boolean shouldCreate(User user) {
-        return user.getRoles().contains(Role.CLIENT);
+        return user.getRoles().contains(Role.THERAPIST);
     }
 
     @Override

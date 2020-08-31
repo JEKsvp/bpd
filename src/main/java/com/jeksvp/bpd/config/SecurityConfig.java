@@ -1,6 +1,6 @@
 package com.jeksvp.bpd.config;
 
-import com.jeksvp.bpd.filter.AuthorizationFilter;
+import com.jeksvp.bpd.security.filter.AuthorizationFilter;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

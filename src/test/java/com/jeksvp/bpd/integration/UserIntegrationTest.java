@@ -2,6 +2,8 @@ package com.jeksvp.bpd.integration;
 
 import com.jeksvp.bpd.configuration.IntegrationTestConfiguration;
 import com.jeksvp.bpd.domain.entity.Role;
+import com.jeksvp.bpd.integration.helpers.TokenObtainer;
+import com.jeksvp.bpd.integration.helpers.TestUserCreator;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +14,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static com.jeksvp.bpd.integration.DefaultUser.*;
+import static com.jeksvp.bpd.integration.models.DefaultUser.*;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -44,8 +46,8 @@ public class UserIntegrationTest {
     @Test
     public void userCantGetUserWithoutAccess() throws Exception {
         String username = "anotherUserCantGetEmail";
-        UserCreator.createUser(mockMvc, username, Role.CLIENT);
-        HttpHeaders authHeader = tokenObtainer.obtainAuthHeader(mockMvc, username, UserCreator.PASSWORD);
+        TestUserCreator.createUser(mockMvc, username, Role.CLIENT);
+        HttpHeaders authHeader = tokenObtainer.obtainAuthHeader(mockMvc, username, TestUserCreator.PASSWORD);
         mockMvc.perform(
                 get("/api/v1/users/${username}", JEKSVP_USERNAME)
                         .headers(authHeader))

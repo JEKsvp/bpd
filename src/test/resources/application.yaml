@@ -2,6 +2,7 @@ server:
   port: 8081
 
 
+
 security:
   oauth2:
     resource:
@@ -22,3 +23,15 @@ spring:
     mongodb:
       database: embeded_db
       uri: localhost
+  main:
+    allow-bean-definition-overriding: true
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      client-id: bpd-produser
+    consumer:
+      client-id: bpd-consumer
+      group-id: bpd-group
+      auto-offset-reset: earliest
+    security:
+      enabled: false

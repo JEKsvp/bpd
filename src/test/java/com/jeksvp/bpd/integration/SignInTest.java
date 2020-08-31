@@ -1,6 +1,7 @@
 package com.jeksvp.bpd.integration;
 
 import com.jeksvp.bpd.configuration.IntegrationTestConfiguration;
+import com.jeksvp.bpd.integration.models.DefaultUser;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +14,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
-import static com.jeksvp.bpd.integration.DefaultClient.CLIENT_ID;
-import static com.jeksvp.bpd.integration.DefaultClient.SECRET;
+import static com.jeksvp.bpd.integration.models.DefaultClient.CLIENT_ID;
+import static com.jeksvp.bpd.integration.models.DefaultClient.SECRET;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;

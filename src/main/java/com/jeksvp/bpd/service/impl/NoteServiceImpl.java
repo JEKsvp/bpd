@@ -5,11 +5,11 @@ import com.jeksvp.bpd.exceptions.ApiErrorContainer;
 import com.jeksvp.bpd.exceptions.ApiException;
 import com.jeksvp.bpd.repository.DiaryRepository;
 import com.jeksvp.bpd.service.NoteService;
-import com.jeksvp.bpd.web.dto.creator.Creator;
+import com.jeksvp.bpd.support.Creator;
 import com.jeksvp.bpd.web.dto.request.note.CreateNoteRequest;
 import com.jeksvp.bpd.web.dto.request.note.UpdateNoteRequest;
 import com.jeksvp.bpd.web.dto.response.note.NoteResponse;
-import com.jeksvp.bpd.web.dto.updater.Updater;
+import com.jeksvp.bpd.support.Updater;
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;

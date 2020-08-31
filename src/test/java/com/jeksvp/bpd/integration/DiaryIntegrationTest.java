@@ -2,6 +2,8 @@ package com.jeksvp.bpd.integration;
 
 import com.jeksvp.bpd.configuration.IntegrationTestConfiguration;
 import com.jeksvp.bpd.domain.entity.Role;
+import com.jeksvp.bpd.integration.helpers.TokenObtainer;
+import com.jeksvp.bpd.integration.helpers.TestUserCreator;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,8 +34,8 @@ public class DiaryIntegrationTest {
     @Test
     public void clientMustHasDiary() throws Exception {
         String username = "testClient";
-        UserCreator.createUser(mockMvc, username, Role.CLIENT);
-        HttpHeaders authHeader = tokenObtainer.obtainAuthHeader(mockMvc, username, UserCreator.PASSWORD);
+        TestUserCreator.createUser(mockMvc, username, Role.CLIENT);
+        HttpHeaders authHeader = tokenObtainer.obtainAuthHeader(mockMvc, username, TestUserCreator.PASSWORD);
         mockMvc.perform(
                 get("/api/v1/users/{username}/diary", username)
                         .headers(authHeader))
@@ -45,8 +47,8 @@ public class DiaryIntegrationTest {
     @Test
     public void therapistMustNotHasDiary() throws Exception {
         String username = "testTherapist";
-        UserCreator.createUser(mockMvc, username, Role.THERAPIST);
-        HttpHeaders authHeader = tokenObtainer.obtainAuthHeader(mockMvc, username, UserCreator.PASSWORD);
+        TestUserCreator.createUser(mockMvc, username, Role.THERAPIST);
+        HttpHeaders authHeader = tokenObtainer.obtainAuthHeader(mockMvc, username, TestUserCreator.PASSWORD);
         mockMvc.perform(
                 get("/api/v1/users/{username}/diary", username)
                         .headers(authHeader))

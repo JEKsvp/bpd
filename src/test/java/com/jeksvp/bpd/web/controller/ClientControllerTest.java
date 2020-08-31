@@ -34,33 +34,33 @@ public class ClientControllerTest {
 
     @Test
     @WithMockUser(username = "psycho")
-    public void getClientsByCurrentUserTest() throws Exception {
-        when(clientService.getAccessedClientsOfUser(eq("psycho"), eq(ClientAccessFilter.builder().build())))
-                .thenReturn(buildAccessClientList());
+    public void getClientsByCurrentTherapistTest() throws Exception {
+        when(clientService.getAccessedTherapistsOfUser(eq("psycho"), eq(ClientAccessFilter.builder().build())))
+                .thenReturn(buildClientAccessList());
 
-        String responseBody = IOUtils.toString(getClass().getResource("/web/controller/client-controller/valid-access-clients-response.json"), Charset.defaultCharset());
-        mvc.perform(get("/api/v1/users/current/clients", "testUser"))
+        String responseBody = IOUtils.toString(getClass().getResource("/web/controller/client-controller/valid-client-accesses-response.json"), Charset.defaultCharset());
+        mvc.perform(get("/api/v1/users/current/client-accesses", "testUser"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(responseBody));
     }
 
     @Test
     @WithMockUser(username = "psycho")
-    public void getClientsByCurrentUserAndStatusTest() throws Exception {
+    public void getClientsByCurrentTherapistAndStatusTest() throws Exception {
         ClientAccessFilter filter = ClientAccessFilter.builder()
                 .status("PENDING")
                 .build();
-        when(clientService.getAccessedClientsOfUser(eq("psycho"), eq(filter)))
-                .thenReturn(buildPendingAccessClientList());
+        when(clientService.getAccessedTherapistsOfUser(eq("psycho"), eq(filter)))
+                .thenReturn(buildPendingClientAccessList());
 
-        String responseBody = IOUtils.toString(getClass().getResource("/web/controller/client-controller/filtered-access-clients-response.json"), Charset.defaultCharset());
-        mvc.perform(get("/api/v1/users/current/clients", "testUser")
+        String responseBody = IOUtils.toString(getClass().getResource("/web/controller/client-controller/filtered-client-accesses-response.json"), Charset.defaultCharset());
+        mvc.perform(get("/api/v1/users/current/client-accesses", "testUser")
                 .queryParam("status", "PENDING"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(responseBody));
     }
 
-    private List<ClientAccessResponse> buildAccessClientList() {
+    private List<ClientAccessResponse> buildClientAccessList() {
         return List.of(
                 ClientAccessResponse.builder()
                         .username("jeksvp")
@@ -74,7 +74,7 @@ public class ClientControllerTest {
     }
 
 
-    private List<ClientAccessResponse> buildPendingAccessClientList() {
+    private List<ClientAccessResponse> buildPendingClientAccessList() {
         return List.of(
                 ClientAccessResponse.builder()
                         .username("tbolivar")

@@ -1,6 +1,7 @@
 package com.jeksvp.bpd.web.dto.response.client;
 
 import com.jeksvp.bpd.domain.entity.access.client.ClientAccess;
+import com.jeksvp.bpd.domain.entity.access.therapist.TherapistAccess;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

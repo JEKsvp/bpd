@@ -2,6 +2,8 @@ package com.jeksvp.bpd.integration;
 
 import com.jeksvp.bpd.configuration.IntegrationTestConfiguration;
 import com.jeksvp.bpd.domain.entity.Role;
+import com.jeksvp.bpd.integration.helpers.TokenObtainer;
+import com.jeksvp.bpd.integration.helpers.TestUserCreator;
 import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -33,26 +35,26 @@ public class TherapistIntegrationTest {
     private TokenObtainer tokenObtainer;
 
     @Test
-    public void emptyTherapistListForClientAfterSignUp() throws Exception {
-        String username = "emptyTherapistsClientSignUp";
-        UserCreator.createUser(mockMvc, username, Role.CLIENT);
-        HttpHeaders authHeader = tokenObtainer.obtainAuthHeader(mockMvc, username, UserCreator.PASSWORD);
+    public void emptyTherapistAccessesForTherapistAfterSignUp() throws Exception {
+        String username = "emptyClientsTherapistSignUp";
+        TestUserCreator.createUser(mockMvc, username, Role.THERAPIST);
+        HttpHeaders authHeader = tokenObtainer.obtainAuthHeader(mockMvc, username, TestUserCreator.PASSWORD);
         mockMvc.perform(
-                get("/api/v1/users/current/therapists")
+                get("/api/v1/users/current/therapist-accesses")
                         .headers(authHeader))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(content().json("[]"));
     }
 
     @Test
-    public void notFoundTherapistListForTherapistAfterSignUp() throws Exception {
-        String username = "404TherapistsTherapistSignUp";
-        UserCreator.createUser(mockMvc, username, Role.THERAPIST);
-        HttpHeaders authHeader = tokenObtainer.obtainAuthHeader(mockMvc, username, UserCreator.PASSWORD);
+    public void notFoundTherapistAccessesForClientAfterSignUp() throws Exception {
+        String username = "404ClientsClientSignUp";
+        TestUserCreator.createUser(mockMvc, username, Role.CLIENT);
+        HttpHeaders authHeader = tokenObtainer.obtainAuthHeader(mockMvc, username, TestUserCreator.PASSWORD);
 
-        String responseBody = IOUtils.toString(getClass().getResource("/web/controller/therapist-controller/therapists-not-found-response.json"), Charset.defaultCharset());
+        String responseBody = IOUtils.toString(getClass().getResource("/web/controller/therapist-controller/tharapist-accesses-not-found-response.json"), Charset.defaultCharset());
         mockMvc.perform(
-                get("/api/v1/users/current/therapists")
+                get("/api/v1/users/current/therapist-accesses")
                         .headers(authHeader))
                 .andExpect(status().is(404))
                 .andExpect(content().json(responseBody));
@@ -64,8 +66,8 @@ public class TherapistIntegrationTest {
         String username1 = "getPageOfTherapistsTest1";
         String username2 = "getPageOfTherapistsTest2";
 
-        UserCreator.createUser(mockMvc, username1, Role.THERAPIST);
-        UserCreator.createUser(mockMvc, username2, Role.THERAPIST);
+        TestUserCreator.createUser(mockMvc, username1, Role.THERAPIST);
+        TestUserCreator.createUser(mockMvc, username2, Role.THERAPIST);
         HttpHeaders authHeader = tokenObtainer.obtainDefaultClientHeader(mockMvc);
 
         String responseBody = IOUtils.toString(getClass().getResource("/web/controller/therapist-controller/therapists-response.json"), Charset.defaultCharset());
@@ -82,8 +84,8 @@ public class TherapistIntegrationTest {
         String username1 = "getPageOfTherapistsTest1";
         String username2 = "getPageOfTherapistsTest2";
 
-        UserCreator.createUser(mockMvc, username1, Role.THERAPIST);
-        UserCreator.createUser(mockMvc, username2, Role.THERAPIST);
+        TestUserCreator.createUser(mockMvc, username1, Role.THERAPIST);
+        TestUserCreator.createUser(mockMvc, username2, Role.THERAPIST);
         HttpHeaders authHeader = tokenObtainer.obtainDefaultClientHeader(mockMvc);
 
         String responseBody = IOUtils.toString(getClass().getResource("/web/controller/therapist-controller/therapists-by-query-response.json"), Charset.defaultCharset());
