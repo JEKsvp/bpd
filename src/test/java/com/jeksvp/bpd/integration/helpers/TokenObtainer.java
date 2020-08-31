@@ -58,4 +58,14 @@ public class TokenObtainer {
     public HttpHeaders obtainDefaultTherapistHeader(MockMvc mockMvc) {
         return obtainAuthHeader(mockMvc, DefaultUser.PSYCHO_USERNAME, DefaultUser.PSYCHO_PASSWORD);
     }
+
+    @SneakyThrows
+    public HttpHeaders obtainDefaultAccessedClientHeader(MockMvc mockMvc) {
+        return obtainAuthHeader(mockMvc, DefaultUser.ACCESSED_CLIENT_USERNAME, DefaultUser.ACCESSED_CLIENT_PASSWORD);
+    }
+
+    @SneakyThrows
+    public HttpHeaders obtainDefaultAccessedTherapistHeader(MockMvc mockMvc) {
+        return obtainAuthHeader(mockMvc, DefaultUser.ACCESSED_THERAPIST_USERNAME, DefaultUser.ACCESSED_THERAPIST_PASSWORD);
+    }
 }
