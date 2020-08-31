@@ -1,6 +1,9 @@
 package com.jeksvp.bpd.service.impl;
 
+import com.jeksvp.bpd.domain.entity.Role;
 import com.jeksvp.bpd.domain.entity.User;
+import com.jeksvp.bpd.exceptions.ApiErrorContainer;
+import com.jeksvp.bpd.exceptions.ApiException;
 import com.jeksvp.bpd.repository.UserRepository;
 import com.jeksvp.bpd.service.TherapistService;
 import com.jeksvp.bpd.web.dto.request.therapist.TherapistPageableFilter;
@@ -24,5 +27,13 @@ public class TherapistServiceImpl implements TherapistService {
         PageRequest pageRequest = PageRequest.of(filter.getPage(), filter.getSize());
         Page<User> therapistsPage = userRepository.findAll(filter.getMongoPredicate(), pageRequest);
         return new PageableDto<>(therapistsPage, TherapistResponse::create);
+    }
+
+    @Override
+    public TherapistResponse getTherapistByUsername(String username) {
+        User therapist = userRepository.findById(username)
+                .filter(user -> user.hasRole(Role.THERAPIST))
+                .orElseThrow(() -> new ApiException(ApiErrorContainer.USER_NOT_FOUND));
+        return TherapistResponse.create(therapist);
     }
 }

@@ -7,4 +7,6 @@ import com.jeksvp.bpd.web.dto.response.therapist.TherapistResponse;
 public interface TherapistService {
 
     PageableDto<TherapistResponse> getTherapists(TherapistPageableFilter filter);
+
+    TherapistResponse getTherapistByUsername(String username);
 }
