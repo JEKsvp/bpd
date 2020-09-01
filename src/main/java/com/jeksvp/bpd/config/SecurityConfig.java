@@ -1,7 +1,6 @@
 package com.jeksvp.bpd.config;
 
 import com.jeksvp.bpd.security.filter.HttpRequestAccessResolver;
-import com.jeksvp.bpd.security.filter.AuthorizationFilter;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -37,12 +36,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected AuthenticationManager authenticationManager() throws Exception {
         return super.authenticationManager();
-    }
-
-    @Bean
-    @SneakyThrows
-    public AuthorizationFilter createAuthFilter(HttpRequestAccessResolver httpRequestAccessResolver) {
-        return new AuthorizationFilter(httpRequestAccessResolver);
     }
 
     @Bean

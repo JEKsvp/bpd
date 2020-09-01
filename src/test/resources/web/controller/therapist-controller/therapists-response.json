@@ -7,6 +7,12 @@
       "aboutMe": "I'am a therapist"
     },
     {
+      "username": "accessedTherapist",
+      "firstName": "accessedTherapist first name",
+      "lastName": "accessedTherapist last name",
+      "aboutMe": "I'am a therapist"
+    },
+    {
       "username": "getPageOfTherapistsTest1",
       "firstName": "getPageOfTherapistsTest1 fist name",
       "lastName": "getPageOfTherapistsTest1 last name"
@@ -19,7 +25,7 @@
   ],
   "paging": {
     "size": 20,
-    "totalElements": 3,
+    "totalElements": 4,
     "totalPages": 1,
     "number": 0
   }

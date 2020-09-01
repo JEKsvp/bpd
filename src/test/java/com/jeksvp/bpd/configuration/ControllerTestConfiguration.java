@@ -9,6 +9,6 @@ public class ControllerTestConfiguration {
 
     @Bean
     public HttpRequestAccessResolver httpRequestAccessResolver() {
-        return new HttpRequestAccessResolver();
+        return new HttpRequestAccessResolver(null);
     }
 }

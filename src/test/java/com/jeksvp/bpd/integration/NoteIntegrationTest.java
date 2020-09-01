@@ -2,7 +2,6 @@ package com.jeksvp.bpd.integration;
 
 import com.jeksvp.bpd.configuration.IntegrationTestConfiguration;
 import com.jeksvp.bpd.domain.entity.Role;
-import com.jeksvp.bpd.integration.helpers.TestUserCreator;
 import com.jeksvp.bpd.integration.helpers.TokenObtainer;
 import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,15 +13,15 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.nio.charset.Charset;
 
-import static com.jeksvp.bpd.integration.models.DefaultUser.JEKSVP_PASSWORD;
-import static com.jeksvp.bpd.integration.models.DefaultUser.JEKSVP_USERNAME;
 import static com.jeksvp.bpd.integration.helpers.TestUserCreator.createUser;
+import static com.jeksvp.bpd.integration.models.DefaultUser.*;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -43,11 +42,15 @@ public class NoteIntegrationTest {
     @Autowired
     private TokenObtainer tokenObtainer;
 
-    private HttpHeaders defaultAuthHeader;
+    private HttpHeaders defaultClientHeader;
+    private HttpHeaders defaultAccessedClientHeader;
+    private HttpHeaders defaultAccessedTherapistHeader;
 
     @BeforeEach
     public void init() {
-        this.defaultAuthHeader = tokenObtainer.obtainAuthHeader(mockMvc, JEKSVP_USERNAME, JEKSVP_PASSWORD);
+        this.defaultClientHeader = tokenObtainer.obtainDefaultClientHeader(mockMvc);
+        this.defaultAccessedClientHeader = tokenObtainer.obtainDefaultAccessedClientHeader(mockMvc);
+        this.defaultAccessedTherapistHeader = tokenObtainer.obtainDefaultAccessedTherapistHeader(mockMvc);
     }
 
     @Test
@@ -55,7 +58,7 @@ public class NoteIntegrationTest {
         String requestBody = IOUtils.toString(getClass().getResource("/web/controller/note-controller/create-note-request.json"), Charset.defaultCharset());
         mockMvc.perform(
                 post("/api/v1/users/{username}/diary/notes", JEKSVP_USERNAME)
-                        .headers(defaultAuthHeader)
+                        .headers(defaultClientHeader)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestBody))
                 .andExpect(status().is2xxSuccessful())
@@ -67,12 +70,43 @@ public class NoteIntegrationTest {
     }
 
     @Test
+    public void therapistWithAccessCantPostNote() throws Exception {
+        HttpHeaders therapistHeader = tokenObtainer.obtainDefaultAccessedTherapistHeader(mockMvc);
+        String requestBody = IOUtils.toString(getClass().getResource("/web/controller/note-controller/create-note-request.json"), Charset.defaultCharset());
+        mockMvc.perform(
+                post("/api/v1/users/{username}/diary/notes", ACCESSED_CLIENT_USERNAME)
+                        .headers(therapistHeader)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestBody))
+                .andExpect(status().is(403));
+    }
+
+    @Test
     public void getNoteTest() throws Exception {
-        String noteId = createNoteAndGetId(JEKSVP_USERNAME, defaultAuthHeader);
+        String noteId = createNoteAndGetId(JEKSVP_USERNAME, defaultClientHeader);
         mockMvc.perform(
                 get("/api/v1/users/{username}/diary/notes/{noteId}", JEKSVP_USERNAME, noteId)
-                        .headers(defaultAuthHeader)
+                        .headers(defaultClientHeader)
                         .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(jsonPath("$.id", is(noteId)))
+                .andExpect(jsonPath("$.event.description", is("Тестовое событие из жизы")))
+                .andExpect(jsonPath("$.emotionalEvaluation.description", is("Тестовая оценка")))
+                .andExpect(jsonPath("$.bodyReaction.description", is("Тестовая реакция тела")))
+                .andExpect(jsonPath("$.myThoughts.description", is("Тестовые мысли")))
+                .andExpect(jsonPath("$.oppositeThoughts.description", is("Тестовые противоположные мысли")));
+    }
+
+    @Test
+    public void therapistWithAccessCanGetNote() throws Exception {
+        String noteId = createNoteAndGetId(ACCESSED_CLIENT_USERNAME, defaultAccessedClientHeader);
+
+        String requestBody = IOUtils.toString(getClass().getResource("/web/controller/note-controller/create-note-request.json"), Charset.defaultCharset());
+        mockMvc.perform(
+                get("/api/v1/users/{username}/diary/notes/{noteId}", ACCESSED_CLIENT_USERNAME, noteId)
+                        .headers(defaultAccessedTherapistHeader)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestBody))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(jsonPath("$.id", is(noteId)))
                 .andExpect(jsonPath("$.event.description", is("Тестовое событие из жизы")))
@@ -104,18 +138,43 @@ public class NoteIntegrationTest {
     }
 
     @Test
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
+    public void therapistWithAccessCantUpdateNote() throws Exception {
+        String noteId = createNoteAndGetId(ACCESSED_CLIENT_USERNAME, defaultAccessedClientHeader);
+
+        String requestBody = IOUtils.toString(getClass().getResource("/web/controller/note-controller/update-note-request.json"), Charset.defaultCharset());
+        mockMvc.perform(
+                put("/api/v1/users/{username}/diary/notes/{noteId}", ACCESSED_CLIENT_USERNAME, noteId)
+                        .headers(defaultAccessedTherapistHeader)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestBody))
+                .andExpect(status().is(403));
+    }
+
+    @Test
     public void deleteNoteTest() throws Exception {
-        String noteId = createNoteAndGetId(JEKSVP_USERNAME, defaultAuthHeader);
+        String noteId = createNoteAndGetId(JEKSVP_USERNAME, defaultClientHeader);
 
         mockMvc.perform(
                 delete("/api/v1/users/{username}/diary/notes/{noteId}", JEKSVP_USERNAME, noteId)
-                        .headers(defaultAuthHeader))
+                        .headers(defaultClientHeader))
                 .andExpect(status().is2xxSuccessful());
 
         mockMvc.perform(
                 get("/api/v1/users/{username}/diary/notes/{noteId}", JEKSVP_USERNAME, noteId)
-                        .headers(defaultAuthHeader))
+                        .headers(defaultClientHeader))
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
+    public void therapistWithAccessCantDeleteNote() throws Exception {
+        String noteId = createNoteAndGetId(ACCESSED_CLIENT_USERNAME, defaultAccessedClientHeader);
+
+        mockMvc.perform(
+                delete("/api/v1/users/{username}/diary/notes/{noteId}", ACCESSED_CLIENT_USERNAME, noteId)
+                        .headers(defaultAccessedTherapistHeader))
+                .andExpect(status().is(403));
     }
 
     @Test
