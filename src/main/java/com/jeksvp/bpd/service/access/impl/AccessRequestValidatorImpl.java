@@ -15,8 +15,6 @@ import com.jeksvp.bpd.web.dto.request.access.AccessRequest;
 import com.jeksvp.bpd.web.dto.request.access.AccessStatusRequest;
 import org.springframework.stereotype.Component;
 
-import javax.validation.constraints.NotNull;
-
 @Component
 public class AccessRequestValidatorImpl implements AccessRequestValidator {
 
@@ -83,9 +81,21 @@ public class AccessRequestValidatorImpl implements AccessRequestValidator {
         String fromUsername = SecurityUtils.getCurrentUserName();
         String toUsername = toUser.getUsername();
         AccessStatus accessStatus = AccessStatusResolver.resolve(status);
-        if (!AccessStatus.PENDING.equals(accessStatus)) {
+        if (AccessStatus.ACCEPT.equals(accessStatus)) {
             checkAccessStatusRequest(fromUsername, toUsername);
             checkAccessStatusRequest(toUsername, fromUsername);
+        }
+        if (AccessStatus.DECLINE.equals(accessStatus)) {
+            isAccessStatusExists(fromUsername, toUsername);
+            isAccessStatusExists(toUsername, fromUsername);
+        }
+    }
+
+    private void isAccessStatusExists(String from, String to) {
+        AccessList accessList = accessListRepository.findById(from)
+                .orElseThrow(() -> new ApiException(ApiErrorContainer.CLIENT_ACCESS_LIST_NOT_FOUND));
+        if (!accessList.hasAccessStatusFor(to)) {
+            throw new ApiException(ApiErrorContainer.THERE_IS_NO_EXISTED_ACCESS_REQUEST);
         }
     }
 
