@@ -25,3 +25,19 @@ spring:
       username: ${MONGODB_USERNAME}
       password: ${MONGODB_PASSWORD}
       authentication-database: ${MONGODB_AUTH_DATABASE}
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVER}
+    producer:
+      client-id: ${KAFKA_ACCESS_REQUEST_PRODUCER_CLIENT_ID}
+    consumer:
+      client-id: ${KAFKA_ACCESS_REQUEST_CONSUMER_CLIENT_ID}
+      group-id: ${KAFKA_ACCESS_REQUEST_GROUP_ID}
+      auto-offset-reset: earliest
+    security:
+      enabled: true
+      protocol: ${KAFKA_SECURITY_PROTOCOL}
+    properties:
+      sasl:
+        mechanism: ${KAFKA_SASL_MECHANISM}
+        jaas:
+          config: ${KAFKA_JAAS_CONFIG}
