@@ -1,6 +1,7 @@
 package com.jeksvp.bpd.web.controller;
 
 import com.jeksvp.bpd.TestFileReader;
+import com.jeksvp.bpd.configuration.ControllerTestConfiguration;
 import com.jeksvp.bpd.domain.entity.Role;
 import com.jeksvp.bpd.exceptions.ApiErrorContainer;
 import com.jeksvp.bpd.exceptions.ApiException;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -25,6 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(SignUpController.class)
+@ContextConfiguration(classes = ControllerTestConfiguration.class)
 public class SignUpControllerTest {
 
     @Autowired

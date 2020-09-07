@@ -60,18 +60,42 @@ public class AccessRequestValidatorImpl implements AccessRequestValidator {
         if (AccessStatusRequest.ACCEPT.equals(accessRequest.getStatus())) {
             throw new ApiException(ApiErrorContainer.CLIENT_CANT_ACCEPT_ACCESS_REQUEST);
         }
-        if (AccessStatusRequest.DECLINE.equals(accessRequest.getStatus())) {
-            throw new ApiException(ApiErrorContainer.CLIENT_CANT_DECLINE_ACCESS_REQUEST);
+
+        AccessList accessList = accessListRepository.findById(SecurityUtils.getCurrentUserName())
+                .orElseThrow(() -> new ApiException(ApiErrorContainer.CLIENT_ACCESS_LIST_NOT_FOUND));
+
+        if (hasAnotherTherapist(toUser, accessList) || pendingToCurrentTherapist(toUser, accessList, accessRequest.getStatus())) {
+            throw new ApiException(ApiErrorContainer.CLIENT_ALREADY_HAS_THERAPIST);
         }
+    }
+
+    private boolean hasAnotherTherapist(User toUser, AccessList accessList) {
+        return !accessList.getAccesses().isEmpty() && !accessList.hasAccessStatusFor(toUser.getUsername());
+    }
+
+    private boolean pendingToCurrentTherapist(User toUser, AccessList accessList, AccessStatusRequest status) {
+        return accessList.hasAccessStatusFor(toUser.getUsername()) && AccessStatusRequest.PENDING.equals(status);
     }
 
     private void validateStatus(User toUser, AccessStatusRequest status) {
         String fromUsername = SecurityUtils.getCurrentUserName();
         String toUsername = toUser.getUsername();
         AccessStatus accessStatus = AccessStatusResolver.resolve(status);
-        if (!AccessStatus.PENDING.equals(accessStatus)) {
+        if (AccessStatus.ACCEPT.equals(accessStatus)) {
             checkAccessStatusRequest(fromUsername, toUsername);
             checkAccessStatusRequest(toUsername, fromUsername);
+        }
+        if (AccessStatus.DECLINE.equals(accessStatus)) {
+            isAccessStatusExists(fromUsername, toUsername);
+            isAccessStatusExists(toUsername, fromUsername);
+        }
+    }
+
+    private void isAccessStatusExists(String from, String to) {
+        AccessList accessList = accessListRepository.findById(from)
+                .orElseThrow(() -> new ApiException(ApiErrorContainer.CLIENT_ACCESS_LIST_NOT_FOUND));
+        if (!accessList.hasAccessStatusFor(to)) {
+            throw new ApiException(ApiErrorContainer.THERE_IS_NO_EXISTED_ACCESS_REQUEST);
         }
     }
 

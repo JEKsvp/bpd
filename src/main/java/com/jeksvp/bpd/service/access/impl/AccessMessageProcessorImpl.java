@@ -23,15 +23,15 @@ public class AccessMessageProcessorImpl implements AccessMessageProcessor {
     }
 
     @Override
-    public void process(AccessRequestMsg accessRequestMsg, String clientUsername, String therapistUsername) {
-        AccessList accessList = accessListRepository.findById(clientUsername)
+    public void process(AccessRequestMsg accessRequestMsg, String fromUsername, String toUsername) {
+        AccessList accessList = accessListRepository.findById(fromUsername)
                 .orElseThrow(() -> new ApiException(ApiErrorContainer.CLIENT_ACCESS_LIST_NOT_FOUND));
 
-        if (accessList.hasAccessStatusFor(therapistUsername)) {
-            Access access = accessList.findAccess(therapistUsername).orElseThrow();
+        if (accessList.hasAccessStatusFor(toUsername)) {
+            Access access = accessList.findAccess(toUsername).orElseThrow();
             access.update(AccessStatusResolver.resolve(accessRequestMsg.getStatus()), clockSource);
         } else {
-            Access access = Access.create(therapistUsername, AccessStatusResolver.resolve(accessRequestMsg.getStatus()), clockSource);
+            Access access = Access.create(toUsername, AccessStatusResolver.resolve(accessRequestMsg.getStatus()), clockSource);
             accessList.addAccess(access);
         }
         accessList.removeDeclinedAccesses();

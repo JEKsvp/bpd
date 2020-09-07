@@ -167,8 +167,8 @@ public class AccessRequestTest {
     @Test
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
     public void cantSendDeclineAccessRequestWithoutPending() throws Exception {
-        String requestBody = IOUtils.toString(getClass().getResource("/web/controller/access-controller/send-valid-decline-request.json"), Charset.defaultCharset());
-        String responseBody = IOUtils.toString(getClass().getResource("/web/controller/access-controller/accept-without-pending-response.json"), Charset.defaultCharset());
+        String requestBody = IOUtils.toString(getClass().getResource("/web/controller/access-controller/send-valid-decline-from-therapist-request.json"), Charset.defaultCharset());
+        String responseBody = IOUtils.toString(getClass().getResource("/web/controller/access-controller/there-is-no-existed-access-response.json"), Charset.defaultCharset());
         mockMvc.perform(
                 post("/api/v1/access-request")
                         .headers(defaultTherapistHeader)
@@ -242,6 +242,178 @@ public class AccessRequestTest {
         assertTrue(accessListRepository.findById(DefaultUser.PSYCHO_USERNAME)
                 .orElseThrow().getAccesses().stream()
                 .anyMatch(therapistAccess -> findExpectedClientWithStatus(therapistAccess, AccessStatus.ACCEPT))
+        );
+    }
+
+    @Test
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
+    public void clientCantSendPendingOrAccessRequestWithExistsPendingRequestAccessRequests() throws Exception {
+        when(uuidSource.random())
+                .thenReturn(UUID.fromString("ba2a9999-3023-4527-b376-4f0a58de7e5d"));
+        when(clockSource.getClock())
+                .thenReturn(TestTime.DEFAULT_CLOCK);
+
+        String pendingRequestBody = IOUtils.toString(getClass().getResource("/web/controller/access-controller/send-valid-pending-request.json"), Charset.defaultCharset());
+        String pendingKafkaMessage = IOUtils.toString(getClass().getResource("/kafka/pending-access-request-message.json"), Charset.defaultCharset());
+        mockMvc.perform(
+                post("/api/v1/access-request")
+                        .headers(defaultClientHeader)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(pendingRequestBody))
+                .andExpect(status().is(200));
+
+        testConsumer.assertNextMessage(pendingKafkaMessage, 5);
+        kafkaListenerAwaiter.await(5);
+
+        assertTrue(accessListRepository.findById(DefaultUser.JEKSVP_USERNAME)
+                .orElseThrow().getAccesses().stream()
+                .anyMatch(clientAccess -> findExpectedTherapistWithStatus(clientAccess, AccessStatus.PENDING))
+        );
+
+        assertTrue(accessListRepository.findById(DefaultUser.PSYCHO_USERNAME)
+                .orElseThrow().getAccesses().stream()
+                .anyMatch(therapistAccess -> findExpectedClientWithStatus(therapistAccess, AccessStatus.PENDING))
+        );
+
+        String responseBody = IOUtils.toString(getClass().getResource("/web/controller/access-controller/client-already-has-therapist-response.json"), Charset.defaultCharset());
+        mockMvc.perform(
+                post("/api/v1/access-request")
+                        .headers(defaultClientHeader)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(pendingRequestBody))
+                .andExpect(status().is(409))
+                .andExpect(content().json(responseBody));
+    }
+
+    @Test
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
+    public void sendPendingAndDeclineFromTherapistAccessRequests() throws Exception {
+        when(uuidSource.random())
+                .thenReturn(UUID.fromString("ba2a9999-3023-4527-b376-4f0a58de7e5d"));
+        when(clockSource.getClock())
+                .thenReturn(TestTime.DEFAULT_CLOCK);
+
+        String pendingRequestBody = IOUtils.toString(getClass().getResource("/web/controller/access-controller/send-valid-pending-request.json"), Charset.defaultCharset());
+        String pendingKafkaMessage = IOUtils.toString(getClass().getResource("/kafka/pending-access-request-message.json"), Charset.defaultCharset());
+        mockMvc.perform(
+                post("/api/v1/access-request")
+                        .headers(defaultClientHeader)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(pendingRequestBody))
+                .andExpect(status().is(200));
+
+        testConsumer.assertNextMessage(pendingKafkaMessage, 5);
+        kafkaListenerAwaiter.await(5);
+
+        assertTrue(accessListRepository.findById(DefaultUser.JEKSVP_USERNAME)
+                .orElseThrow().getAccesses().stream()
+                .anyMatch(clientAccess -> findExpectedTherapistWithStatus(clientAccess, AccessStatus.PENDING))
+        );
+
+        assertTrue(accessListRepository.findById(DefaultUser.PSYCHO_USERNAME)
+                .orElseThrow().getAccesses().stream()
+                .anyMatch(therapistAccess -> findExpectedClientWithStatus(therapistAccess, AccessStatus.PENDING))
+        );
+
+        String acceptRequestBody = IOUtils.toString(getClass().getResource("/web/controller/access-controller/send-valid-decline-from-therapist-request.json"), Charset.defaultCharset());
+        String declineKafkaMessage = IOUtils.toString(getClass().getResource("/kafka/decline-access-request-from-therapist-message.json"), Charset.defaultCharset());
+        mockMvc.perform(
+                post("/api/v1/access-request")
+                        .headers(defaultTherapistHeader)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(acceptRequestBody))
+                .andExpect(status().is(200));
+
+        testConsumer.assertNextMessage(declineKafkaMessage, 5);
+        kafkaListenerAwaiter.await(5);
+
+        assertTrue(accessListRepository.findById(DefaultUser.JEKSVP_USERNAME)
+                .orElseThrow().getAccesses().isEmpty()
+        );
+
+        assertTrue(accessListRepository.findById(DefaultUser.PSYCHO_USERNAME)
+                .orElseThrow().getAccesses().isEmpty()
+        );
+    }
+
+    @Test
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
+    public void sendPendingAndDeclineFromClientAccessRequests() throws Exception {
+        when(uuidSource.random())
+                .thenReturn(UUID.fromString("ba2a9999-3023-4527-b376-4f0a58de7e5d"));
+        when(clockSource.getClock())
+                .thenReturn(TestTime.DEFAULT_CLOCK);
+
+        String pendingRequestBody = IOUtils.toString(getClass().getResource("/web/controller/access-controller/send-valid-pending-request.json"), Charset.defaultCharset());
+        String pendingKafkaMessage = IOUtils.toString(getClass().getResource("/kafka/pending-access-request-message.json"), Charset.defaultCharset());
+        mockMvc.perform(
+                post("/api/v1/access-request")
+                        .headers(defaultClientHeader)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(pendingRequestBody))
+                .andExpect(status().is(200));
+
+        testConsumer.assertNextMessage(pendingKafkaMessage, 5);
+        kafkaListenerAwaiter.await(5);
+
+        assertTrue(accessListRepository.findById(DefaultUser.JEKSVP_USERNAME)
+                .orElseThrow().getAccesses().stream()
+                .anyMatch(clientAccess -> findExpectedTherapistWithStatus(clientAccess, AccessStatus.PENDING))
+        );
+
+        assertTrue(accessListRepository.findById(DefaultUser.PSYCHO_USERNAME)
+                .orElseThrow().getAccesses().stream()
+                .anyMatch(therapistAccess -> findExpectedClientWithStatus(therapistAccess, AccessStatus.PENDING))
+        );
+
+        String acceptRequestBody = IOUtils.toString(getClass().getResource("/web/controller/access-controller/send-valid-decline-from-client-request.json"), Charset.defaultCharset());
+        String declineKafkaMessage = IOUtils.toString(getClass().getResource("/kafka/decline-access-request-from-client-message.json"), Charset.defaultCharset());
+        mockMvc.perform(
+                post("/api/v1/access-request")
+                        .headers(defaultClientHeader)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(acceptRequestBody))
+                .andExpect(status().is(200));
+
+        testConsumer.assertNextMessage(declineKafkaMessage, 5);
+        kafkaListenerAwaiter.await(5);
+
+        assertTrue(accessListRepository.findById(DefaultUser.JEKSVP_USERNAME)
+                .orElseThrow().getAccesses().isEmpty()
+        );
+
+        assertTrue(accessListRepository.findById(DefaultUser.PSYCHO_USERNAME)
+                .orElseThrow().getAccesses().isEmpty()
+        );
+    }
+
+    @Test
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
+    public void sendDeclineFromAcceptedClientRequests() throws Exception {
+        when(uuidSource.random())
+                .thenReturn(UUID.fromString("ba2a9999-3023-4527-b376-4f0a58de7e5d"));
+        when(clockSource.getClock())
+                .thenReturn(TestTime.DEFAULT_CLOCK);
+        HttpHeaders clientHeader = tokenObtainer.obtainDefaultAccessedClientHeader(mockMvc);
+
+        String declineRequestBody = IOUtils.toString(getClass().getResource("/web/controller/access-controller/send-valid-decline-from-accepted-client-request.json"), Charset.defaultCharset());
+        String declineKafkaMessage = IOUtils.toString(getClass().getResource("/kafka/decline-access-request-from-accepted-client-message.json"), Charset.defaultCharset());
+        mockMvc.perform(
+                post("/api/v1/access-request")
+                        .headers(clientHeader)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(declineRequestBody))
+                .andExpect(status().is(200));
+
+        testConsumer.assertNextMessage(declineKafkaMessage, 5);
+        kafkaListenerAwaiter.await(5);
+
+        assertTrue(accessListRepository.findById(DefaultUser.ACCESSED_CLIENT_USERNAME)
+                .orElseThrow().getAccesses().isEmpty()
+        );
+
+        assertTrue(accessListRepository.findById(DefaultUser.ACCESSED_THERAPIST_USERNAME)
+                .orElseThrow().getAccesses().isEmpty()
         );
     }
 

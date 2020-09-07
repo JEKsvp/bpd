@@ -34,5 +34,51 @@
     "_class": "com.jeksvp.bpd.domain.entity.access.AccessList",
     "username": "psycho",
     "accesses": []
+  },
+  {
+    "_class": "com.jeksvp.bpd.domain.entity.User",
+    "username": "accessedClient",
+    "password": "$2a$10$Whfna.9FBPLRH.XZmLW6geQ6jtjkEikU8/wMlDXtNXjmuahM3jsCa",
+    "email": "accessedClient@test.com",
+    "roles": [
+      "CLIENT"
+    ]
+  },
+  {
+    "_class": "com.jeksvp.bpd.domain.entity.diary.Diary",
+    "username": "accessedClient",
+    "notes": []
+  },
+  {
+    "_class": "com.jeksvp.bpd.domain.entity.access.AccessList",
+    "username": "accessedClient",
+    "accesses": [
+      {
+        "username": "accessedTherapist",
+        "status": "ACCEPT"
+      }
+    ]
+  },
+  {
+    "_class": "com.jeksvp.bpd.domain.entity.User",
+    "username": "accessedTherapist",
+    "firstName": "accessedTherapist first name",
+    "lastName": "accessedTherapist last name",
+    "aboutMe": "I'am a therapist",
+    "password": "$2a$10$Whfna.9FBPLRH.XZmLW6geQ6jtjkEikU8/wMlDXtNXjmuahM3jsCa",
+    "email": "accessedPsycho@test.com",
+    "roles": [
+      "THERAPIST"
+    ]
+  },
+  {
+    "_class": "com.jeksvp.bpd.domain.entity.access.AccessList",
+    "username": "accessedTherapist",
+    "accesses": [
+      {
+        "username": "accessedClient",
+        "status": "ACCEPT"
+      }
+    ]
   }
 ]

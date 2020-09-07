@@ -49,7 +49,7 @@ public class UserIntegrationTest {
         TestUserCreator.createUser(mockMvc, username, Role.CLIENT);
         HttpHeaders authHeader = tokenObtainer.obtainAuthHeader(mockMvc, username, TestUserCreator.PASSWORD);
         mockMvc.perform(
-                get("/api/v1/users/${username}", JEKSVP_USERNAME)
+                get("/api/v1/users/{username}", JEKSVP_USERNAME)
                         .headers(authHeader))
                 .andExpect(status().is(403));
     }
